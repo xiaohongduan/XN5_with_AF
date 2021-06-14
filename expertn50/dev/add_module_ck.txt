@@ -1,0 +1,8 @@
+# additional models (ck)
+#xpn/modul/libopen_geo_sys_driver/src
+#xpn/modul/libtest/src
+#xpn/modul/libtest2/src
+#xpn/modul/libxpnpython/src
+#xpn/modul/libmodule_example/src
+xpn/modul/libstickstoff/src
+xpn/modul/libsurface_layer/src

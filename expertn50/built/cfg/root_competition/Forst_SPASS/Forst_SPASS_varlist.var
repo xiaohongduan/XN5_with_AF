@@ -1,0 +1,12 @@
+# Diese Datei enthält Filter fürs mitschneiden von Dateien
+pTi.pSimTime.fTime
+#pWa.pWLayer.fContAct*
+#pPl.*
+*output*
+*fWaterLossAF*
+*fWaterGainAF*
+pPl.pRoot.pLayerRoot.fActWatUptAF
+#*fActLayWatUptAF*
+#pCl.pAverage.fYearPAR
+#*
+#

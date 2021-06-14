@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="expertn50" Database="./expertn50.tags">
+  <Project Name = "agroforestry" Path = "D:\XN5_AF\expertn50\dev\agroforestry.project" Active="No"/>
+  <Project Name = "balance" Path = "D:\XN5_AF\expertn50\dev\balance.project" Active="No"/>
+  <Project Name = "century_n" Path = "D:\XN5_AF\expertn50\dev\century_n.project" Active="No"/>
+  <Project Name = "ceres" Path = "D:\XN5_AF\expertn50\dev\ceres.project" Active="No"/>
+  <Project Name = "daisy" Path = "D:\XN5_AF\expertn50\dev\daisy.project" Active="No"/>
+  <Project Name = "daisy_miner" Path = "D:\XN5_AF\expertn50\dev\daisy_miner.project" Active="No"/>
+  <Project Name = "depos" Path = "D:\XN5_AF\expertn50\dev\depos.project" Active="No"/>
+  <Project Name = "evapotranspiration_pm" Path = "D:\XN5_AF\expertn50\dev\evapotranspiration_pm.project" Active="No"/>
+  <Project Name = "expertn_bin" Path = "D:\XN5_AF\expertn50\dev\expertn_bin.project" Active="No"/>
+  <Project Name = "expertn_class" Path = "D:\XN5_AF\expertn50\dev\expertn_class.project" Active="No"/>
+  <Project Name = "expertn_database" Path = "D:\XN5_AF\expertn50\dev\expertn_database.project" Active="No"/>
+  <Project Name = "expertn_modul_base" Path = "D:\XN5_AF\expertn50\dev\expertn_modul_base.project" Active="No"/>
+  <Project Name = "gecros" Path = "D:\XN5_AF\expertn50\dev\gecros.project" Active="No"/>
+  <Project Name = "hpm" Path = "D:\XN5_AF\expertn50\dev\hpm.project" Active="No"/>
+  <Project Name = "hydraulic_functions" Path = "D:\XN5_AF\expertn50\dev\hydraulic_functions.project" Active="No"/>
+  <Project Name = "hydrus" Path = "D:\XN5_AF\expertn50\dev\hydrus.project" Active="No"/>
+  <Project Name = "interception" Path = "D:\XN5_AF\expertn50\dev\interception.project" Active="No"/>
+  <Project Name = "leachn" Path = "D:\XN5_AF\expertn50\dev\leachn.project" Active="No"/>
+  <Project Name = "mpmas_coupling" Path = "D:\XN5_AF\expertn50\dev\mpmas_coupling.project" Active="No"/>
+  <Project Name = "pedotransfer" Path = "D:\XN5_AF\expertn50\dev\pedotransfer.project" Active="No"/>
+  <Project Name = "pollen" Path = "D:\XN5_AF\expertn50\dev\pollen.project" Active="No"/>
+  <Project Name = "read_wrf_weather" Path = "D:\XN5_AF\expertn50\dev\read_wrf_weather.project" Active="No"/>
+  <Project Name = "schaaf" Path = "D:\XN5_AF\expertn50\dev\schaaf.project" Active="No"/>
+  <Project Name = "schaaf_manag" Path = "D:\XN5_AF\expertn50\dev\schaaf_manag.project" Active="No"/>
+  <Project Name = "spass" Path = "D:\XN5_AF\expertn50\dev\spass.project" Active="No"/>
+  <Project Name = "treemix" Path = "D:\XN5_AF\expertn50\dev\treemix.project" Active="No"/>
+  <Project Name = "wrf_coupling" Path = "D:\XN5_AF\expertn50\dev\wrf_coupling.project" Active="No"/>
+  <Project Name = "wrfchem_coupling" Path = "D:\XN5_AF\expertn50\dev\wrfchem_coupling.project" Active="No"/>
+  <Project Name = "xnoah" Path = "D:\XN5_AF\expertn50\dev\xnoah.project" Active="No"/>
+  <Project Name = "xpn_output" Path = "D:\XN5_AF\expertn50\dev\xpn_output.project" Active="No"/>
+  <Project Name = "xylemwaterflow" Path = "D:\XN5_AF\expertn50\dev\xylemwaterflow.project" Active="No"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="agroforestry" ConfigName="Release"/>
+      <Project Name="balance" ConfigName="Release"/>
+      <Project Name="century_n" ConfigName="Release"/>
+      <Project Name="ceres" ConfigName="Release"/>
+      <Project Name="daisy" ConfigName="Release"/>
+      <Project Name="daisy_miner" ConfigName="Release"/>
+      <Project Name="depos" ConfigName="Release"/>
+      <Project Name="evapotranspiration_pm" ConfigName="Release"/>
+      <Project Name="expertn_bin" ConfigName="Release"/>
+      <Project Name="expertn_class" ConfigName="Release"/>
+      <Project Name="expertn_database" ConfigName="Release"/>
+      <Project Name="expertn_modul_base" ConfigName="Release"/>
+      <Project Name="gecros" ConfigName="Release"/>
+      <Project Name="hpm" ConfigName="Release"/>
+      <Project Name="hydraulic_functions" ConfigName="Release"/>
+      <Project Name="hydrus" ConfigName="Release"/>
+      <Project Name="interception" ConfigName="Release"/>
+      <Project Name="leachn" ConfigName="Release"/>
+      <Project Name="mpmas_coupling" ConfigName="Release"/>
+      <Project Name="pedotransfer" ConfigName="Release"/>
+      <Project Name="pollen" ConfigName="Release"/>
+      <Project Name="read_wrf_weather" ConfigName="Release"/>
+      <Project Name="schaaf" ConfigName="Release"/>
+      <Project Name="schaaf_manag" ConfigName="Release"/>
+      <Project Name="spass" ConfigName="Release"/>
+      <Project Name="treemix" ConfigName="Release"/>
+      <Project Name="wrf_coupling" ConfigName="Release"/>
+      <Project Name="wrfchem_coupling" ConfigName="Release"/>
+      <Project Name="xnoah" ConfigName="Release"/>
+      <Project Name="xpn_output" ConfigName="Release"/>
+      <Project Name="xylemwaterflow" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

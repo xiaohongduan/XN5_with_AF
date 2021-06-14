@@ -1,0 +1,573 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0118)http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm -->
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>Differences in Parameter Sets for the Century Models</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- The following comment specifies the web address for this page. --><!-- This=http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm -->
+<META content="index, nofollow" name=robots>
+<META content="Rebecca McKeown" name=author>
+<META 
+content="Copyright © 2005, 2008, 2010 Colorado State University. All rights reserved." 
+name=copyright>
+<META content=document name=resource-type>
+<META scheme=Month-Day-Year content=08/18/2010 name=last-modified>
+<META 
+content="List of the differences in parameter sets for the various versions of the Century models. This document is a part of the IRC project at the Natural Resource Ecology Laboratory, Colorado State University." 
+name=Description>
+<META lang=en-us content=IRC name=Keywords xml:lang="en-us">
+<META http-equiv=Reply-to content=irc@nrel.colostate.edu><LINK 
+href="Differences in Parameter Sets for the Century Models-Dateien/Whitepapers.css" 
+type=text/css rel=stylesheet><LINK 
+href="Differences in Parameter Sets for the Century Models-Dateien/Whitepapers.css" 
+type=text/css rel=stylesheet>
+<META content="MSHTML 6.00.2900.3698" name=GENERATOR></HEAD>
+<BODY>
+<DIV class=chapter title=Header>
+<TABLE cellSpacing=2 cellPadding=2>
+  <TBODY>
+  <TR>
+    <TD align=left><B>Organization: </B></TD>
+    <TD><B>Natural Resource Ecology Laboratory </B></TD></TR>
+  <TR>
+    <TD align=left><B>Project: </B></TD>
+    <TD><B>IRC </B></TD></TR>
+  <TR>
+    <TD align=left><B>Category: </B></TD>
+    <TD><B>User Reference </B></TD></TR>
+  <TR>
+    <TD align=left><B>Title: </B></TD>
+    <TD><B>Differences in Parameter Sets for the Century Models 
+  </B></TD></TR></TBODY></TABLE></DIV>
+<DIV class=contents id=contents title=Contents>
+<H2><A name=contents></A>Contents</H2>
+<TABLE style="PADDING-LEFT: 2em" cellSpacing=2 cellPadding=2>
+  <TBODY>
+  <TR>
+    <TD><A 
+      href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm#introduction">Introduction</A> 
+    </TD></TR>
+  <TR>
+    <TD><A 
+      href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm#param_diff_1">Parameter 
+      Differences between Century 4 and Century 5</A> </TD></TR>
+  <TR>
+    <TD><A 
+      href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm#param_diff_2">Parameter 
+      Differences between Century 4 and 5, and DayCent5</A> </TD></TR>
+  <TR>
+    <TD><A 
+      href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm#monthly_4_and_5_vs_45">Parameter 
+      Differences between Century 4 and 5, and Century 4.5 </A></TD></TR>
+  <TR>
+    <TD><A 
+      href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm#param_diff_3">Parameter 
+      Differences between DayCent4.5 and DayCent5</A> </TD></TR>
+  <TR>
+    <TD><A 
+      href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm#add_info">Additional 
+      Information</A> </TD></TR>
+  <TR>
+    <TD><A 
+      href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm#about">About 
+      This Document</A> </TD></TR></TBODY></TABLE></DIV>
+<DIV class=chapter id=introduction title=Introduction>
+<H2><A name=introduction></A>Introduction </H2>
+<P>This document lists the differences in site and model parameters between the 
+various versions of the Century models. For descriptions of Century5 and 
+DayCent5 parameters, see the Century5 Users Guide[1]. </P></DIV>
+<DIV class=chapter id=param_diff_1>
+<H2><A name=param_diff_1></A>Parameter Differences between Century 4 and Century 
+5 </H2>
+<H3>Site.100</H3>
+<UL>
+  <LI>The new Century5 site parameter file format is NetCDF rather than text 
+  format. However, the text 100 file format can also be used. 
+  <LI>New site parameters in Century5: layer indexes (1-10) for SAND, SILT, 
+  CLAY, and BULKD parameters. 
+  <LI>New site parameters for runoff equation coefficients are in the Soil 
+  section: 
+  <BLOCKQUOTE style="MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0.5em">RUNOFF(1) : 2nd 
+    order coefficient <BR>RUNOFF(2) : 1st order coefficient<BR>RUNOFF(3) : 
+    constant </BLOCKQUOTE>For more information, see the section <B>Water 
+  Budget</B> in the <A 
+  href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/Century5/Reference/" 
+  target=_blank>Water Budget, Leaching and Soil Temperature</A> page in the 
+  Century5 manual. 
+  <LI>Unused site parameters in Century5: W1LIG, W2LIG, W3LIG. 
+  <LI>New parameters for the lower soil pools. See the section <B>Lower Layer 
+  Pools</B> in the <A 
+  href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/Century5/Reference/" 
+  target=_blank>Erosion and Deposition</A> page in the Century5 manual. 
+  <LI>New parameters for erosion. See the section <B>Affects upon Water Content 
+  and Soil Organic Matter</B> in the <A 
+  href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/Century5/Reference/" 
+  target=_blank>Erosion and Deposition</A> page in the Century5 manual. 
+</LI></UL></DIV>
+<DIV class=chapter id=param_diff_2>
+<H2><A name=param_diff_2></A>Parameter Differences between Century 4 and 5, and 
+DayCent5</H2>
+<H3>Site.100</H3>
+<UL>
+  <LI>Add layer index (1-10) to SAND, SILT, CLAY, and BULKD parameters (Century5 
+  and DayCent5). 
+  <LI>Add DayCent5 Hydrology and Biophysical parameters: 
+  <UL>
+    <LI>KSAT(1 through 10) - Saturated Hydraulic Conductivity, each soil layer 
+    <LI>SWCLIM(1 through 10) - Minimum volumetric soil water content (fraction 
+    below wilting point) 
+    <LI>RAINHR - Duration of rain event (hours) 
+    <LI>FSUBLM - Multiplier on sublimation amount (0-1) 
+    <LI>ALBSNW - Short Wave Albedo of Snow (0-1) 
+    <LI>ALBVEG - Short Wave Albedo of Vegetation (0-1) </LI></UL>
+  <LI>Add DayCent5 soil temperature parameters 
+  <UL>
+    <LI>AVTD - Average Thermal Diffusivity of unfrozen soil (0.001-0.005) 
+    <LI>AVTDFZ - Average Thermal Diffusivity of frozen soil (0.001-0.005) 
+    <LI>STDX - Depth interval for soil temperature calculations (1-5 cm) 
+    <LI>STDMP - Time step correction factor for soil temperature model 
+    (0.001-0.009) 
+    <LI>TBOTMN - Minimum soil temperature at bottom of soil profile for year 
+    (deg C) 
+    <LI>TBOTMX - Maximum soil temperature at bottom of soil profile for year 
+    (deg C) 
+    <LI>TIMLAG - Time lag from beginning of year to coldest time period (days) 
+    <LI>STEMP(1 through 10) - Initial soil temperature, each soil layer 
+  </LI></UL></LI></UL>
+<H3>Crop.100</H3>
+<UL>
+  <LI>The following root parameters are for DayCent5 only: FRTCINDX, FRTC(4) 
+  <LI>Add maintenance respiration parameters KMRSP(1), KMRSPMX(1 through 2) 
+  <LI>Add nitrate preference parameter NO3PREF </LI></UL>
+<H3>Tree.100</H3>
+<UL>
+  <LI>Add root allocation parameters FRFRAC(1 through 2) 
+  <LI>Add Maintenance respiration parameters KMRSP(2), KMRSPMX(1 through 5) 
+  <LI>Add nitrate preference parameter NO3PREF </LI></UL>
+<H3>Fert.100</H3>
+<UL>
+  <LI>Add nitrate fraction NO3FRAC </LI></UL>
+<H3>Fire.100</H3>
+<UL>
+  <LI>FFCRET – Obsolete parameter removed from VEMAP files but not DayCent5 (not 
+  used). </LI></UL>
+<H3>Fix.100</H3>
+<UL>
+  <LI>Added new temperature effect calculation so definitions of TEFF (1 through 
+  3) have changed and TEFF(4) was added. 
+  <LI>SEED is an obsolete parameter but has not been removed from DayCent5 (not 
+  used) or VEMAP. </LI></UL></DIV>
+<DIV class=chapter id=monthly_4_and_5_vs_45>
+<H2><A id=monthly_4_and_5_vs_45 name=monthly_4_and_5_vs_45></A>Parameter 
+Differences between Century 4 and 5, and Century 4.5 </H2>
+<H3>CROP.100</H3>
+<P>The CROP.100 file used by Century version 4.5 has 15 additional parameters: 
+</P>
+<P></P><PRE>     FRTCINDX    - plant growth type
+                     0 - use Great Plains equation to compute root to shoot
+                         ratio (fixed carbon allocation based on rainfall)
+                     1 - perennial plant (i.e., grass, dynamic carbon
+                         allocation)
+                     2 - annual plant (i.e., crop, dynamic carbon allocation)
+     FRTC(4)     - maximum increase in the fraction of C going to the roots
+                   due to water stress, used when FRTCINDX = 2
+     FRTC(5)     - maximum increase in the fraction of C going to the roots
+                   due to nutrient stress, used when FRTCINDX = 2
+     CFRTCN(1)   - maximum fraction of C allocated to roots under maximum
+                   water stress, used when FRTCINDX = 1
+     CFRTCN(2)   - minimum fraction of C allocated to roots with no water
+                   stress, used when FRTCINDX = 1
+     CFRTCW(1)   - maximum fraction of C allocated to roots under maximum
+                   nutrient stress, used when FRTCINDX = 1
+     CFRTCW(2)   - minimum fraction of C allocated to roots with no nutrient
+                   stress, used when FRTCINDX = 1
+     KMRSP(1)    - the fraction of net primary production that goes to the
+                   maintenance respiration storage pool for crops
+     CKMRSPMX(1) - maximum fraction of aboveground live C that goes to
+                   maintenance respiration for crops
+     CKMRSPMX(2) - maximum fraction of belowground live C that goes to
+                   maintenance respiration for crops
+     NO3PREF(1)  - fraction of N update that is NO3 for crops, currently not
+                   being used
+     CLAYPG      - number of soil layers used to determine water and mineral
+                   N, P, and S that are available for grass/crop growth
+     TMPGERM     - germination temperature for the growing degree day
+                   submodel, will cause a FRST event when FRTCINDX = 3 or a
+                   PLTM event when FRTCINDX = 4 (degrees C)
+     DDHARV      - required number of thermal units that need to accumulate to
+                   trigger a SENM/HARV event when simulating a grass/crop
+                   using the growing degree submodel, FRTCINDX = 3 or 4
+     TMPKILL     - temperature at which growth will stop when using the
+                   growing degree day submodel, will cause a SENM and LAST
+                   event when FRTCINDX = 3 or a HARV and LAST event if
+                   FRTCINDX = 4, if the required number of thermal units has
+                   not been accumulated prior to trigger a SENM or a HARV
+                   event (degrees C)
+</PRE>
+<P>For reference, here are the definitions for the other FRTC(*) parameters 
+which are also used in the new dynamic carbon allocation routines: </P><PRE>     FRTC(1) - fraction of C allocated to roots at planting, with no water or
+               nutrient stress, used when FRTCINDX = 2
+     FRTC(2) - fraction of C allocated to roots at time FRTC(3), with no
+               water or nutrient stress, used when FRTCINDX = 2
+     FRTC(3) - time after planting (months with soil temperature greater than
+               RTDTMP) at which the FRTC(2) value is reached, used when
+               FRTCINDX = 2
+</PRE>
+<P>The FRTCINDX, FRTC(*), CFRTCN(*), and CFRTCW(*) parameters are used in the 
+new dynamic carbon allocation routines. FRTCINDX is inserted into the crop 
+parameterization preceding the FRTC(1) parameter. The FRTC(4), FRTC(5), 
+CFRTCN(1), CFRTCN(2), CFRTCW(1), and CFRTCW(2) parameters follow the FRTC(3) 
+parameter. </P>
+<P>When converting from an existing Century 4.0 CROP.100 file format to a 
+Century 4.5 CROP.100 file format the following rules will be used to set default 
+values for these parameters. </P>
+<OL>
+  <LI>If FRTC(1) = 0.0 in the Century 4.0 crop parameterization assume this is a 
+  parameterization that should be set to use the Great Plains equation. Set 
+  FRTCINDX to 0. 
+  <LI>If FRTC(1) != to 0.0 in the Century 4.0 crop parameterization then we 
+  cannot make an assumption about what this parameterization represents. The 
+  user will be prompted to enter a 1 for a perennial plant, or a 2 for an annual 
+  plant to set the FRTCINDX value. </LI></OL>
+<P>In all cases FRTC(1), FRTC(2) and FRTC(3) will retain their original Century 
+4.0 values. FRTC(4) will be set to 0.2, FRTC(5) will be set to 0.1, CFRTCN(1) 
+will be set to 0.4, CFRTCN(2) will be set to 0.25, CFRTCW(1) will be set to the 
+original Century 4.0 FRTC(1) value, and CFRTCW(2) will be set to the original 
+Century 4.0 FRTC(2) value.</P>
+<P>The KMRSP(1), CKMRSPMX(1), and CKMRSPMX(2) parameters are used in the new 
+maintenance respiration routines. These parameters are give the following 
+default values:</P><PRE>     KMRSP(1)    - 0.20000
+     CKMRSPMX(1) - 0.00300
+     CKMRSPMX(2) - 0.00300
+</PRE>
+<P>The NO3PREF(1) parameter is not being used by the model currently but is 
+included in this conversion utility for compatability with anticipated future 
+code changes. The NO3PREF(1) parameter is given a default value of 0.25000. </P>
+<P>The KMRSP(1), CKMRSPMX(1), and CKMRSPMX(2), and NO3PREF(1) parameters follow 
+the CO2IRS(1) parameter. </P>
+<P>The CLAYPG parameter is added to each crop option in the crop.100 file 
+following the NO3PREF(1) parameter. It is given a default value of 4. </P>
+<P>The TMPGERM, DDHARV, and TMPKILL parameters are added to the end of each crop 
+option in the crop.100 file following the CLAYPG parameter. These parameters are 
+given default values of 10.0000, 1500.00, and 7.00000 respectively. These 
+parameters are used by DayCent only but are included in the Century crop.100 
+file to enable file sharing between the two models. </P>
+<P>The definition for the PRDX(1) parameter has been changed and each crop 
+option in the crop.100 file should have the value for PRDX(1) set to a default 
+value of 0.5. New Century 4.5 PRDX(1) definition: </P><PRE>     PRDX(1) - coefficient for calculating potential aboveground monthly
+               production as a function of solar radiation outside the
+               atmosphere
+</PRE>
+<H3>FIRE.100</H3>
+<P>The FIRE.100 file used by Century version 4.5 has 11 additional parameters 
+and 3 parameters that have had their "names" changed: </P><PRE>     FDFREM(3) - fraction of dead fine branches removed by a fire event
+     FDFREM(4) - fraction of dead large wood removed by a fire event
+     FRET(1,1) - fraction of C in the burned aboveground material (live
+                 shoots, standing dead, and litter) returned to the system
+                 following a fire event as charcoal in the passive SOM pool
+     FRET(1,2) - fraction of N in the burned aboveground material (live
+                 shoots, standing dead, and litter) returned to the system
+                 following a fire event (NOTE: replaces fret(1))
+     FRET(1,3) - fraction of P in the burned aboveground material live
+                 shoots, standing dead, and litter) returned to the system
+                 following a fire event (NOTE: replaces fret(2))
+     FRET(1,4) - fraction of S in the burned aboveground material (live
+                 shoots, standing dead, and litter) returned to the system
+                 following a fire event (NOTE: replaces fret(3))
+     FRET(2,1) - fraction of C in the burned dead fine branch material
+                 returned to the system following a fire event as charcoal in
+                 the passive SOM pool
+     FRET(2,2) - fraction of N in the burned dead fine branch material
+                 returned to the system following a fire event 
+     FRET(2,3) - fraction of P in the burned dead fine branch material
+                 returned to the system following a fire event
+     FRET(2,4) - fraction of S in the burned dead fine branch material
+                 returned to the system following a fire event
+     FRET(3,1) - fraction of C in the burned dead large wood material returned
+                 to the system following a fire event as charcoal in the
+                 passive SOM pool
+     FRET(3,2) - fraction of N in the burned dead large wood material returned
+                 to the system following a fire event
+     FRET(3,3) - fraction of P in the burned dead large wood material returned
+                 to the system following a fire event
+     FRET(3,4) - fraction of S in the burned dead large wood material returned
+                 to the system following a fire event
+</PRE>
+<P>The FDFREM(3), FDFREM(4), and FRET(1,1) parameters follow the FDFREM(2) 
+parameter. The FRET(1,2) parameter replaces the FRET(1) parameter. The FRET(1,3) 
+parameter replaces the FRET(2) parameter. The FRET(1,4) parameter replaces the 
+FRET(3) parameter. The remainder of the new FRET(*,*) parameters follow the 
+FRET(1,4) parameter. The FRTSH and FNUE(*) parameters follow the FRET(3,4) 
+parameter. </P>
+<P>The following default values are used for these parameters: </P><PRE>     FDFREM(3) - 0.30000
+     FDFREM(4) - 0.20000
+     FRET(1,1) - 0.10000
+     FRET(1,2) - retains value of FRET(1) from original file
+     FRET(1,3) - retains value of FRET(2) from original file
+     FRET(1,4) - retains value of FRET(3) from original file
+     FRET(2,1) - 0.00300
+     FRET(2,2) - 0.20000
+     FRET(2,3) - 0.00000
+     FRET(2,4) - 0.00000
+     FRET(3,1) - 0.00300
+     FRET(3,2) - 0.20000
+     FRET(3,3) - 0.00000
+     FRET(3,4) - 0.00000
+</PRE>
+<H3>FIX.100</H3>
+<P>The FIX.100 file used by Century 4.5 has 2 additional parameters not used in 
+Century4 or 5: </P><PRE>     TEFF(4) - slope of line at inflection point
+     PSECOC2 - controls the back flow from occluded to secondary P
+</PRE>
+<P>DayCent5 uses TEFF(1-4) in the same way as Century/DayCent 4.5. </P>
+<P>The PSECOC parameter has been renamed PSECOC1 and retains its original 
+definition: </P><PRE>     PSECOC1 - controls the flow from secondary to occluded P
+</PRE>
+<P>The PSECOC2 parameter follows the PSECOC1 parameter. </P>
+<P>When running the conversion utility the PSECOC1 parameter retains the value 
+for PSECOC and the following default value is used for PSECOC2: </P><PRE>     PSECOC2 - 0.00000
+</PRE>
+<P>Century 4.5 uses 4 coefficients in the equation for computing the temperature 
+effect on decomposition. The TEFF(4) parameter is added to give us the 
+additional coefficient required to paramerterize the temperature equation. The 
+definitions for the TEFF(*) parameters are as follows: </P><PRE>     TEFF(1) - "x" location of inflection point
+     TEFF(2) - "y" location of inflection point
+     TEFF(3) - step size (distance from the maximum point to the minimum
+               point)
+     TEFF(4) - slope of line at inflection point
+</PRE>
+<P>The TEFF(4) parameter is inserted in the FIX.100 file following the TEFF(3) 
+parameter. </P>
+<P>When running the conversion utility the following default values are used for 
+the TEFF(*) parameters: </P><PRE>     TEFF(1) - 15.4000
+     TEFF(2) - 11.7500
+     TEFF(3) - 29.7000
+     TEFF(4) - 0.03100
+</PRE>
+<P>The PET calculation is now taking into account solar radition outside of the 
+atmosphere and an approximated cloud cover based on temperature range. As a 
+result of this change the FWLOSS[4] parameter in the FIX.100 file needs to be 
+rescaled. A default value of 0.95 is now recommended for this parameter. </P>
+<P>Due to the changes in the snow melting equation the following default values 
+will be entered for the TMELT(*) parameters: </P><PRE>     TMELT(1) - 0.00000
+     TMELT(2) - 0.00200
+</PRE>
+<P>TMELT(1) retains its original definition. TMELT(2) has been redefined: </P><PRE>     TMELT(2) - coefficient used for calculating snow melt as a function of
+                solar radiation outside the atmosphere
+</PRE>
+<P>The VLOSSG parameter is now dynamic and will be computed as a function of 
+soil texture based on clay content. The VLOSSG parameter value read from the 
+FIX.100 file is used as a multiplier for tuning this equation. The conversion 
+utility will set the VLOSSG parameter value in a FIX.100 file to 1.0 so there 
+will be no multiplicative effect. </P>
+<H3>TREE.100</H3>
+<P>The TREE.100 file used by Century version 4.5 has 15 additional parameters: 
+</P><PRE>     TFRTCN(1)   - maximum fraction of C allocated to fine roots under maximum
+                   water stress
+     TFRTCN(2)   - minimum fraction of C allocated to fine roots with no water
+                   stress
+     TFRTCW(1)   - maximum fraction of C allocated to fine roots under maximum
+                   nutrient stress
+     TFRTCW(2)   - minimum fraction of C allocated to fine roots with no
+                   nutrient stress
+     MAXNP       - maximum N/P ratio for leaves, used only when nelem &gt;= 2
+     KMRSP(2)    - the fraction of net primary production that goes to the
+                   maintenance respiration storage pool for trees
+     FKMRSPMX(1) - maximum fraction of live leaf C that goes to maintenance
+                   respiration for trees
+     FKMRSPMX(2) - maximum fraction of live fine root C that goes to
+                   maintenance respiration for trees
+     FKMRSPMX(3) - maximum fraction of live fine branch C that goes to
+                   maintenance respiration for trees
+     FKMRSPMX(4) - maximum fraction of live large wood C that goes to
+                   maintenance respiration for trees
+     FKMRSPMX(5) - maximum fraction of live coarse root C that goes to
+                   maintenance respiration for trees
+     NO3PREF(2)  - fraction of N update that is NO3 for trees, currently not
+                   being used
+     TLAYPG      - number of soil layers used to determine water and mineral
+                   N, P, and S that are available for tree growth
+     TMPLFF      - temperature at which leaf drop will occur in a deciduous
+                   tree type, degrees C
+     TMPLFS      - temperature at which leaf out will occur in a deciduous
+                   tree type, degrees C
+</PRE>
+<P>The TFRTCN(*) and TFRTCW(*) parameters are used in the new dynamic carbon 
+allocation routines. TFRTCN(1) is inserted into the tree parameterization 
+following the FCFRAC(5,2) parameter followed by TFRTCN(2), TFRTCW(1), and 
+TFRTCW(2). The TFRTCW(2) parameter and precedes the LEAFDR(1) parameter. </P>
+<P>When running the conversion utility the FRFRAC(*) parameters are given the 
+following default values: </P><PRE>     TFRTCN(1) - 0.40000
+     TFRTCN(2) - 0.25000
+     TFRTCW(1) - 0.36000
+     TFRTCW(2) - 0.30000
+</PRE>
+<P>The MAXNP, KMRSP(2), FKMRSPMX(1), FKMRSPMX(2), FKMRSPMX(3), FKMRSPMX(4), and 
+FKMRSPMX(5) parameters are used in the new maintenance respiration routines. 
+These parameters are give the following default values: </P><PRE>     MAXNP       - 13.5000
+     KMRSP(2)    - 0.30000
+     FKMRSPMX(1) - 0.00400
+     FKMRSPMX(2) - 0.00400
+     FKMRSPMX(3) - 0.00400
+     FKMRSPMX(4) - 0.00400
+     FKMRSPMX(5) - 0.00400
+</PRE>
+<P>The NO3PREF(2) parameter is not being used by the model currently but is 
+included in this conversion utility for compatability with anticipated future 
+code changes. The NO3PREF(2) parameter is given a default value of 0.50000. </P>
+<P>The MAXNP, KMRSP(2), FKMRSPMX(1), FKMRSPMX(2), FKMRSPMX(3), FKMRSPMX(4), and 
+FKMRSPMX(5) parameters follow the SITPOT parameter. </P>
+<P>The SITPOT parameter is now dynamic and will be computed as a function of 
+average annual precipitation. The SITPOT parameter value read from the TREE.100 
+file is used as a multiplier for tuning this equation. This conversion utility 
+will set all of the SITPOT parameter values in a TREE.100 file to 1.0 so there 
+will be no multiplicative effect. </P>
+<P>The definition for the PRDX(2) parameter has been changed and each tree 
+option in the tree.100 file should have the value for PRDX(2) set to a default 
+value of 0.5. New Century 4.5 PRDX(2) definition: </P><PRE>     PRDX(2) - coefficient for calculating potential monthly forest
+               production as a function of solar radiation outside the
+               atmosphere
+</PRE>
+<P>The PRDX(3) parameter is no longer being used and has been removed from the 
+tree.100 file. </P>
+<P>The equation for computing tree basal area has been changed therefore BASFCT 
+is given a a default value of 1.0. </P>
+<P>The TLAYPG parameter is added to the end of each tree option in the tree.100 
+file. It is given a default value of 6. </P>
+<P>The TMPLFF and TMPLFS temperature values are added to the end of each tree 
+option in the tree.100 file. They are given default values of 7.0 and 10.0 
+respecitively. </P>
+<H3><I>site</I>.100</H3>
+<P>There have been three parameters added to this file. </P><PRE>     ROCK   - fraction of rock in soil (0.0 - 1.0)
+     PRECRO - the amount of monthly rainfall required in order for runoff to
+              occur (cm) (used by monthly Century only)
+     FRACRO - the fraction of the monthly rainfall, over PRECRO, which is lost
+              via runoff (0.0 - 1.0) (used by monthly Century only)
+</PRE>
+<P>The ROCK parameter is added following the CLAY parameter and is used to 
+modify AFIEL and AWILT values if SWFLAG is not equal to 0. Set this parameter 
+value to 0.0 to run a simulation with no rock effect on field capacity and 
+wilting point values. </P>
+<P>The PRECRO and FRACRO paramters are added following the STORMF parameter and 
+are used in place of hard coded values for computing the runoff amount in 
+monthly Century. </P>
+<P>The following default values are assigned to these parameters by the 
+conversion utility: </P><PRE>     ROCK   - 0.00000 
+     PRECRO - 8.00000
+     FRACRO - 0.15000
+</PRE>
+<P>The equation for computing the non-symbiotic soil N fixation has been 
+changed. This change requires a modification of the EPNFS(*) parameter values. 
+The following are the default values used for the EPNFS(*) parameters: </P><PRE>     EPNFS(1) - 30.0000
+     EPNFS(2) - 0.01000
+</PRE>
+<P>The WD?LIG parameters are obsolete and need to be removed from the <SITE>.100 
+file if necessary. </P>
+<H3>Management Schedule File Changes</H3>
+<P>We have added the option to do a shift in soil pH if desired. The pH shift 
+change requires adding additional lines to the schedule file. The pH shift is 
+implemented in much the same manner as the CO2 effect. If the value for PHSYS as 
+read from the schedule file is greater than 0 then the next line in the schedule 
+file contains the start year and end year for the pH effect and then another 
+additional line in the schedule file gives the ending pH amount. The pH in the 
+soil will be ramped from the start value to the end value over the period of 
+years indicated. If the pH shift is not being modeled a value of -1 should be 
+read in for the PHSYS variable. </P>
+<P>Example Century 4.5 schedule file header excerpt with no pH shift: </P><PRE>-1             CO2 Systems
+-1             pH shift
+1             Initial system
+</PRE>
+<P>Example Century 4.5 schedule file header excerpt with pH shift: </P><PRE>-1             CO2 Systems
+1             pH shift
+1990  1991  
+8.00   
+1             Initial system
+</PRE>
+<P>The conversion utility will modify an existing Century 4.0 schedule file to 
+add the header line for no pH shift. </P>
+<P>We have also added an option to simulate soil surface temperature warming 
+experiments where the soil surface temperature is warmed without an increase in 
+the minimum and maximum air temperature values if desired. The soil surface 
+warming option is implemented in the same manner the CO2 effect and the pH shift 
+effect options. If the value for stsys as read from the schedule file header is 
+greater than 0 then the next line in the schedule file header contains the start 
+year for the soil surface warming and the following line contains the amount to 
+warm the soil surface temperature in degrees C. </P>
+<P>Example Century 4.5 schedule file header excerpt with no temperature warming 
+experiment: </P><PRE>-1             CO2 Systems
+-1             pH shift
+-1             Soil warming
+</PRE>
+<P>Example Century 4.5 schedule file header excerpt with temperature warming 
+experiment: </P><PRE>-1             CO2 Systems
+-1             pH shift
+1              Soil warming
+1990
+0.5
+</PRE>
+<P>For block headers in Century 4.5, the Output Interval is an integer multiple 
+of 1 month. In version 4 and 5, the interval is a floating-point multiple of 
+1/12, or 0.0833, where 1/12 = monthly, and 1.0 = annual output. Century 4.5 
+requires the interval to an integer, or it will fail with a Fortran format 
+error. </P>
+<P>Century 4.5 schedule files should not contain tabs to separate information in 
+the file, otherwise it may fail since the tab characters may end up in the event 
+option strings (e.g., 1 1 CROP &lt;new line&gt; CPR; internally the string "CPR" 
+may look like "CPR&lt;tab&gt;&lt;tab&gt;"), causing the *.100 database search to 
+fail. </P></DIV>
+<DIV class=chapter id=param_diff_3>
+<H2><A name=param_diff_3></A>Parameter Differences between DayCent4.5 and 
+DayCent5</H2>
+<H3>Crop.100</H3>
+<UL>
+  <LI>DayCent4.5 added FRTC(5), CFRTCN(1-2), CFRTCW(1-2), CLAYPG, TMPGERM, 
+  DDHARV, TMPKILL 
+  <LI>NO3PREF is indexed so trees have an index as well in 4.5 and not in 5. 
+  NO3PREF(1) = crop/grass, and NO3PREF(2) = trees. </LI></UL>
+<H3>Tree.100</H3>
+<UL>
+  <LI>DayCent4.5 has PRDX(2), DayCent5 has PRDX(3 &amp; 4) 
+  <LI>DayCent5 includes FRFRAC(1 through 2) 
+  <LI>DayCent4.5 includes FKMRSPMX(1 through 5) while DayCent5 includes 
+  KMRSPMX(1 through 5) 
+  <LI>DayCent4.5 includes TFRTCN(1 through 2) and TFRTCW(1 through 2) which 
+  control the C allocated to roots under nutrient and water stress. 
+  <LI>DayCent4.5 includes MAXNP 
+  <LI>DayCent4.5 includes NO3PREF(2) 
+  <LI>DayCent4.5 includes TLAYPG, TMPLFF, TMPLFS </LI></UL>
+<H3>Fire.100</H3>
+<UL>
+  <LI>FDFREM has dimension 2 in DayCent5 and 4 in DayCent4.5 
+  <LI>FRET has dimension 3 in DayCent5 and (3,4) in DayCent4.5 </LI></UL></DIV>
+<DIV class=chapter id=add_info title="Additional Information">
+<H2><A name=add_info></A>Additional Information </H2>
+<P><A 
+href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/Century5/Reference/index.html" 
+target=_blank>Century5 and DayCent5 User's Guide</A> </P></DIV>
+<DIV class=chapter id=doc_info title="About This Document">
+<H2><A name=about></A>About This Document</H2>
+<DIV class=section id=revisions title="Revision History">
+<H3><A name=revisions></A>Revision History </H3>
+<DL>
+  <DT>2004/12/22 
+  <DD>Author(s): Rebecca McKeown <BR>Draft version released. 
+  <DT>2005/01/13 
+  <DD>Author(s): Thomas E. Hilinski<BR>First version released. 
+  <DT>2008/03/31 
+  <DD>Editor: Thomas E. Hilinski<BR>Added section on differences between 
+  versions 4 and 5, and 4.5. This information was provided by Cindy Keough. 
+  <DT>2010/08/18 
+  <DD>Editor: Thomas E. Hilinski<BR>Updated section on differences between 
+  Century 4 and 5, and DayCent5. <BR>Added section "Additional Information". 
+  </DD></DL></DIV>
+<DIV class=section id=doc_source title="Document Source">
+<H3><A name=doc_source></A>Document Source</H3>
+<P>This document: <A 
+href="http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm">http://www.nrel.colostate.edu/projects/irc/public/Documents/Software/WhitePapers/CenturyModelsParameterDifferences.htm</A></P>
+<P>Project web page: <A 
+href="http://www.nrel.colostate.edu/projects/irc/">http://www.nrel.colostate.edu/projects/irc/</A></P>
+<P>E-mail contact: <A 
+href="mailto:irc@nrel.colostate.edu">irc@nrel.colostate.edu</A> </P></DIV>
+<DIV class=section id=copyright title="Copyright and Distribution Information">
+<H3><A name=copyright></A>Copyright and Distribution Information </H3>
+<P>Copyright © 2005, 2008, 2010, Colorado State University. All rights reserved. 
+</P></DIV></DIV>
+<HR>
+</BODY></HTML>

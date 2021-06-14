@@ -1,0 +1,35 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+import os
+
+
+APPNAME='expertn_bin'
+SOURCE_FILES=['main.c']
+
+#def options(opt):
+#    if os.name == 'nt':
+#       opt.add_option('--GUI', action='store_true', default=False,help='Build Expert-N for use on graphical user interface (Windows only)')
+
+def configure(conf):
+    if os.name == 'nt':
+        if conf.options.GUI:
+            conf.env.append_value('CFLAGS','-mwindows')
+            conf.env.append_value('CXXFLAGS','-mwindows')
+            conf.env.append_value("LINKFLAGS", '-mwindows')
+        conf.start_msg('Flag GUI')
+        conf.end_msg(str(conf.options.GUI))
+
+
+def build(bld):
+    exe = bld(
+        features        = 'c cprogram',
+        source          = SOURCE_FILES,
+        uselib          = bld.env.USELIB_STD,
+        use             = bld.env.USE_CLASS,
+        ccflags         = bld.env.WINDOWS_FLAG,
+        target          = APPNAME,
+        includes        = '../include ../../libexpertn_modul_base/include ../../libexpertn_class/include',
+        install_path    = bld.env.INSTALL_BIN
+        )
+

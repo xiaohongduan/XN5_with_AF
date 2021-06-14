@@ -1,0 +1,1188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="generator" content="http://www.nongnu.org/elyxer/"/>
+<meta name="create-date" content="2013-12-05"/>
+<link rel="stylesheet" href="http://elyxer.nongnu.org/lyx.css" type="text/css" media="all"/>
+<title>Expert-N 5.0 Manual</title>
+</head>
+<body>
+<div id="globalWrapper">
+<h1 class="title">
+Expert-N 5.0 Manual
+</h1>
+<h2 class="author">
+Christian Klein
+</h2>
+<h2 class="Date">
+04.12.2013
+</h2>
+<div class="fulltoc">
+<div class="tocheader">
+Table of Contents
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Chapter-1">Chapter 1: Overview</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-1.1">Section 1.1: Introduction</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-1.2">Section 1.2: Expert-N 5.0 Modeling System Program Components</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-1.2.1">Subsection 1.2.1: Expert-N 5.0 standalone version:</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-1.2.2">Subsection 1.2.2: Expert-N Tools:</a>
+</div>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Chapter-2">Chapter 2: Software Installation</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-2.1">Section 2.1: Introduction</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-2.2">Section 2.2: Required Compilers, Scripting Languages and Libraries</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-2.2.1">Subsection 2.2.1: Architecture </a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-2.2.2">Subsection 2.2.2: Software Requirements</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-2.3">Section 2.3: Building Expert-N</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-2.3.1">Subsection 2.3.1: Building on Ubuntu 12.04 with OpenMP or MPI</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-2.3.2">Subsection 2.3.2: Installing additional Software (optional)</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-2.3.3">Subsection 2.3.3: Compiling an example module</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-2.3.4">Subsection 2.3.4: Using an IDE (Integrating Development Environment)</a>
+</div>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Chapter-3">Chapter 3: Model Configuration</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-3.1">Section 3.1: Quick Console Tutorial</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-3.1.1">Subsection 3.1.1: Creating a test project</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-3.1.2">Subsection 3.1.2: Run the test project</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-3.1.3">Subsection 3.1.3: Add a plugin (libhydrus.so), activate the hydrus flow module and set the boundary condition</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-3.1.4">Subsection 3.1.4: Copy an Expert-N column (with all dependences and properties) and change the saturated conductivity of the soil in this Expertn-N column</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-3.2">Section 3.2: Quick GUI Tutorial</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Chapter-4">Chapter 4: Driver and Plugin Structure</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-4.1">Section 4.1: Driver Implementation</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-4.2">Section 4.2: Plugin Structure and Example</a>
+</div>
+</div>
+</div>
+
+</div>
+<h1 class="Chapter">
+<a class="toc" name="toc-Chapter-1">1</a> Overview
+</h1>
+<h2 class="Section">
+<a class="toc" name="toc-Section-1.1">1.1</a> Introduction
+</h2>
+<div class="Unindented">
+Expert-N 5.0 is a simulation framework, which provides an interface to manage and combine dynamic modules to a complete model. In comparison to former versions of Expert-N <span class="bibcites">[<a class="bibliocite" name="cite-10" href="#biblio-10"><span class="bib-index">10</span></a>]</span> number, order and configuration of modules and sub-modules can be defined almost free. This is obtained by configuration files and a plug-in like structure, which loads module packages during run time. The flexibility makes Expert-N 5.0 to a workbench that is ready for many scientific questions and the related modules, which are needed in future can be easily included into the framework. However, it makes sense to choose a proven combination of modules and sub-modules for the start configuration to reduce the complexity of the system and limit the debugging time. The combination of modules for water, heat, nitrogen and carbon dynamics, which was chosen here, is an example for a soil-plant ecosystem simulator, which can be later completed with other modules like pollen forecast, animal models, decision support systems, etc. The technical details and the configuration process is explained in Chapter <a class="Reference" href="#chap:Model-Configuration">3↓</a>.<br/>
+Another new property is that the Expert-N 5.0 core is designed as library itself. This makes it possible to couple Expert-N to any application or model. For example, it is possible to realize an Expert-N Version which works as a stand alone version like former versions of Expert-N, or to connect Expert-N to a weather and forecast model including two-way interaction. At the present time two drivers exist: The first is a stand alone version, which use climate data as input files, and the second is a version which is coupled to the Weather Research and Forecasting (WRF) model <span class="bibcites">[<a class="bibliocite" name="cite-9" href="#biblio-9"><span class="bib-index">9</span></a>]</span>. Details to driver implementations are explained in Section <a class="Reference" href="#sec:Driver-Implementation">4.1↓</a><br/>
+Communication between driver and modules can be done in two ways: First, there is an implemented base structure, a predefined structure with plant, soil, heat and water variables, which satisfies the communication for the most plant and soil models. The second way of communication works with an associative array, which gives the modules the possibility to share structures between models, between driver and models or even between parallel instances of Expert-N. More details are explained in Section <a class="Reference" href="#sec:Plugin-Structure-and">4.2↓</a>.
+</div>
+<div class="Indented">
+The supported algorithms of the modules are taken from such published models like LEACHM <span class="bibcites">[<a class="bibliocite" name="cite-4" href="#biblio-4"><span class="bib-index">4</span></a>]</span>, HYDRUS <span class="bibcites">[<a class="bibliocite" name="cite-8" href="#biblio-8"><span class="bib-index">8</span></a>]</span>, N-SIM <span class="bibcites">[<a class="bibliocite" name="cite-7" href="#biblio-7"><span class="bib-index">7</span></a>]</span>,Modeling Plant and Soil <span class="bibcites">[<a class="bibliocite" name="cite-3" href="#biblio-3"><span class="bib-index">3</span></a>]</span>, NCSOIL <span class="bibcites">[<a class="bibliocite" name="cite-5" href="#biblio-5"><span class="bib-index">5</span></a>]</span>, Hurley Pasture Model <span class="bibcites">[<a class="bibliocite" name="cite-11" href="#biblio-11"><span class="bib-index">11</span></a>]</span>, NOAH <span class="bibcites">[<a class="bibliocite" name="cite-1" href="#biblio-1"><span class="bib-index">1</span></a>]</span>, CENTURY <span class="bibcites">[<a class="bibliocite" name="cite-6" href="#biblio-6"><span class="bib-index">6</span></a>]</span> and DAISY <span class="bibcites">[<a class="bibliocite" name="cite-2" href="#biblio-2"><span class="bib-index">2</span></a>]</span>.<br/>
+Simulations are preformed one-dimensionally in the vertical direction and, depending on the spatial variation of main parameters, considered as representative for the plot or the field scale. It is possible to arrange several Expert-N plant-soil columns in a gridded structure. The grid can be configured to match the Arakawa-C grid of WRF (Weather and Research Model) <span class="bibcites">[<a class="bibliocite" name="cite-9" href="#biblio-9"><span class="bib-index">9</span></a>]</span>. Additionally it is possible to configure several numbers of Expert-N plant-soil columns on every grid cell. Owing to its plugin-like structure, there are no fixed modules in Expert-N 5.0. Every module can be displaced or removed. However, there are a few modules which take a leading part in memory management, input and output of data and are recommended to be used in every session.
+</div>
+<h2 class="Section">
+<a class="toc" name="toc-Section-1.2">1.2</a> Expert-N 5.0 Modeling System Program Components
+</h2>
+<div class="Unindented">
+To use the tools of Expert-N or the Expert-N Standalone version it is is necessary to setup the Expert-N Environment (--&gt; Section <a class="Reference" href="#sub:Checking-your-installation">6↓</a>).
+</div>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-1.2.1">1.2.1</a> Expert-N 5.0 standalone version:
+</h3>
+<ul>
+<li>
+<b>expertn_bin</b> or <b>expertn_bin.exe</b>: located in the <b>expertn50/built/bin path</b> and is the heart of the Expert-N Modeling System
+</li>
+
+</ul>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-1.2.2">1.2.2</a> Expert-N Tools:
+</h3>
+<ul>
+<li>
+expertn_gui.py
+</li>
+<li>
+xnoplot.py
+</li>
+<li>
+xpnhelper.py
+</li>
+<li>
+run_n_times.py
+</li>
+<li>
+xpn_cfg_manager.py
+</li>
+<li>
+dump_wrfnc.py
+</li>
+<li>
+transpose_cdb_file.py
+</li>
+<li>
+xpnstatistic.py
+</li>
+<li>
+create_input_for_rosetta_from_xpn.py
+</li>
+<li>
+convert_rosetta_to_xpn.py
+</li>
+<li>
+find_grid_koord.py
+</li>
+<li>
+calc_statistic.py
+</li>
+<li>
+create_project_from_netcdf.py
+</li>
+
+</ul>
+<h1 class="Chapter">
+<a class="toc" name="toc-Chapter-2">2</a> Software Installation
+</h1>
+<h2 class="Section">
+<a class="toc" name="toc-Section-2.1">2.1</a> Introduction
+</h2>
+<h2 class="Section">
+<a class="toc" name="toc-Section-2.2">2.2</a> Required Compilers, Scripting Languages and Libraries
+</h2>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-2.2.1">2.2.1</a> Architecture 
+</h3>
+<div class="Unindented">
+Expert-N was tested with the following operating systems and architectures (it might work with other software and architecture, too):
+</div>
+<ul>
+<li>
+Suse Linux Enterprise Server 11 (Kernel-Release: 2.6.32.12-0.7, Kernel-Version: #1 SMP 2010-05-20 11:14:20, Architecture: x86_64, Operating System: GNU/Linux)
+</li>
+<li>
+Ubuntu 12.04 (Architecture: i386_64 bit)
+</li>
+<li>
+Windows XP Professional (Architecture: i386_32 bit), Windows 7
+</li>
+
+</ul>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-2.2.2">2.2.2</a> Software Requirements
+</h3>
+<div class="Unindented">
+Most libraries and tools are available in the packet manager of any linux distribution. In principle, it is possible to use any POSIX C compatible compiler (on not POSIX compatible systems, glibc functions are used, if possible). On non POSIX systems, like MS Windows, some Expert-N 5.0 functions are not available.
+</div>
+<h4 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--1"></a>Expert-N Console:
+</h4>
+<ul>
+<li>
+Python 2.7 (for waf build tool)
+</li>
+<li>
+gcc, g++ (compiler), Visual C++ (Windows)
+</li>
+<li>
+GLib 2.22.5 (lib)
+</li>
+<li>
+GObject 2.22.5 (lib)
+</li>
+<li>
+GModule (lib)
+</li>
+<li>
+libxml (lib)
+</li>
+<li>
+GDA 4.1.2 (lib)
+</li>
+<li>
+NETCDF (lib)
+</li>
+<li>
+PNETCDF (used by OPEN MPI)
+</li>
+<li>
+OPEN MPI (optional)
+</li>
+
+</ul>
+<h4 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--2"></a>Expert-N GUI (configuration tool):
+</h4>
+<ul>
+<li>
+Python 2.7
+</li>
+<li>
+Bash Interpreter
+</li>
+<li>
+PyGTK 2.16,
+</li>
+<li>
+GTK 2.18
+</li>
+<li>
+Numpy 1.3
+</li>
+<li>
+Matplotlib 0.99.1.2
+</li>
+<li>
+RSVG 2.26
+</li>
+<li>
+python-rsvg 2.30
+</li>
+<li>
+Text Editor, Office
+</li>
+
+</ul>
+<h2 class="Section">
+<a class="toc" name="toc-Section-2.3">2.3</a> Building Expert-N
+</h2>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-2.3.1">2.3.1</a> Building on Ubuntu 12.04 with OpenMP or MPI
+</h3>
+<h4 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--3"></a>Checkout:
+</h4>
+<ul>
+<li>
+Install Subversion (svn):<br/>
+<div class="listing">
+<pre class="listing">sudo apt-get install subversion
+</pre>
+</div>
+
+</li>
+<li>
+Checkout (e.g. in your Home (~) path):<ul>
+<li>
+get <b>expertn50</b> and <b>expertn50/dev</b> path: <br/>
+<div class="listing">
+<pre class="listing">svn checkout http://newmatrix/projects/expertn50
+</pre>
+</div>
+
+</li>
+<li>
+change to the <b>expertn50</b> path and checkout the <b>built</b> and the <b>expertn_tools</b> path:<br/>
+<div class="listing">
+<pre class="listing">cd expertn50
+svn checkout http://newmatrix/projects/built
+svn checkout http://newmatrix/projects/expertn_tools
+</pre>
+</div>
+
+</li>
+<li>
+the expertn_gui and xnoplot need cfg files (there are some templates, you can modify them later to your needs) --&gt; type:<br/>
+<div class="listing">
+<pre class="listing">cd expertn50/expertn_tools
+cp expertn_gui.ini.template expertn_gui.ini
+cp xnoplot.ini.template xnoplot.ini
+</pre>
+</div>
+
+</li>
+
+</ul>
+
+</li>
+
+</ul>
+<h4 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--4"></a>Installing Software Packages:
+</h4>
+<ul>
+<li>
+Open a terminal and type:<br/>
+<div class="listing">
+<pre class="listing">sudo apt-get install libgtk2.0-dev libgda-4.0-dev libnetcdf-dev
+</pre>
+</div>
+
+</li>
+<li>
+For the configuration tool scripts:<br/>
+<div class="listing">
+<pre class="listing">sudo apt-get install python-numpy python-matplotlib python-rsvg python-iniparse
+</pre>
+</div>
+
+</li>
+<li>
+If you want to use OpenMP parallelization you can go to the configure step.
+</li>
+<li>
+If you want to use MPI parallelization you have to install the MPI Software:<ul>
+<li>
+<div class="listing">
+<pre class="listing">sudo apt-get install libopenmpi-dev openmpi-bin
+</pre>
+</div>
+
+</li>
+<li>
+Expert-N uses library pnetcdf for netcdf output, in case mpi is used. This library is not available in Ubuntu’s packet manager. Download it from: <a class="FlexURL" href="http://trac.mcs.anl.gov/projects/parallel-netcdf">http://trac.mcs.anl.gov/projects/parallel-netcdf</a> 
+</li>
+<li>
+Download for example Version 1.4.0 (File: parallel-netcdf-1.4.0.tar.gz)
+</li>
+<li>
+Extract it into a directory of your choice and install it with:<br/>
+<div class="listing">
+<pre class="listing">export CPPFLAGS=-fPIC
+./configure --disable-fortran
+make
+sudo make install
+</pre>
+</div>
+
+</li>
+
+</ul>
+
+</li>
+
+</ul>
+<h4 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--5"></a>Configure, Build and Install Expert-N:
+</h4>
+<ul>
+<li>
+move to dev path in your Expert-N directory, e.g:<br/>
+<div class="listing">
+<pre class="listing">cd ~/expertn50/dev
+</pre>
+</div>
+
+</li>
+<li>
+check the possible installation and configuration possibilities:<br/>
+<div class="listing">
+<pre class="listing">./waf --help
+</pre>
+</div>
+
+</li>
+<li>
+configure process (take your preferred parallelization option)<ul>
+<li>
+with OPENMP and optimization:<br/>
+<div class="listing">
+<pre class="listing">./waf configure --USE_OPENMP --max_optimize
+</pre>
+</div>
+
+</li>
+<li>
+with MPI and optimization:<br/>
+<div class="listing">
+<pre class="listing">./waf configure --USE_MPI --max_optimize
+</pre>
+</div>
+
+</li>
+
+</ul>
+
+</li>
+<li>
+if everything is OK, just type:<br/>
+<div class="listing">
+<pre class="listing">./waf build install
+</pre>
+</div>
+ and your Expert-N should be compiled and installed to the built directories. e.g: ~/expertn50/built
+</li>
+
+</ul>
+<h4 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--6"></a>Checking your installation <a class="Label" name="sub:Checking-your-installation"> </a>
+</h4>
+<ul>
+<li>
+setup the Expert-N Environment:<br/>
+<div class="listing">
+<pre class="listing">export XPN_PATH=~/expertn50
+~/expertn50/built/bin/expertn_environment.sh
+</pre>
+</div>
+You can add this expression to your ~/.bashrc file to setup the Expert-N Environment each time you open a bash terminal
+</li>
+<li>
+type something like:<br/>
+<div class="listing">
+<pre class="listing">expertn_bin --version
+</pre>
+</div>
+or<br/>
+<div class="listing">
+<pre class="listing">expertn_bin --help
+</pre>
+</div>
+
+</li>
+
+</ul>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-2.3.2">2.3.2</a> Installing additional Software (optional)
+</h3>
+<div class="Unindented">
+This software is not necessary to use Expert-N. It is only my recommendation!
+</div>
+<ul>
+<li>
+To use the netcdf access of the python scripts in the <b>expertn_tools</b> path, the library <b>netcdf4python</b> is necessary:<ul>
+<li>
+Download from: <a class="FlexURL" href="http://code.google.com/p/netcdf4-python/">http://code.google.com/p/netcdf4-python/</a>, e.g: netCDF4-1.0.7.tar.gz 
+</li>
+<li>
+Type:<br/>
+<div class="listing">
+<pre class="listing">sudo apt-get install libhdf5-serial-dev python2.7-dev
+sudo ldconfig
+sudo python setup.py install
+</pre>
+</div>
+
+</li>
+
+</ul>
+
+</li>
+<li>
+Text Editor (Geany: Lightweight text editor, also useful for programming, scripts and small projects):<br/>
+<div class="listing">
+<pre class="listing">sudo apt-get install geany geany-plugins
+</pre>
+</div>
+
+</li>
+<li>
+SQLite Manager for Databases:<br/>
+<div class="listing">
+<pre class="listing">sudo apt-get install sqliteman
+</pre>
+</div>
+
+</li>
+<li>
+Integrated Development Environment (IDE) (Codelite): <a class="FlexURL" href="http://codelite.org/">http://codelite.org/</a>
+</li>
+
+</ul>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-2.3.3">2.3.3</a> Compiling an example module
+</h3>
+<div class="Unindented">
+Expert-N 5.0 is very flexible. It possible to create new modules and models in C and C++ easily. There is an example project in <b>dev/xpn/modul/libmodule_example/src</b>. It consists of the following files:
+</div>
+<div class="Indented">
+<div class="center">
+<table>
+<tr>
+<td align="left" valign="top" style="width: 7cm;">
+<b>file</b>
+</td>
+<td align="left" valign="top" style="width: 10cm;">
+<b>description</b>
+</td>
+
+</tr>
+<tr>
+<td align="left" valign="top" style="width: 7cm;">
+wscript
+</td>
+<td align="left" valign="top" style="width: 10cm;" colspan="1">
+<span class="hspace" style="width: 0pt;"> </span>configuration file for the waf build system (dependencies, libname, target, project file names, ...)
+</td>
+
+</tr>
+<tr>
+<td align="left" valign="top" style="width: 7cm;">
+module_example_register_modul.c
+</td>
+<td align="left" valign="top" style="width: 10cm;" colspan="1">
+<span class="hspace" style="width: 0pt;"> </span>Expert-N description file for the plugin: This plugin consists two models (biomass growth and photosynthesis) 
+</td>
+
+</tr>
+<tr>
+<td align="left" valign="top" style="width: 7cm;">
+module_example.h
+</td>
+<td align="left" valign="top" style="width: 10cm;" colspan="1">
+<span class="hspace" style="width: 0pt;"> </span>header file for an example gobject class
+</td>
+
+</tr>
+<tr>
+<td align="left" valign="top" style="width: 7cm;">
+module_example.c
+</td>
+<td align="left" valign="top" style="width: 10cm;">
+model example
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+<h4 class="Subsubsection">
+<a class="toc" name="toc-Subsubsection-1"></a>Configure Process with the waf build system:
+</h4>
+<ul>
+<li>
+goto to the directory <b>dev</b>
+</li>
+<li>
+There you find the file <b>module_example.mod</b>, a text file with the path to your example project
+</li>
+<li>
+So let’s configure the project:<br/>
+<div class="listing">
+<pre class="listing">./waf configure --debug --USE_OPENMP --extern_project=module_example.mod --prefix=$XPN_PATH/built
+</pre>
+</div>
+<ul>
+<li>
+--debug: compile in debugging mode (alternative you can use --max_optimize for maximum of speed:
+</li>
+<li>
+--USE_OPENMP: OPENMP parallelization (alternative: USE_MPI)
+</li>
+<li>
+--extern_project: text file with paths to the modules, which will be compiled
+</li>
+<li>
+--prefix: Expert-N 5.0 installation path
+</li>
+
+</ul>
+
+</li>
+<li>
+for other options use the help function:<br/>
+<div class="listing">
+<pre class="listing">./waf --help
+</pre>
+</div>
+
+</li>
+
+</ul>
+<h4 class="Subsubsection">
+<a class="toc" name="toc-Subsubsection-2"></a>Build and Install
+</h4>
+<div class="Unindented">
+Just type:<br/>
+<div class="listing">
+<pre class="listing">./waf build
+./waf install
+</pre>
+</div>
+
+</div>
+<div class="Indented">
+or just<br/>
+<div class="listing">
+<pre class="listing">./waf build install
+</pre>
+</div>
+
+</div>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-2.3.4">2.3.4</a> Using an IDE (Integrating Development Environment)
+</h3>
+<div class="Unindented">
+Different IDE’s can be used with the waf build system. I prefer the platform independent Codelite IDE (<a class="FlexURL" href="http://codelite.org/">http://codelite.org/</a>). 
+</div>
+<ul>
+<li>
+<div class="block">
+to get a Codelite project just type (after the configuration step):<br/>
+<div class="listing">
+<pre class="listing">./waf codelite
+</pre>
+</div>
+
+</div>
+
+</li>
+<li>
+open the codelite ide and open the codelite workspace file in the <b>dev</b> path
+</li>
+<li>
+<b>compile and install</b>: click with the <i>right mouse button</i> to your project (e.g. <b>module example</b>) in your Workspace View: <b>Custom Build Targets --&gt; Build and Install</b>.
+</li>
+<li>
+debugging works if your configuration allows that
+</li>
+
+</ul>
+<h1 class="Chapter">
+<a class="toc" name="toc-Chapter-3">3</a> Model Configuration<a class="Label" name="chap:Model-Configuration"> </a>
+</h1>
+<h2 class="Section">
+<a class="toc" name="toc-Section-3.1">3.1</a> Quick Console Tutorial
+</h2>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-3.1.1">3.1.1</a> Creating a test project
+</h3>
+<ul>
+<li>
+open a python console (type <b>python</b> in the terminal or create a <b>python script</b> in your favorite editor):<br/>
+<div class="listing">
+<pre class="listing">import os,xpn_cfg_manager
+​
+# setup some path variables for Expert-N:
+xpn_path = os.environ[’XPN_PATH’]
+base_path = xpn_path+"/built"
+template_path = base_path+"/cfg_template"
+​
+# Name and Path of the new Expert-N Project:
+project_name = base_path+"/cfg/test_project/test_project.xpn"
+​
+# create an empty project:
+p=xpn_cfg_manager.cxpn_project(base_path=base_path,project_filename=project_name)
+p.create_new_project(project_name,template_path+"/project.xpn")
+​
+# let’s create add new grid with one Expert-N Column (Grid_Act,k,i,j = 1,1,1,1): 
+col_name = p.add_new_grid(template_path+"/project.xpn",template_path+"/project.xpi","",1,1,1,1)
+</pre>
+</div>
+
+</li>
+<li>
+tree structure of the project (project file with all dependences):
+</li>
+
+</ul>
+<div class="Unindented">
+<div class="center">
+<span class="tiny"><span class="unknown">\Tree</span> [.project.xpn <b>(1)</b> [.project_1_1_1_0.xpi <b>(2)</b> project_1_1_1_0_cfg.ini <b>(3a)</b> project_1_1_1_0_climate_hr.csv <b>(3b)</b> ] ] </span>
+</div>
+
+</div>
+<ul>
+<li>
+The files of the project consist of:<ol>
+<li>
+the main project file (ini file): contains used plugins, Expert-N columns, global project properties
+</li>
+<li>
+the config files for the Expert-N column (g,i,j,k=1,1,1,0): contains model choice of the specific column, model properties (model properties can point to additional config files)
+</li>
+<li>
+additional config files for the chosen models: In this case: a) location and soil properties (ini), b) climate data (csv)
+</li>
+
+</ol>
+
+</li>
+
+</ul>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-3.1.2">3.1.2</a> Run the test project
+</h3>
+<ul>
+<li>
+running a test project with OpenMP (terminal):<br/>
+<div class="listing">
+<pre class="listing">expertn_bin --base-dir=$XPN_PATH/built --config-file=$XPN_PATH/built/cfg/test_project/test_project.xpn
+</pre>
+</div>
+
+</li>
+<li>
+running a test project with MPI using 1 processors (terminal):<br/>
+<div class="listing">
+<pre class="listing">mpirun -n 1 expertn_bin --base-dir=$XPN_PATH/built --config-file=$XPN_PATH/built/cfg/test_project/test_project.xpn
+</pre>
+</div>
+
+</li>
+
+</ul>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-3.1.3">3.1.3</a> Add a plugin (libhydrus.so), activate the hydrus flow module and set the boundary condition
+</h3>
+<ul>
+<li>
+The following python script shows how to add a plugin and choose one model of this plugin:<br/>
+<div class="listing">
+<pre class="listing"># add a module plugin (*.dll,*.so) to the xpn_project (hydrus):
+config = xpn_cfg_manager.ConfigParser()
+config.read(project_name)
+oldlibs = config.get("modul","libs")
+config.set("modul","libs",oldlibs+"hydrus;")
+configfile = open(project_name, ’wb’)
+config.write(configfile)
+configfile.close()
+​
+#activate hydrus flow module(to 1,1,1):
+config = xpn_cfg_manager.ConfigParser()
+config.read(col_name)
+try:     
+  config.add_section("flow module")
+except:
+  pass
+config.set("water","flow module","HYDRUS Flow")
+​
+#set up options --&gt; for standard values open the files in the template folder or pdf in doc folder
+try:
+  config.add_section("hydrus");
+except:
+  pass
+config.set("hydrus","bottombc",1)
+config.set("hydrus","mobil",0)
+config.set("hydrus","infiltration_limit",1)
+config.set("hydrus","infiltration_layer_limit",0)
+configfile = open(col_name, ’wb’)
+config.write(configfile)
+configfile.close()
+​
+</pre>
+</div>
+
+</li>
+<li>
+How do I get to know the models which are contained in a plugin <b>(module.so</b> or <b>module.dll</b>)? Just type in the terminal (using the <i>--show-modules</i> option):<br/>
+<div class="listing">
+<pre class="listing">expertn_bin --show-modules --base-dir=$XPN_PATH/built --config-file=$XPN_PATH/built/cfg/test_project/test_project.xpn
+</pre>
+</div>
+This will give you the following result:
+</li>
+
+</ul>
+<div class="Unindented">
+<div class="center">
+<table>
+<tr>
+<td align="center" valign="top">
+group
+</td>
+<td align="center" valign="top">
+sub group
+</td>
+<td align="center" valign="top">
+plugin name
+</td>
+<td align="center" valign="top">
+possible models
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+control
+</td>
+<td align="center" valign="top">
+database
+</td>
+<td align="center" valign="top">
+libexpertn_database.so
+</td>
+<td align="center" valign="top">
+Expert N Standard Database
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+Expert N Standard Read INI
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+water
+</td>
+<td align="center" valign="top">
+hydraulic functions
+</td>
+<td align="center" valign="top">
+libhydraulic_functions.so
+</td>
+<td align="center" valign="top">
+Hutson and Cass
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+van Genuchten and Mualem
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+Brooks and Corey
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+Brutsaert and Gardner
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+Biomodal van Genuchten
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+control
+</td>
+<td align="center" valign="top">
+pedotransfer
+</td>
+<td align="center" valign="top">
+libpedotransfer.so
+</td>
+<td align="center" valign="top">
+Campbell
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+Vereecken
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+Brakensiek &amp; Rawls
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+control
+</td>
+<td align="center" valign="top">
+output
+</td>
+<td align="center" valign="top">
+xpn_output.so
+</td>
+<td align="center" valign="top">
+Campbell
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+
+</td>
+<td align="center" valign="top">
+XPN_OUTPUT
+</td>
+
+</tr>
+<tr>
+<td align="center" valign="top">
+water
+</td>
+<td align="center" valign="top">
+flow module
+</td>
+<td align="center" valign="top">
+libhydrus.so
+</td>
+<td align="center" valign="top">
+HYDRUS Flow
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+<ul>
+<li>
+How do I know the options of one model (e.a. <b>libhydrus.so</b>)?<ul>
+<li>
+if there are options, you will find the possible parameter in the template path. For <b>libhydrus.so</b>, open the file <b>$XPN_PATH/built/cfg_template/libhydrus.cfg</b>. It can contain options for one model (<b>HYDRUS Flow</b>), options for the complete model group in the plugin (<b>hydrus</b>) and options, which can be set as global options (<b>global</b>). In this case the parameters are chosen for the whole models in the plugin (libhydrus.so has only one model):<br/>
+<div class="listing">
+<pre class="listing">[hydrus]
+bottombc = 1
+mobil = 0
+infiltration_limit = 1
+infiltration_layer_limit = 1
+</pre>
+</div>
+
+</li>
+<li>
+Explanation of the model options can be found in the documentation of the plugin, which should be found in: <b>$XPN_PATH/built/doc/libhydrus.pdf</b>.
+</li>
+
+</ul>
+
+</li>
+
+</ul>
+<h3 class="Subsection">
+<a class="toc" name="toc-Subsection-3.1.4">3.1.4</a> Copy an Expert-N column (with all dependences and properties) and change the saturated conductivity of the soil in this Expertn-N column
+</h3>
+<ul>
+<li>
+Copy a column:
+</li>
+
+</ul>
+<div class="Unindented">
+<div class="listing">
+<pre class="listing"># create a second Expert-N column (copy the old one, including all ini/cfg files):
+regstr = xpn_cfg_manager.get_regstr_from_filename(col_name)
+col_name2 = p.add_new_grid(project_name,col_name,regstr,1,1,1,2)
+</pre>
+</div>
+
+</div>
+<ul>
+<li>
+Now the dependency tree looks like that:
+</li>
+
+</ul>
+<div class="Unindented">
+<div class="center">
+<span class="tiny"><span class="unknown">\Tree</span> [.project.xpn [.project_1_1_1_0.xpi project_1_1_1_0_cfg.ini project_1_1_1_0_climate_hr.csv ] [.project_1_1_2_0.xpi project_1_1_2_0_cfg.ini project_1_1_2_0_climate_hr.csv ] ] </span>
+</div>
+
+</div>
+<ul>
+<li>
+Change soil properties:
+</li>
+
+</ul>
+<div class="Unindented">
+<div class="listing">
+<pre class="listing">#change the soil properties (saturated conductivity [mm/d]) of the second Expert-N column (1,1,2):
+regstr = xpn_cfg_manager.get_regstr_from_filename(col_name2)
+config = xpn_cfg_manager.ConfigParser()
+config.read(col_name2)
+ini_name_frame = config.get("Expert N Standard Read INI","filename")
+ini_name = xpn_cfg_manager.replace_std_template_and_path(ini_name_frame,project_name,base_path,regstr)
+config.read(ini_name)
+cond_sat=[3811.6,3515.4,952.3,5925.6]
+config.set("soil","cond_sat",’;’.join(map(str, cond_sat))+’;’)
+configfile = open(ini_name, ’wb’)
+config.write(configfile)
+configfile.close()
+</pre>
+</div>
+
+</div>
+<h2 class="Section">
+<a class="toc" name="toc-Section-3.2">3.2</a> Quick GUI Tutorial
+</h2>
+<ul>
+<li>
+The OpenMP Version of Expert-N can also be controlled by the graphical interface, to open the GUI type:<br/>
+<div class="listing">
+<pre class="listing">expertn_gui
+</pre>
+</div>
+
+</li>
+
+</ul>
+<h1 class="Chapter">
+<a class="toc" name="toc-Chapter-4">4</a> Driver and Plugin Structure
+</h1>
+<h2 class="Section">
+<a class="toc" name="toc-Section-4.1">4.1</a> Driver Implementation<a class="Label" name="sec:Driver-Implementation"> </a>
+</h2>
+<h2 class="Section">
+<a class="toc" name="toc-Section-4.2">4.2</a> Plugin Structure and Example<a class="Label" name="sec:Plugin-Structure-and"> </a>
+</h2>
+<div class="Unindented">
+<h1 class="biblio">
+Bibliography
+</h1>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-1"><span class="bib-index">1</span></a>] </span> <span class="bib-authors">Fei Chen, Jimy Dudhia</span>: “<span class="bib-title">Coupling an advanced land surface-hydrology model with the Penn State-NCAR MM5 modeling system. Part I: Model implementation and sensitivity</span>”, <i><span class="bib-journal">Monthly Weather Review</span></i>, pp. <span class="bib-pages">569—585</span>, <span class="bib-year">2001</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-2"><span class="bib-index">2</span></a>] </span> <span class="bib-authors">S Hansen, HE Jensen, NE Nielsen, H Svendsen</span>: “<span class="bib-title">Simulation of nitrogen dynamics and biomass production in winter wheat using the Danish simulation model DAISY</span>”, <i><span class="bib-journal">Fertilizer Research</span></i>, pp. <span class="bib-pages">245-259</span>, <span class="bib-year">1991</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-3"><span class="bib-index">3</span></a>] </span> <span class="bib-authors">Robert Horton, Sang-Ok Chung, J Hanks, JT Ritchie, others</span>: “<span class="bib-title">Soil heat flow.</span>”, <i><span class="bib-journal">Modeling plant and soil systems.</span></i>, pp. <span class="bib-pages">397-438</span>, <span class="bib-year">1991</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-4"><span class="bib-index">4</span></a>] </span> <span class="bib-authors">JL Hutson, RJ Wagenet</span>: “<span class="bib-title">LEACHM, Leaching estimation and chemistry model, version 3</span>”, <i><span class="bib-journal">Dep. of Soil, Crop and Atmospheric Sci. Res. Ser</span></i>, <span class="bib-year">1992</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-5"><span class="bib-index">5</span></a>] </span> <span class="bib-authors">B Nicolardot, JAE Molina</span>: “<span class="bib-title">C and N fluxes between pools of soil organic matter: model calibration with long-term field experimental data</span>”, <i><span class="bib-journal">Soil biology and biochemistry</span></i>, pp. <span class="bib-pages">245-251</span>, <span class="bib-year">1994</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-6"><span class="bib-index">6</span></a>] </span> <span class="bib-authors">William J Parton, Melannie Hartman, Dennis Ojima, David Schimel</span>: “<span class="bib-title">DAYCENT and its land surface submodel: description and testing</span>”, <i><span class="bib-journal">Global and planetary Change</span></i>, pp. <span class="bib-pages">35-48</span>, <span class="bib-year">1998</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-7"><span class="bib-index">7</span></a>] </span> <span class="bib-authors">Th Schaaf, E Priesack, Th Engel</span>: “<span class="bib-title">Comparing field data from north Germany with simulations of the nitrogen model N-SIM</span>”, <i><span class="bib-journal">Ecological Modelling</span></i>, pp. <span class="bib-pages">223-232</span>, <span class="bib-year">1995</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-8"><span class="bib-index">8</span></a>] </span> <span class="bib-authors">J Simuunek, K Huang, M Th Van Genuchten</span>: “<span class="bib-title">The HYDRUS code for simulating the one-dimensional movement of water, heat, and multiple solutes in variably-saturated media. Version 6.0</span>”, <i><span class="bib-journal">Res. Rep</span></i>, pp. <span class="bib-pages">142</span>, <span class="bib-year">1998</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-9"><span class="bib-index">9</span></a>] </span> <span class="bib-authors">WC Skamarock, JB Klemp, J Dudhia, DO Gill, DM Barker</span>: <i><span class="bib-title">Coauthors, 2008: A description of the Advanced Research WRF version 3. NCAR Tech</span></i>, <span class="bib-year">2008</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-10"><span class="bib-index">10</span></a>] </span> <span class="bib-authors">Roland Stenger, Eckart Priesack, Greg Barkle, G Sperr</span>: “<span class="bib-title">A tool for simulating nitrogen and carbon dynamics in the soil-plant atmosphere system</span>”, <i><span class="bib-journal"></span></i>, pp. <span class="bib-pages">19—28</span>, <span class="bib-year">1999</span>.
+</p>
+<p class="biblio">
+<span class="entry">[<a class="biblioentry" name="biblio-11"><span class="bib-index">11</span></a>] </span> <span class="bib-authors">John HM Thornley, others</span>: <i><span class="bib-title">Grassland dynamics: an ecosystem simulation model.</span></i>. <span class="bib-publisher">CAB international</span>, <span class="bib-year">1998</span>.
+</p>
+
+</div>
+
+<hr class="footer"/>
+<div class="footer" id="generated-by">
+Document generated by <a href="http://elyxer.nongnu.org/">eLyXer 1.2.3 (2011-08-31)</a> on <span class="create-date">2013-12-05T16:06:53.918669</span>
+</div>
+</div>
+</body>
+</html>

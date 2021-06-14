@@ -1,0 +1,1 @@
+void quicksort(struct pff l[],int n);

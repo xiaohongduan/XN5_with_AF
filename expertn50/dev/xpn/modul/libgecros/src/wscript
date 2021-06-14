@@ -1,0 +1,32 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='gecros'
+
+
+SOURCE_FILES=  [
+                 'gecros.c',
+                 'gecros_alloc.c',
+                 'gecros_tools.c',
+                 'gecros_register_modul.c',
+                ]
+
+     
+def options(opt):
+        pass
+
+def configure(conf):
+        pass
+
+def build(bld):
+    lib = bld(
+                features        = 'c cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_STD,
+                use             = bld.env.USE_STD,                
+                target          = LIBNAME,
+                includes        = bld.env.INCLUDES_STD,
+                install_path    = bld.env.INSTALL_MODELS
+                )

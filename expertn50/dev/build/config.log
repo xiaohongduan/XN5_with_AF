@@ -1,0 +1,130 @@
+# project  configured on Mon Jun 14 17:39:18 2021 by
+# waf 1.7.9 (abi 98, python 20703f0 on win32)
+# using waf --check-cxx-compiler=g++ --check-c-compiler=gcc --debug --GUI --USE_OPENMP --prefix=D:\XN5_AF\expertn50\dev configure codelite --debug
+#
+----------------------------------------
+Setting top to
+D:\XN5_AF\expertn50\dev
+----------------------------------------
+Setting out to
+D:\XN5_AF\expertn50\dev\build
+----------------------------------------
+Checking for 'g++' (c++ compiler)
+find program=['g++', 'c++'] paths=['C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath', 'C:\\WINDOWS\\system32', 'C:\\WINDOWS', 'C:\\WINDOWS\\System32\\Wbem', 'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\', 'C:\\WINDOWS\\System32\\OpenSSH\\', 'C:\\Program Files\\Git\\cmd', 'D:\\MinGW\\bin', 'D:\\Gtk+\\bin', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps', 'C:\\Program Files\\Multipass\\bin', 'D:\\expertn50\\expertn_tools', 'D:\\expertn50\\built\\bin', 'D:\\Python27', 'D:\\MinGW\\msys\\1.0\\bin', 'D:\\Python27\\Lib\\site-packages\\pywin32_system32', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe', 'C:\\User\\Dong\\anaconda3', ''] var='CXX' -> 'D:\\MinGW\\bin\\g++.exe'
+find program=['ar'] paths=['C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath', 'C:\\WINDOWS\\system32', 'C:\\WINDOWS', 'C:\\WINDOWS\\System32\\Wbem', 'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\', 'C:\\WINDOWS\\System32\\OpenSSH\\', 'C:\\Program Files\\Git\\cmd', 'D:\\MinGW\\bin', 'D:\\Gtk+\\bin', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps', 'C:\\Program Files\\Multipass\\bin', 'D:\\expertn50\\expertn_tools', 'D:\\expertn50\\built\\bin', 'D:\\Python27', 'D:\\MinGW\\msys\\1.0\\bin', 'D:\\Python27\\Lib\\site-packages\\pywin32_system32', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe', 'C:\\User\\Dong\\anaconda3', ''] var='AR' -> 'D:\\MinGW\\bin\\ar.exe'
+D:\MinGW\bin\g++.exe
+----------------------------------------
+Checking for 'gcc' (c compiler)
+find program=['gcc', 'cc'] paths=['C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath', 'C:\\WINDOWS\\system32', 'C:\\WINDOWS', 'C:\\WINDOWS\\System32\\Wbem', 'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\', 'C:\\WINDOWS\\System32\\OpenSSH\\', 'C:\\Program Files\\Git\\cmd', 'D:\\MinGW\\bin', 'D:\\Gtk+\\bin', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps', 'C:\\Program Files\\Multipass\\bin', 'D:\\expertn50\\expertn_tools', 'D:\\expertn50\\built\\bin', 'D:\\Python27', 'D:\\MinGW\\msys\\1.0\\bin', 'D:\\Python27\\Lib\\site-packages\\pywin32_system32', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe', 'C:\\User\\Dong\\anaconda3', ''] var='CC' -> 'D:\\MinGW\\bin\\gcc.exe'
+(tool ar is already loaded, skipping)
+D:\MinGW\bin\gcc.exe
+----------------------------------------
+Checking for program pkg-config
+D:\MinGW\bin\pkg-config.exe
+find program=['pkg-config'] paths=['C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath', 'C:\\WINDOWS\\system32', 'C:\\WINDOWS', 'C:\\WINDOWS\\System32\\Wbem', 'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\', 'C:\\WINDOWS\\System32\\OpenSSH\\', 'C:\\Program Files\\Git\\cmd', 'D:\\MinGW\\bin', 'D:\\Gtk+\\bin', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps', 'C:\\Program Files\\Multipass\\bin', 'D:\\expertn50\\expertn_tools', 'D:\\expertn50\\built\\bin', 'D:\\Python27', 'D:\\MinGW\\msys\\1.0\\bin', 'D:\\Python27\\Lib\\site-packages\\pywin32_system32', 'C:\\Users\\Dong\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe', 'C:\\User\\Dong\\anaconda3', ''] var='PKGCONFIG' -> 'D:\\MinGW\\bin\\pkg-config.exe'
+----------------------------------------
+Checking for 'glib-2.0' >= 2.22.5
+['D:\\MinGW\\bin\\pkg-config.exe', '--atleast-version=2.22.5', 'glib-2.0']
+['D:\\MinGW\\bin\\pkg-config.exe', '--cflags', '--libs', 'glib-2.0']
+out: -mms-bitfields -ID:/MinGW/include/glib-2.0 -ID:/MinGW/lib/glib-2.0/include  -LD:/MinGW/lib -lglib-2.0 -lintl  
+
+yes
+----------------------------------------
+Checking for 'gobject-2.0' >= 2.22.5
+['D:\\MinGW\\bin\\pkg-config.exe', '--atleast-version=2.22.5', 'gobject-2.0']
+['D:\\MinGW\\bin\\pkg-config.exe', '--cflags', '--libs', 'gobject-2.0']
+out: -mms-bitfields -ID:/MinGW/include/glib-2.0 -ID:/MinGW/lib/glib-2.0/include  -LD:/MinGW/lib -lgobject-2.0 -lgthread-2.0 -lglib-2.0 -lintl  
+
+yes
+----------------------------------------
+Checking for 'gmodule-2.0'
+['D:\\MinGW\\bin\\pkg-config.exe', '--cflags', '--libs', 'gmodule-2.0']
+out: -mms-bitfields -ID:/MinGW/include/glib-2.0 -ID:/MinGW/lib/glib-2.0/include  -LD:/MinGW/lib -lgmodule-2.0 -lglib-2.0 -lintl  
+
+yes
+----------------------------------------
+Checking for 'gmodule-2.0'
+['D:\\MinGW\\bin\\pkg-config.exe', '--cflags', '--libs', 'gmodule-2.0']
+out: -mms-bitfields -ID:/MinGW/include/glib-2.0 -ID:/MinGW/lib/glib-2.0/include  -LD:/MinGW/lib -lgmodule-2.0 -lglib-2.0 -lintl  
+
+yes
+----------------------------------------
+Checking for 'libxml-2.0'
+['D:\\MinGW\\bin\\pkg-config.exe', '--cflags', '--libs', 'libxml-2.0']
+out: -ID:/MinGW/include/libxml2  -LD:/MinGW/lib -lxml2  
+
+yes
+----------------------------------------
+Checking for 'libgda-4.0' >= 4.0.9
+['D:\\MinGW\\bin\\pkg-config.exe', '--atleast-version=4.0.9', 'libgda-4.0']
+['D:\\MinGW\\bin\\pkg-config.exe', '--cflags', '--libs', 'libgda-4.0']
+out: -DGDA_DEBUG -mms-bitfields -ID:/MinGW/include/libgda-4.0 -ID:/MinGW/include/libgda-4.0/libgda -ID:/MinGW/include/libxml2 -ID:/MinGW/include/glib-2.0 -ID:/MinGW/lib/glib-2.0/include  -LD:/MinGW/lib -lgda-4.0 -lgobject-2.0 -lxml2 -lgthread-2.0 -lglib-2.0 -lintl  
+
+yes
+----------------------------------------
+Checking for library m
+==>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] [32mc: build\conf_check_7a840b604b19cb962c69209e28232766\test.c -> build\conf_check_7a840b604b19cb962c69209e28232766\testbuild\test.c.1.o
+[0m
+['D:\\MinGW\\bin\\gcc.exe', '-Wall', '-DHAVE_GLIB=1', '-DHAVE_GOBJECT=1', '-DHAVE_GMODULE=1', '-DHAVE_LIBXML2=1', '-DHAVE_LIBGDA=1', '..\\test.c', '-c', '-o', 'test.c.1.o']
+[2/2] [33mcprogram: build\conf_check_7a840b604b19cb962c69209e28232766\testbuild\test.c.1.o -> build\conf_check_7a840b604b19cb962c69209e28232766\testbuild\testprog.exe
+[0m
+['D:\\MinGW\\bin\\gcc.exe', '-Wl,--enable-auto-import', '-Wl,--enable-auto-import', 'test.c.1.o', '-o', 'D:\\XN5_AF\\expertn50\\dev\\build\\conf_check_7a840b604b19cb962c69209e28232766\\testbuild\\testprog.exe', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-lm']
+yes
+----------------------------------------
+Checking for MS Windows
+True
+----------------------------------------
+Checking Expert-N Version
+5.0 Rev 0
+----------------------------------------
+Flag debug:
+True
+----------------------------------------
+Flag max_optimize
+False
+----------------------------------------
+Flag USE_OPENMP
+True
+----------------------------------------
+Checking for openmp flag -fopenmp
+==>
+#include <omp.h>
+                        int main(int argc, char **argv){
+                        int i;
+                        #pragma omp parallel for
+                        for (i=0;i<5;i++)
+                        {}
+                        return omp_get_thread_num();};
+<==
+[1/2] [32mc: build\conf_check_99781beb93c9bd7d800ecd88b7922a43\test.c -> build\conf_check_99781beb93c9bd7d800ecd88b7922a43\testbuild\test.c.1.o
+[0m
+['D:\\MinGW\\bin\\gcc.exe', '-Wall', '-fPIC', '-g', '-O0', '-fopenmp', '-DHAVE_GLIB=1', '-DHAVE_GOBJECT=1', '-DHAVE_GMODULE=1', '-DHAVE_LIBXML2=1', '-DHAVE_LIBGDA=1', '-DWIN32=1', '-DXPN_VERSION="5.0 Rev 0"', '-DXPN_DEBUG=1', '-DUSE_OPENMP=1', '..\\test.c', '-c', '-o', 'test.c.1.o']
+err: ..\test.c:1:0: warning: -fPIC ignored for target (all code is position independent) [enabled by default]
+
+[2/2] [33mcprogram: build\conf_check_99781beb93c9bd7d800ecd88b7922a43\testbuild\test.c.1.o -> build\conf_check_99781beb93c9bd7d800ecd88b7922a43\testbuild\testprog.exe
+[0m
+['D:\\MinGW\\bin\\gcc.exe', '-Wl,--enable-auto-import', '-Wl,--enable-auto-import', '-fopenmp', 'test.c.1.o', '-o', 'D:\\XN5_AF\\expertn50\\dev\\build\\conf_check_99781beb93c9bd7d800ecd88b7922a43\\testbuild\\testprog.exe', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+yes
+----------------------------------------
+Flag USE_MPI
+False
+----------------------------------------
+Checking for 'netcdf'
+['D:\\MinGW\\bin\\pkg-config.exe', '--cflags', '--libs', 'netcdf']
+out: -ID:/MinGW/include  -LD:/MinGW/lib -lnetcdf  
+
+yes
+----------------------------------------
+Installation Prefix
+D:\XN5_AF\expertn50\dev
+----------------------------------------
+Flag GUI
+True

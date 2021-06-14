@@ -1,0 +1,14 @@
+[control]
+database = Expert N Standard Read INI
+pedotransfer = Campbell
+output = XPN_OUTPUT
+
+[water]
+hydraulic functions = van Genuchten and Mualem
+
+[Expert N Standard Read INI]
+use high resolution climate data = 1
+interpolate climate data = 1
+filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_cfg.ini$>
+high res climate file = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_climate_hr.csv$>
+time zone = 0

@@ -1,0 +1,40 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='spass'
+
+
+SOURCE_FILES=  [
+                 'spass.c',
+                 'spass_canopy.c',
+                 'spass_growth.c',
+                 'spass_ini.c',
+                 'spass_nitrogen.c',
+                 'spass_phenology.c',
+                 'spass_photosynthesis.c',
+                 'spass_read.c',
+                 'spass_register_modul.c',
+                 'spass_root.c',
+                 'spass_senescence.c',
+                 'spass_water.c',
+                ]
+
+     
+def options(opt):
+        pass
+
+def configure(conf):
+        pass
+
+def build(bld):
+    lib = bld(
+                features        = 'c cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_STD,
+                use             = bld.env.USE_STD,                
+                target          = LIBNAME,
+                includes        = bld.env.INCLUDES_STD,
+                install_path    = bld.env.INSTALL_MODELS
+                )

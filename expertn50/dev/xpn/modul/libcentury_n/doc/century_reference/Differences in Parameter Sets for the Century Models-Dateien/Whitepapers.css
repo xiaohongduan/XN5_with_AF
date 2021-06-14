@@ -1,0 +1,63 @@
+BODY {
+	COLOR: black; BACKGROUND-COLOR: white
+}
+A:link {
+	COLOR: blue; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: blue; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: blue; BACKGROUND-COLOR: #ccffff; TEXT-DECORATION: underline
+}
+A:active {
+	COLOR: red; TEXT-DECORATION: underline
+}
+DIV.chapter {
+	PADDING-BOTTOM: 0in; TEXT-INDENT: 0pt; PADDING-TOP: 0in; FONT-STYLE: normal; FONT-FAMILY: Arial, Helvetica, sans-serif; POSITION: relative; TEXT-ALIGN: left
+}
+H1 {
+	PADDING-BOTTOM: 1.5%; COLOR: black; PADDING-TOP: 1.5%; FONT-STYLE: normal; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-ALIGN: center
+}
+H2 {
+	MARGIN-TOP: 4%; MARGIN-BOTTOM: 2%; PADDING-BOTTOM: 0pt; COLOR: #008080; PADDING-TOP: 0pt; FONT-STYLE: normal; FONT-FAMILY: Arial, Helvetica, sans-serif; BACKGROUND-COLOR: #e0e0e0; TEXT-ALIGN: left
+}
+H3 {
+	PADDING-BOTTOM: 1%; COLOR: #008080; PADDING-TOP: 1.5%; FONT-STYLE: normal; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-ALIGN: left
+}
+H4 {
+	PADDING-BOTTOM: 0pt; COLOR: black; PADDING-TOP: 1.5%; FONT-STYLE: normal; FONT-FAMILY: sans-serif; TEXT-ALIGN: left
+}
+P {
+	PADDING-BOTTOM: 0pt; TEXT-INDENT: 0.2in; PADDING-TOP: 0pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+P.toc_item_level1 {
+	FONT-WEIGHT: bold; PADDING-BOTTOM: 0pt; MARGIN: 0pt; TEXT-INDENT: 0.2in; PADDING-TOP: 1%
+}
+P.toc_item_level2 {
+	PADDING-BOTTOM: 0pt; MARGIN: 0pt; TEXT-INDENT: 0.4in; PADDING-TOP: 1%
+}
+P.toc_item_level3 {
+	PADDING-BOTTOM: 0pt; MARGIN: 0pt; TEXT-INDENT: 0.6in; PADDING-TOP: 0pt
+}
+OL {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT-FAMILY: sans-serif
+}
+UL {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+LI {
+	PADDING-BOTTOM: 0.5%; PADDING-TOP: 0px
+}
+DT {
+	PADDING-BOTTOM: 1%; PADDING-TOP: 0px
+}
+DD {
+	PADDING-BOTTOM: 1%; PADDING-TOP: 0px
+}
+code_example {
+	FONT-WEIGHT: normal; FONT-SIZE: smaller; FONT-FAMILY: monospace; WHITE-SPACE: pre
+}
+.code_comment {
+	FONT-WEIGHT: bold; COLOR: green; FONT-FAMILY: inherit
+}

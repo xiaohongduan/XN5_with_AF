@@ -1,0 +1,2799 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass memoir
+\begin_preamble
+\usepackage{xcolor}
+\usepackage{qtree}
+\end_preamble
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.5cm
+\topmargin 3cm
+\rightmargin 1.5cm
+\bottommargin 5.5cm
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation 0bp
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\listings_params "backgroundcolor={\color{white}},basicstyle={\color{black}\ttfamily},breaklines=true,comment={[l]{//}},commentstyle={\color{purple}\ttfamily},frame=single,framerule=1pt,identifierstyle={\color{black}},keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break,set,open,map},keywordstyle={\color{blue}\bfseries},morecomment={[s]{/*}{*/}},ndkeywords={class, export, boolean, throw, implements, import, this},ndkeywordstyle={\color{darkgray}\bfseries},sensitive=false,stringstyle={\color{red}\ttfamily}"
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Expert-N 5.0 Manual
+\end_layout
+
+\begin_layout Author
+Christian Klein
+\end_layout
+
+\begin_layout Date
+04.12.2013
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Overview
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Expert-N 5.0 is a simulation framework, which provides an interface to manage
+ and combine dynamic modules to a complete model.
+ In comparison to former versions of Expert-N 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "stenger1999tool"
+
+\end_inset
+
+ number, order and configuration of modules and sub-modules can be defined
+ almost free.
+ This is obtained by configuration files and a plug-in like structure, which
+ loads module packages during run time.
+ The flexibility makes Expert-N 5.0 to a workbench that is ready for many
+ scientific questions and the related modules, which are needed in future
+ can be easily included into the framework.
+ However, it makes sense to choose a proven combination of modules and sub-modul
+es for the start configuration to reduce the complexity of the system and
+ limit the debugging time.
+ The combination of modules for water, heat, nitrogen and carbon dynamics,
+ which was chosen here, is an example for a soil-plant ecosystem simulator,
+ which can be later completed with other modules like pollen forecast, animal
+ models, decision support systems, etc.
+ The technical details and the configuration process is explained in Chapter
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:Model-Configuration"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Another new property is that the Expert-N 5.0 core is designed as library
+ itself.
+ This makes it possible to couple Expert-N to any application or model.
+ For example, it is possible to realize an Expert-N Version which works
+ as a stand alone version like former versions of Expert-N, or to connect
+ Expert-N to a weather and forecast model including two-way interaction.
+ At the present time two drivers exist: The first is a stand alone version,
+ which use climate data as input files, and the second is a version which
+ is coupled to the Weather Research and Forecasting (WRF) model 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Skamarock2008"
+
+\end_inset
+
+.
+ Details to driver implementations are explained in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Driver-Implementation"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Communication between driver and modules can be done in two ways: First,
+ there is an implemented base structure, a predefined structure with plant,
+ soil, heat and water variables, which satisfies the communication for the
+ most plant and soil models.
+ The second way of communication works with an associative array, which
+ gives the modules the possibility to share structures between models, between
+ driver and models or even between parallel instances of Expert-N.
+ More details are explained in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Plugin-Structure-and"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The supported algorithms of the modules are taken from such published models
+ like LEACHM 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Hutson1992"
+
+\end_inset
+
+, HYDRUS 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "vSimuunek1998"
+
+\end_inset
+
+, N-SIM 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Schaaf1995"
+
+\end_inset
+
+,Modeling Plant and Soil 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Horton1991"
+
+\end_inset
+
+, NCSOIL 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Nicolardot1994"
+
+\end_inset
+
+, Hurley Pasture Model 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Thornley1998"
+
+\end_inset
+
+, NOAH 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Chen2001"
+
+\end_inset
+
+, CENTURY 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Parton1998"
+
+\end_inset
+
+ and DAISY 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Hansen1991"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Simulations are preformed one-dimensionally in the vertical direction and,
+ depending on the spatial variation of main parameters, considered as representa
+tive for the plot or the field scale.
+ It is possible to arrange several Expert-N plant-soil columns in a gridded
+ structure.
+ The grid can be configured to match the Arakawa-C grid of WRF (Weather
+ and Research Model) 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Skamarock2008"
+
+\end_inset
+
+.
+ Additionally it is possible to configure several numbers of Expert-N plant-soil
+ columns on every grid cell.
+ Owing to its plugin-like structure, there are no fixed modules in Expert-N
+ 5.0.
+ Every module can be displaced or removed.
+ However, there are a few modules which take a leading part in memory management
+, input and output of data and are recommended to be used in every session.
+\end_layout
+
+\begin_layout Section
+Expert-N 5.0 Modeling System Program Components
+\end_layout
+
+\begin_layout Standard
+To use the tools of Expert-N or the Expert-N Standalone version it is is
+ necessary to setup the Expert-N Environment (--> Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Checking-your-installation"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Expert-N 5.0 standalone version:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+expertn_bin
+\series default
+ or 
+\series bold
+expertn_bin.exe
+\series default
+: located in the 
+\series bold
+expertn50/built/bin path
+\series default
+ and is the heart of the Expert-N Modeling System
+\end_layout
+
+\begin_layout Subsection
+Expert-N Tools:
+\end_layout
+
+\begin_layout Itemize
+expertn_gui.py
+\end_layout
+
+\begin_layout Itemize
+xnoplot.py
+\end_layout
+
+\begin_layout Itemize
+xpnhelper.py
+\end_layout
+
+\begin_layout Itemize
+run_n_times.py
+\end_layout
+
+\begin_layout Itemize
+xpn_cfg_manager.py
+\end_layout
+
+\begin_layout Itemize
+dump_wrfnc.py
+\end_layout
+
+\begin_layout Itemize
+transpose_cdb_file.py
+\end_layout
+
+\begin_layout Itemize
+xpnstatistic.py
+\end_layout
+
+\begin_layout Itemize
+create_input_for_rosetta_from_xpn.py
+\end_layout
+
+\begin_layout Itemize
+convert_rosetta_to_xpn.py
+\end_layout
+
+\begin_layout Itemize
+find_grid_koord.py
+\end_layout
+
+\begin_layout Itemize
+calc_statistic.py
+\end_layout
+
+\begin_layout Itemize
+create_project_from_netcdf.py
+\end_layout
+
+\begin_layout Chapter
+Software Installation
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Section
+Required Compilers, Scripting Languages and Libraries
+\end_layout
+
+\begin_layout Subsection
+Architecture 
+\end_layout
+
+\begin_layout Standard
+Expert-N was tested with the following operating systems and architectures
+ (it might work with other software and architecture, too):
+\end_layout
+
+\begin_layout Itemize
+Suse Linux Enterprise Server 11 (Kernel-Release: 2.6.32.12-0.7, Kernel-Version:
+ #1 SMP 2010-05-20 11:14:20, Architecture: x86_64, Operating System: GNU/Linux)
+\end_layout
+
+\begin_layout Itemize
+Ubuntu 12.04 (Architecture: i386_64 bit)
+\end_layout
+
+\begin_layout Itemize
+Windows XP Professional (Architecture: i386_32 bit), Windows 7
+\end_layout
+
+\begin_layout Subsection
+Software Requirements
+\end_layout
+
+\begin_layout Standard
+Most libraries and tools are available in the packet manager of any linux
+ distribution.
+ In principle, it is possible to use any POSIX C compatible compiler (on
+ not POSIX compatible systems, glibc functions are used, if possible).
+ On non POSIX systems, like MS Windows, some Expert-N 5.0 functions are not
+ available.
+\end_layout
+
+\begin_layout Subsubsection*
+Expert-N Console:
+\end_layout
+
+\begin_layout Itemize
+Python 2.7 (for waf build tool)
+\end_layout
+
+\begin_layout Itemize
+gcc, g++ (compiler), Visual C++ (Windows)
+\end_layout
+
+\begin_layout Itemize
+GLib 2.22.5 (lib)
+\end_layout
+
+\begin_layout Itemize
+GObject 2.22.5 (lib)
+\end_layout
+
+\begin_layout Itemize
+GModule (lib)
+\end_layout
+
+\begin_layout Itemize
+libxml (lib)
+\end_layout
+
+\begin_layout Itemize
+GDA 4.1.2 (lib)
+\end_layout
+
+\begin_layout Itemize
+NETCDF (lib)
+\end_layout
+
+\begin_layout Itemize
+PNETCDF (used by OPEN MPI)
+\end_layout
+
+\begin_layout Itemize
+OPEN MPI (optional)
+\end_layout
+
+\begin_layout Subsubsection*
+Expert-N GUI (configuration tool):
+\end_layout
+
+\begin_layout Itemize
+Python 2.7
+\end_layout
+
+\begin_layout Itemize
+Bash Interpreter
+\end_layout
+
+\begin_layout Itemize
+PyGTK 2.16,
+\end_layout
+
+\begin_layout Itemize
+GTK 2.18
+\end_layout
+
+\begin_layout Itemize
+Numpy 1.3
+\end_layout
+
+\begin_layout Itemize
+Matplotlib 0.99.1.2
+\end_layout
+
+\begin_layout Itemize
+RSVG 2.26
+\end_layout
+
+\begin_layout Itemize
+python-rsvg 2.30
+\end_layout
+
+\begin_layout Itemize
+Text Editor, Office
+\end_layout
+
+\begin_layout Section
+Building Expert-N
+\end_layout
+
+\begin_layout Subsection
+Building on Ubuntu 12.04 with OpenMP or MPI
+\end_layout
+
+\begin_layout Subsubsection*
+Checkout:
+\end_layout
+
+\begin_layout Itemize
+Install Subversion (svn):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sudo apt-get install subversion
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Checkout (e.g.
+ in your Home (~) path):
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+get 
+\series bold
+expertn50
+\series default
+ and 
+\series bold
+expertn50/dev
+\series default
+ path: 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+svn checkout http://newmatrix/projects/expertn50
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+change to the 
+\series bold
+expertn50
+\series default
+ path and checkout the 
+\series bold
+built
+\series default
+ and the 
+\series bold
+expertn_tools
+\series default
+ path:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+cd expertn50
+\end_layout
+
+\begin_layout Plain Layout
+
+svn checkout http://newmatrix/projects/built
+\end_layout
+
+\begin_layout Plain Layout
+
+svn checkout http://newmatrix/projects/expertn_tools
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+the expertn_gui and xnoplot need cfg files (there are some templates, you
+ can modify them later to your needs) --> type:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+cd expertn50/expertn_tools
+\end_layout
+
+\begin_layout Plain Layout
+
+cp expertn_gui.ini.template expertn_gui.ini
+\end_layout
+
+\begin_layout Plain Layout
+
+cp xnoplot.ini.template xnoplot.ini
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection*
+Installing Software Packages:
+\end_layout
+
+\begin_layout Itemize
+Open a terminal and type:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},language=bash"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sudo apt-get install libgtk2.0-dev libgda-4.0-dev libnetcdf-dev
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+For the configuration tool scripts:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sudo apt-get install python-numpy python-matplotlib python-rsvg python-iniparse
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+If you want to use OpenMP parallelization you can go to the configure step.
+\end_layout
+
+\begin_layout Itemize
+If you want to use MPI parallelization you have to install the MPI Software:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sudo apt-get install libopenmpi-dev openmpi-bin
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Expert-N uses library pnetcdf for netcdf output, in case mpi is used.
+ This library is not available in Ubuntu's packet manager.
+ Download it from: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://trac.mcs.anl.gov/projects/parallel-netcdf
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+Download for example Version 1.4.0 (File: parallel-netcdf-1.4.0.tar.gz)
+\end_layout
+
+\begin_layout Itemize
+Extract it into a directory of your choice and install it with:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+export CPPFLAGS=-fPIC
+\end_layout
+
+\begin_layout Plain Layout
+
+./configure --disable-fortran
+\end_layout
+
+\begin_layout Plain Layout
+
+make
+\end_layout
+
+\begin_layout Plain Layout
+
+sudo make install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection*
+Configure, Build and Install Expert-N:
+\end_layout
+
+\begin_layout Itemize
+move to dev path in your Expert-N directory, e.g:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+cd ~/expertn50/dev
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+check the possible installation and configuration possibilities:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf --help
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+configure process (take your preferred parallelization option)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+with OPENMP and optimization:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf configure --USE_OPENMP --max_optimize
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+with MPI and optimization:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf configure --USE_MPI --max_optimize
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+if everything is OK, just type:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf build install
+\end_layout
+
+\end_inset
+
+ and your Expert-N should be compiled and installed to the built directories.
+ e.g: ~/expertn50/built
+\end_layout
+
+\begin_layout Subsubsection*
+Checking your installation 
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Checking-your-installation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+setup the Expert-N Environment:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+export XPN_PATH=~/expertn50
+\end_layout
+
+\begin_layout Plain Layout
+
+~/expertn50/built/bin/expertn_environment.sh
+\end_layout
+
+\end_inset
+
+You can add this expression to your ~/.bashrc file to setup the Expert-N
+ Environment each time you open a bash terminal
+\end_layout
+
+\begin_layout Itemize
+type something like:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+expertn_bin --version
+\end_layout
+
+\end_inset
+
+or
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+expertn_bin --help
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Installing additional Software (optional)
+\end_layout
+
+\begin_layout Standard
+This software is not necessary to use Expert-N.
+ It is only my recommendation!
+\end_layout
+
+\begin_layout Itemize
+To use the netcdf access of the python scripts in the 
+\series bold
+expertn_tools
+\series default
+ path, the library 
+\series bold
+netcdf4python
+\series default
+ is necessary:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Download from: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://code.google.com/p/netcdf4-python/
+\end_layout
+
+\end_inset
+
+, e.g: netCDF4-1.0.7.tar.gz 
+\end_layout
+
+\begin_layout Itemize
+Type:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sudo apt-get install libhdf5-serial-dev python2.7-dev
+\end_layout
+
+\begin_layout Plain Layout
+
+sudo ldconfig
+\end_layout
+
+\begin_layout Plain Layout
+
+sudo python setup.py install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Text Editor (Geany: Lightweight text editor, also useful for programming,
+ scripts and small projects):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sudo apt-get install geany geany-plugins
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+SQLite Manager for Databases:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sudo apt-get install sqliteman
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Integrated Development Environment (IDE) (Codelite): 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://codelite.org/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Compiling an example module
+\end_layout
+
+\begin_layout Standard
+Expert-N 5.0 is very flexible.
+ It possible to create new modules and models in C and C++ easily.
+ There is an example project in 
+\series bold
+dev/xpn/modul/libmodule_example/src
+\series default
+.
+ It consists of the following files:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features booktabs="true" islongtable="true" longtabularalignment="center">
+<column alignment="left" valignment="top" width="7cm">
+<column alignment="left" valignment="top" width="10cm">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+wscript
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" leftline="true" usebox="none" width="10cm">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{0pt}
+\end_layout
+
+\end_inset
+
+configuration file for the waf build system (dependencies, libname, target,
+ project file names, ...)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+module_example_register_modul.c
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" leftline="true" usebox="none" width="10cm">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{0pt}
+\end_layout
+
+\end_inset
+
+Expert-N description file for the plugin: This plugin consists two models
+ (biomass growth and photosynthesis) 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+module_example.h
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{0pt}
+\end_layout
+
+\end_inset
+
+header file for an example gobject class
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+module_example.c
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+model example
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Configure Process with the waf build system:
+\end_layout
+
+\begin_layout Itemize
+goto to the directory 
+\series bold
+dev
+\end_layout
+
+\begin_layout Itemize
+There you find the file 
+\series bold
+module_example.mod
+\series default
+, a text file with the path to your example project
+\end_layout
+
+\begin_layout Itemize
+So let's configure the project:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf configure --debug --USE_OPENMP --extern_project=module_example.mod --prefix=
+$XPN_PATH/built
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+--debug: compile in debugging mode (alternative you can use --max_optimize
+ for maximum of speed:
+\end_layout
+
+\begin_layout Itemize
+--USE_OPENMP: OPENMP parallelization (alternative: USE_MPI)
+\end_layout
+
+\begin_layout Itemize
+--extern_project: text file with paths to the modules, which will be compiled
+\end_layout
+
+\begin_layout Itemize
+--prefix: Expert-N 5.0 installation path
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+for other options use the help function:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf --help
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Build and Install
+\end_layout
+
+\begin_layout Standard
+Just type:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf build
+\end_layout
+
+\begin_layout Plain Layout
+
+./waf install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+or just
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf build install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Using an IDE (Integrating Development Environment)
+\end_layout
+
+\begin_layout Standard
+Different IDE's can be used with the waf build system.
+ I prefer the platform independent Codelite IDE (
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://codelite.org/
+\end_layout
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+\align block
+to get a Codelite project just type (after the configuration step):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+./waf codelite
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+open the codelite ide and open the codelite workspace file in the 
+\series bold
+dev
+\series default
+ path
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+compile and install
+\series default
+: click with the 
+\shape italic
+right mouse button
+\shape default
+ to your project (e.g.
+ 
+\series bold
+module example
+\series default
+) in your Workspace View: 
+\series bold
+Custom Build Targets --> Build and Install
+\series default
+.
+\end_layout
+
+\begin_layout Itemize
+debugging works if your configuration allows that
+\end_layout
+
+\begin_layout Chapter
+Model Configuration
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Model-Configuration"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Quick Console Tutorial
+\end_layout
+
+\begin_layout Subsection
+Creating a test project
+\end_layout
+
+\begin_layout Itemize
+open a python console (type 
+\series bold
+python
+\series default
+ in the terminal or create a 
+\series bold
+python script
+\series default
+ in your favorite editor):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+lstparams "language=Python"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+import os,xpn_cfg_manager
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# setup some path variables for Expert-N:
+\end_layout
+
+\begin_layout Plain Layout
+
+xpn_path = os.environ['XPN_PATH']
+\end_layout
+
+\begin_layout Plain Layout
+
+base_path = xpn_path+"/built"
+\end_layout
+
+\begin_layout Plain Layout
+
+template_path = base_path+"/cfg_template"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# Name and Path of the new Expert-N Project:
+\end_layout
+
+\begin_layout Plain Layout
+
+project_name = base_path+"/cfg/test_project/test_project.xpn"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# create an empty project:
+\end_layout
+
+\begin_layout Plain Layout
+
+p=xpn_cfg_manager.cxpn_project(base_path=base_path,project_filename=project_name)
+\end_layout
+
+\begin_layout Plain Layout
+
+p.create_new_project(project_name,template_path+"/project.xpn")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# let's create add new grid with one Expert-N Column (Grid_Act,k,i,j = 1,1,1,1):
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+col_name = p.add_new_grid(template_path+"/project.xpn",template_path+"/project.xpi"
+,"",1,1,1,1)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+tree structure of the project (project file with all dependences):
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\size tiny
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Tree [.{project.xpn 
+\backslash
+textbf{(1)}} [.{project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_1
+\backslash
+_0.xpi 
+\backslash
+textbf{(2)}} {project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_1
+\backslash
+_0
+\backslash
+_cfg.ini 
+\backslash
+textbf{(3a)}} {project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_1
+\backslash
+_0
+\backslash
+_climate
+\backslash
+_hr.csv 
+\backslash
+textbf{(3b)}} ] ] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The files of the project consist of:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+the main project file (ini file): contains used plugins, Expert-N columns,
+ global project properties
+\end_layout
+
+\begin_layout Enumerate
+the config files for the Expert-N column (g,i,j,k=1,1,1,0): contains model
+ choice of the specific column, model properties (model properties can point
+ to additional config files)
+\end_layout
+
+\begin_layout Enumerate
+additional config files for the chosen models: In this case: a) location
+ and soil properties (ini), b) climate data (csv)
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Run the test project
+\end_layout
+
+\begin_layout Itemize
+running a test project with OpenMP (terminal):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+expertn_bin --base-dir=$XPN_PATH/built --config-file=$XPN_PATH/built/cfg/test_pr
+oject/test_project.xpn
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+running a test project with MPI using 1 processors (terminal):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+mpirun -n 1 expertn_bin --base-dir=$XPN_PATH/built --config-file=$XPN_PATH/built
+/cfg/test_project/test_project.xpn
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Add a plugin (libhydrus.so), activate the hydrus flow module and set the
+ boundary condition
+\end_layout
+
+\begin_layout Itemize
+The following python script shows how to add a plugin and choose one model
+ of this plugin:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+lstparams "language=Python"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+# add a module plugin (*.dll,*.so) to the xpn_project (hydrus):
+\end_layout
+
+\begin_layout Plain Layout
+
+config = xpn_cfg_manager.ConfigParser()
+\end_layout
+
+\begin_layout Plain Layout
+
+config.read(project_name)
+\end_layout
+
+\begin_layout Plain Layout
+
+oldlibs = config.get("modul","libs")
+\end_layout
+
+\begin_layout Plain Layout
+
+config.set("modul","libs",oldlibs+"hydrus;")
+\end_layout
+
+\begin_layout Plain Layout
+
+configfile = open(project_name, 'wb')
+\end_layout
+
+\begin_layout Plain Layout
+
+config.write(configfile)
+\end_layout
+
+\begin_layout Plain Layout
+
+configfile.close()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#activate hydrus flow module(to 1,1,1):
+\end_layout
+
+\begin_layout Plain Layout
+
+config = xpn_cfg_manager.ConfigParser()
+\end_layout
+
+\begin_layout Plain Layout
+
+config.read(col_name)
+\end_layout
+
+\begin_layout Plain Layout
+
+try:     
+\end_layout
+
+\begin_layout Plain Layout
+
+  config.add_section("flow module")
+\end_layout
+
+\begin_layout Plain Layout
+
+except:
+\end_layout
+
+\begin_layout Plain Layout
+
+  pass
+\end_layout
+
+\begin_layout Plain Layout
+
+config.set("water","flow module","HYDRUS Flow")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#set up options --> for standard values open the files in the template folder
+ or pdf in doc folder
+\end_layout
+
+\begin_layout Plain Layout
+
+try:
+\end_layout
+
+\begin_layout Plain Layout
+
+  config.add_section("hydrus");
+\end_layout
+
+\begin_layout Plain Layout
+
+except:
+\end_layout
+
+\begin_layout Plain Layout
+
+  pass
+\end_layout
+
+\begin_layout Plain Layout
+
+config.set("hydrus","bottombc",1)
+\end_layout
+
+\begin_layout Plain Layout
+
+config.set("hydrus","mobil",0)
+\end_layout
+
+\begin_layout Plain Layout
+
+config.set("hydrus","infiltration_limit",1)
+\end_layout
+
+\begin_layout Plain Layout
+
+config.set("hydrus","infiltration_layer_limit",0)
+\end_layout
+
+\begin_layout Plain Layout
+
+configfile = open(col_name, 'wb')
+\end_layout
+
+\begin_layout Plain Layout
+
+config.write(configfile)
+\end_layout
+
+\begin_layout Plain Layout
+
+configfile.close()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+How do I get to know the models which are contained in a plugin 
+\series bold
+(module.so
+\series default
+ or 
+\series bold
+module.dll
+\series default
+)? Just type in the terminal (using the 
+\shape italic
+--show-modules
+\shape default
+ option):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+expertn_bin --show-modules --base-dir=$XPN_PATH/built --config-file=$XPN_PATH/bu
+ilt/cfg/test_project/test_project.xpn
+\end_layout
+
+\end_inset
+
+This will give you the following result:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="14" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0pt">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+group
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sub group
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+plugin name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+possible models
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+control
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+database
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+libexpertn_database.so
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Expert N Standard Database
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Expert N Standard Read INI
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+hydraulic functions
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+libhydraulic_functions.so
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hutson and Cass
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+van Genuchten and Mualem
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Brooks and Corey
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Brutsaert and Gardner
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Biomodal van Genuchten
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+control
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pedotransfer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+libpedotransfer.so
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Campbell
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Vereecken
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Brakensiek & Rawls
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+control
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+output
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+xpn_output.so
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Campbell
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+XPN_OUTPUT
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+flow module
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+libhydrus.so
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+HYDRUS Flow
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+How do I know the options of one model (e.a.
+ 
+\series bold
+libhydrus.so
+\series default
+)?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+if there are options, you will find the possible parameter in the template
+ path.
+ For 
+\series bold
+libhydrus.so
+\series default
+, open the file 
+\series bold
+$XPN_PATH/built/cfg_template/libhydrus.cfg
+\series default
+.
+ It can contain options for one model (
+\series bold
+HYDRUS Flow
+\series default
+), options for the complete model group in the plugin (
+\series bold
+hydrus
+\series default
+) and options, which can be set as global options (
+\series bold
+global
+\series default
+).
+ In this case the parameters are chosen for the whole models in the plugin
+ (libhydrus.so has only one model):
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+lstparams "language=inform"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[hydrus]
+\end_layout
+
+\begin_layout Plain Layout
+
+bottombc = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+mobil = 0
+\end_layout
+
+\begin_layout Plain Layout
+
+infiltration_limit = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+infiltration_layer_limit = 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Explanation of the model options can be found in the documentation of the
+ plugin, which should be found in: 
+\series bold
+$XPN_PATH/built/doc/libhydrus.pdf
+\series default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Copy an Expert-N column (with all dependences and properties) and change
+ the saturated conductivity of the soil in this Expertn-N column
+\end_layout
+
+\begin_layout Itemize
+Copy a column:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=Python"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+# create a second Expert-N column (copy the old one, including all ini/cfg
+ files):
+\end_layout
+
+\begin_layout Plain Layout
+
+regstr = xpn_cfg_manager.get_regstr_from_filename(col_name)
+\end_layout
+
+\begin_layout Plain Layout
+
+col_name2 = p.add_new_grid(project_name,col_name,regstr,1,1,1,2)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Now the dependency tree looks like that:
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\size tiny
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Tree [.{project.xpn} [.{project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_1
+\backslash
+_0.xpi} {project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_1
+\backslash
+_0
+\backslash
+_cfg.ini} {project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_1
+\backslash
+_0
+\backslash
+_climate
+\backslash
+_hr.csv} ] [.{project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_2
+\backslash
+_0.xpi}  {project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_2
+\backslash
+_0
+\backslash
+_cfg.ini} {project
+\backslash
+_1
+\backslash
+_1
+\backslash
+_2
+\backslash
+_0
+\backslash
+_climate
+\backslash
+_hr.csv} ] ] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Change soil properties:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=Python"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+#change the soil properties (saturated conductivity [mm/d]) of the second
+ Expert-N column (1,1,2):
+\end_layout
+
+\begin_layout Plain Layout
+
+regstr = xpn_cfg_manager.get_regstr_from_filename(col_name2)
+\end_layout
+
+\begin_layout Plain Layout
+
+config = xpn_cfg_manager.ConfigParser()
+\end_layout
+
+\begin_layout Plain Layout
+
+config.read(col_name2)
+\end_layout
+
+\begin_layout Plain Layout
+
+ini_name_frame = config.get("Expert N Standard Read INI","filename")
+\end_layout
+
+\begin_layout Plain Layout
+
+ini_name = xpn_cfg_manager.replace_std_template_and_path(ini_name_frame,project_n
+ame,base_path,regstr)
+\end_layout
+
+\begin_layout Plain Layout
+
+config.read(ini_name)
+\end_layout
+
+\begin_layout Plain Layout
+
+cond_sat=[3811.6,3515.4,952.3,5925.6]
+\end_layout
+
+\begin_layout Plain Layout
+
+config.set("soil","cond_sat",';'.join(map(str, cond_sat))+';')
+\end_layout
+
+\begin_layout Plain Layout
+
+configfile = open(ini_name, 'wb')
+\end_layout
+
+\begin_layout Plain Layout
+
+config.write(configfile)
+\end_layout
+
+\begin_layout Plain Layout
+
+configfile.close()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Quick GUI Tutorial
+\end_layout
+
+\begin_layout Itemize
+The OpenMP Version of Expert-N can also be controlled by the graphical interface
+, to open the GUI type:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+expertn_gui
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Driver and Plugin Structure
+\end_layout
+
+\begin_layout Section
+Driver Implementation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Driver-Implementation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Plugin Structure and Example
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Plugin-Structure-and"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "expertn_doc"
+options "elsarticle-num-names"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,16 @@
+
+[results]
+category=water,nitrogen,plant,heat
+
+[water]
+Climate=bla,bla
+Temperal Change=Test
+
+[heat]
+submodul=heat transfer
+
+[plant]
+submodul=water demand,water uptake,phenological development,canopy gross photosynthesis,biomass growth,canopy formation,root length growth,nitrogen demand,nitrogen uptake,crop senescence
+
+[nitrogen]
+submodul=deposition,nitrogen transport,urea hydolysis,nitrification,denitrification,mineralisation,volatilization

@@ -1,0 +1,37 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='hydraulic_functions'
+
+
+SOURCE_FILES=  [
+                 'Bimodal_van_Genuchten.c',
+                 'Brooks_and_Corey.c',
+                 'Brutsaert_and_Gardner.c',
+                 'Hutson_and_Cass.c',
+                 'hydraulic_functions.c',
+                 'hydraulic_functions_register_modul.c',
+                 'math_functions.c',
+                 'VanGenuchten.c'
+                ]
+
+
+        
+def options(opt):
+        pass
+
+def configure(conf):
+        pass
+
+def build(bld):
+    lib = bld(
+                features        = 'c cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_STD,
+                use             = bld.env.USE_STD,                
+                target          = LIBNAME,
+                includes        = bld.env.INCLUDES_STD,
+                install_path    = bld.env.INSTALL_MODELS
+                )

@@ -1,0 +1,7 @@
+# additional models (hong)
+# ./waf configure --debug --USE_OPENMP --add_project=add_module_hong.txt codelite
+#xpn/modul/libdaisyhong/src
+xpn/modul/libschaaf_manag/src
+xpn/modul/libmpmas_coupling/src
+xpn/modul/libdaisy_miner/src
+xpn/modul/libgecros/src

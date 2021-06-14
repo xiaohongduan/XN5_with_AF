@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export directory=$(dirname $(readlink -f ${0}))
+cd $directory
+python ./expertn_gui.py
+

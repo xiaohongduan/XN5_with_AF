@@ -1,0 +1,842 @@
+#!/usr/bin/env python
+
+import time
+#from datetime import datetime
+import datetime
+import sys,string
+import gtk, gobject
+import tempfile
+import subprocess
+import os
+
+from numpy import *
+
+from matplotlib.figure import Figure
+import matplotlib.mlab as mlab
+from  matplotlib.dates import num2date,DateFormatter 
+from numpy import arange, sin, pi
+import ConfigParser
+from threading import Thread
+import thread
+#from datetime import datetime
+
+lock = thread.allocate_lock()
+
+# uncomment to select /GTK/GTKAgg/GTKCairo
+#from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+#from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas
+
+# or NavigationToolbar for classic
+#from matplotlib.backends.backend_gtk import NavigationToolbar2GTK as NavigationToolbar
+from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
+
+def isNaN(x):
+    return (x!=x)
+
+def isInfinite(x):
+    inf=1e10000    
+    return x not in (inf,-inf)
+
+##class ThreadExternalProg(Thread):
+##    def __init__(self,process,filename,plotwin,window):
+##        Thread.__init__(self)
+##        self.process = process
+##        self.filename = filename
+##        self.plotwin = plotwin
+##        self.window = window
+##        self.lock=thread.allocate_lock()
+##    def run(self):
+##        self.process.wait()
+##        print "ja ja"
+##        self.
+##        try:
+##            self.plotwin.open_file(self.filename)
+##        except:
+##            print "Error open file"
+##        print "non no"
+##        self.lock.release()
+##        os.remove (self.filename)
+##        print "Exit Thread"
+##        
+        
+
+class PlotWindow(gtk.VBox):
+    def __init__(self,main_class,window,figure_count,filename,liststore,externspreadsheet,open_whole_file=False):
+        gtk.VBox.__init__(self)        
+        self.Figure_Count = figure_count
+        self.filename = filename
+        self.externspreadsheet = externspreadsheet
+        iter = liststore.get_iter_first()
+        First = liststore.get_value(iter,1)
+        self.Parentwindow = window
+        self.main_class = main_class
+        count2 = 0
+        self.valuelist = []
+        readingerror=0
+        if open_whole_file==False:
+            if ".rf" in self.filename:
+                        self.xachseformat = 1
+                        print "Read Expert N Header"
+                        f = open(self.filename)
+                        count = 0
+                        count3=0
+                        for line in f:
+                            count = count + 1
+                            if (count < 7): continue
+                            if (line=="\n"): break
+                        count = 0
+                        listtime = []
+                        columnumbers=[]
+                        names = []
+                        for line in f:
+                            #if readingerror!=0:
+                            #    break
+                            count = count + 1
+                            if (count < 3): continue
+                            if (count == 3):
+                                names=string.split(line.replace(" ",""),"\t")
+                                count2=0                        
+                                while 1:
+                                    count2 = count2 + 1
+                                    iter=liststore.iter_next(iter)
+                                    if iter is None:
+                                        break
+                                    akt = liststore.get_value(iter,0)
+                                    if (akt is True):
+                                        columnumbers.append(count2)
+                                #print columnumbers
+                            else:
+                                if (line=="\n"): continue
+                                if (count > 4):
+                                    line = line.split("\n")[0]
+                                    S2 = line.replace(" ","").rsplit("\t")
+                                    count2=0
+                                    for S in S2:
+                                        if (count2==0):
+                                            d=0
+                                            m=0
+                                            y=0
+                                            try:
+                                                d = int(S[0]+S[1])
+                                                m = int(S[2]+S[3])
+                                                y = int(S[4]+S[5])
+                                            except:
+                                                readingerror=1
+                                                break;
+                                            if (y>50):
+                                                y=1900+y
+                                            else:
+                                                y=2000+y
+                                            t = datetime.date(year=y,month=m,day=d)
+                                            t = time.mktime(t.timetuple()) #Zeit in ses
+                                            #t = double(t / (24.0*60.0*60.0)) #in Tagen
+                                            #print t
+                                            listtime.append(t)
+                                        if readingerror!=0:
+                                            break
+                                        else:
+                                            if count2 in columnumbers:
+                                                if (count3==0):
+                                                    listx = []
+                                                    listy = []
+                                                    S2 = names[count2]
+                                                    listx.append(listtime[count3])
+                                                    listy.append(double(S))
+                                                    list2 = []
+                                                    list2.append(listx)
+                                                    list2.append(listy)
+                                                    list2.append(S2)
+                                                    self.valuelist.append(list2)
+                                                else:
+                                                    list2 = self.valuelist[columnumbers.index(count2)]
+                                                    listx = list2[0]
+                                                    listy = list2[1]
+                                                    listx.append(listtime[count3])
+                                                    listy.append(double(S))
+                                        count2 = count2 + 1
+                                    count3 = count3 + 1
+                
+            else:
+                self.xachseformat = 0            
+                while 1:
+                    count2 = count2 + 1
+                    iter=liststore.iter_next(iter)
+                    if iter is None:
+                        break
+                    S = liststore.get_value(iter,1)
+                    akt = liststore.get_value(iter,0)
+                    if (akt is True):
+                        xList = [] # leere Liste
+                        yList = []
+                        count = 0
+                        f = open(self.filename)
+                        for line in f:
+                            parts = line.split(',')
+                            count = count + 1
+                            if (count==1):
+                                continue
+                            try:
+                                float(parts[count2])
+                            except ValueError:
+                                continue
+                           
+                            xList.append(double(parts[0]))
+                            yList.append(double(parts[count2]))
+                        list2=[]
+                        list2.append(xList)
+                        list2.append(yList)
+                        list2.append(S)
+                        self.valuelist.append(list2)
+        else:
+            self.open_file(self.filename)
+            self.xachseformat = 0 
+        self.toolbar = gtk.Toolbar()
+        self.toolbar.set_orientation(gtk.ORIENTATION_HORIZONTAL)
+        self.toolbar.set_style(gtk.TOOLBAR_ICONS)
+        self.toolbar.set_icon_size(2)
+        self.toolbar.set_show_arrow(False)
+        #self.toolbar.set_resize_mode(True)
+        #self.toolbar.set_size_request(True)
+        
+        
+        self.legend=False
+        self.paint_allowed=False
+        
+        
+        #Open Button
+        image = gtk.Image()
+        image.set_from_stock(gtk.STOCK_OPEN,3)
+        close_button = gtk.ToolButton(image,"Open")
+        close_button.connect_object("clicked",self.on_open_file,None)
+        self.toolbar.insert(close_button,-1)
+        
+        #Save Button
+        image = gtk.Image()
+        image.set_from_stock(gtk.STOCK_SAVE_AS,3)
+        close_button = gtk.ToolButton(image,"Save")
+        close_button.connect_object("clicked",self.on_save_file,None)
+        self.toolbar.insert(close_button,-1)
+        
+        
+        #Edit Button
+        image = gtk.Image()
+        image.set_from_stock(gtk.STOCK_EDIT,3)
+        close_button = gtk.ToolButton(image,"Edit")
+        close_button.connect_object("clicked",self.on_extern_edit,None)
+        self.toolbar.insert(close_button,-1)
+        
+        self.toolbar.insert(gtk.SeparatorToolItem(),-1)
+        
+        #Second legend:
+        image = gtk.Image()
+        image.set_from_stock(gtk.STOCK_INFO,3)
+        self.legend_button = gtk.ToggleToolButton(None)
+        self.legend_button.set_icon_widget(image)
+        self.legend_button.connect_object("clicked",self.on_toggle_legend,self.legend_button)
+        self.toolbar.insert(self.legend_button,-1)
+        
+        #List:
+        image = gtk.Image()
+        image.set_from_stock(gtk.STOCK_INDEX,3)
+        self.list_button = gtk.ToggleToolButton(None)
+        self.list_button.set_icon_widget(image)
+        self.list_button.connect_object("clicked",self.on_toggle_list,self.list_button)
+        self.toolbar.insert(self.list_button,-1)
+        
+        self.toolbar.insert(gtk.SeparatorToolItem(),-1)
+        
+        #Plot Style:
+        comboboxentry = gtk.ComboBoxEntry()
+        liststore = gtk.ListStore(str)
+        comboboxentry.set_model(liststore)
+        liststore.append(['-'])
+        liststore.append(['o'])
+        liststore.append(['o-'])
+        liststore.append(['--'])
+        liststore.append(['.'])
+        liststore.append([':'])
+        comboboxentry.set_text_column(0)
+        comboboxentry.child.connect('changed', self.set_linestyle)
+        comboboxentry.set_active(0)
+        self.linestyle='-'
+        toolitem = gtk.ToolItem() 
+        vbox = gtk.VBox()
+        vbox.pack_start(comboboxentry,True,True)
+        toolitem.add(vbox)
+        toolitem.set_expand(True)
+        toolitem.set_homogeneous(True)
+        self.toolbar.insert(toolitem,-1)
+        
+        combobox = gtk.combo_box_new_text()
+        combobox.append_text('x - Numbers')
+        combobox.append_text('x - Date')
+        combobox.connect('changed', self.set_xAchse)
+        
+        self.toolbar.insert(gtk.SeparatorToolItem(),-1)
+        
+        combobox.set_active(self.xachseformat)
+        toolitem = gtk.ToolItem() 
+        toolitem.add(combobox)
+        toolitem.set_expand(True)
+        toolitem.set_homogeneous(True)
+        self.toolbar.insert(toolitem,-1)
+        
+        self.vpaned = gtk.VPaned()
+        self.PlotBox = gtk.VBox()
+        self.vpaned.pack1(self.PlotBox,True,True)
+        self.list = self.create_list()
+        self.vpaned.pack2(self.list,False,True)
+        
+        
+        vbox = gtk.VBox()
+        vbox.pack_start(self.toolbar,False,True)
+        self.pack_start(vbox,False,True)
+        self.pack_start(self.vpaned)
+        
+        self.paint_allowed=True
+        self.paintPlot()
+        self.show_all()
+        self.list.hide()
+        
+    def open_file(self,filename):
+        del self.valuelist[0:len(self.valuelist)]
+        print "open: ", filename
+        names = []
+        f = open(filename)
+        for line in f:
+            names = line.split('\n')[0].split(',')
+            break
+        f.close()
+        count2 = 0
+        print "312"
+        print names
+        for name in names:
+            count2 = count2 + 1
+            if count2 == 1:
+                continue 
+            xList = [] # leere Liste
+            yList = []
+            count = 0
+            f = open(filename)
+            for line in f:
+                count = count + 1
+                parts = line.split('\n')[0].split(',')
+                if (count==1):
+                    continue
+                try:
+                    double(parts[1])
+                except ValueError:
+                    print "Fehler"
+                    continue
+                xList.append(double(parts[0]))
+                yList.append(double(parts[count2-1]))
+            list2=[]
+            list2.append(xList)
+            list2.append(yList)
+            list2.append(name)
+            self.valuelist.append(list2)
+        try:
+            child2 = self.vpaned.get_child2()
+            self.list = self.create_list()
+            child2 = self.vpaned.get_child2()
+            child2.hide()
+            self.vpaned.remove(child2)
+            child2.destroy()
+            self.vpaned.pack2(self.list,False,True)
+            if self.list_button.get_active()==True:
+                self.vpaned.get_child2().show()
+        except:
+            return
+       
+   
+            
+        
+        
+    def on_open_file(self,widget):
+        filechooser =  gtk.FileChooserDialog(action=gtk.FILE_CHOOSER_ACTION_OPEN,buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        # if we want to apply filters
+        
+        filter2 = gtk.FileFilter()
+        filter2.set_name("C Debug File (*.cdb)")
+        filter2.add_pattern("*.cdb")
+        filechooser.add_filter(filter2)
+        
+        filter1 = gtk.FileFilter()
+        filter1.set_name("All Files (*.*)")
+        filter1.add_pattern("*")
+        filechooser.add_filter(filter1)
+
+        response = filechooser.run()
+        if response==gtk.RESPONSE_OK:
+            filename=filechooser.get_filename()
+            self.open_file(filename)
+            self.paintPlot()
+        filechooser.hide()
+        
+    def save_file(self,filename):
+        f = open(filename,'w')
+        i=0
+        for lists in self.valuelist:
+            i=i+1
+            if (i==1):
+                f.write("Time,")
+            if i==len(self.valuelist):
+                f.write(lists[2])
+            else:
+                f.write(lists[2]+',')
+        f.write("\n")
+        lists=self.valuelist[0]
+        listcount = len(lists[0])
+        for i in range(0, listcount):
+            i2 = 0
+            for lists in self.valuelist:
+                if (i2==0):
+                    S = "%e," % (lists[0][i])
+                    f.write(S)
+                if i2 == len(self.valuelist)-1:
+                    S = "%e" % (lists[1][i])
+                else:
+                    S = "%e," % (lists[1][i])
+                f.write(S)
+                i2 = i2 + 1
+            f.write("\n")
+        f.close()
+             
+    
+    def on_save_file(self,widget):
+        filechooser =  gtk.FileChooserDialog(action=gtk.FILE_CHOOSER_ACTION_SAVE,buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_SAVE, gtk.RESPONSE_OK))
+        # if we want to apply filters
+        
+        filter2 = gtk.FileFilter()
+        filter2.set_name("C Debug File (*.cdb)")
+        filter2.add_pattern("*.cdb")
+        filechooser.add_filter(filter2)
+        
+        filter1 = gtk.FileFilter()
+        filter1.set_name("All Files (*.*)")
+        filter1.add_pattern("*")
+        filechooser.add_filter(filter1)
+
+        response = filechooser.run()
+        if response==gtk.RESPONSE_OK:
+            filename=filechooser.get_filename()
+            if filechooser.get_filter()==filter2:
+                filename=filename+'.cdb'
+            self.save_file(filename)
+        filechooser.hide()
+        
+    def set_linestyle(self,entry):
+        self.linestyle = entry.get_text()
+        self.paintPlot()
+    def set_xAchse(self,combobox):
+        model = combobox.get_model()
+        index = combobox.get_active()
+        if index > -1:
+            self.xachseformat = index 
+            self.paintPlot()
+    def create_list(self):
+        scrolled_window = gtk.ScrolledWindow()
+        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+
+        modelarray = []
+        modelarray.append(gobject.TYPE_DOUBLE)
+        for lists in self.valuelist:
+            modelarray.append(gobject.TYPE_DOUBLE)
+        model = gtk.ListStore(*modelarray)
+        #model.append([gobject.TYPE_DOUBLE])
+        tree_view = gtk.TreeView(model)
+        scrolled_window.add_with_viewport (tree_view)
+        tree_view.show()
+        i=0
+        for lists in self.valuelist:
+            i=i+1
+            if (i==1):
+                cell = gtk.CellRendererText()
+                column = gtk.TreeViewColumn("Time [days]", cell, text=i-1)
+                column.set_resizable(True)
+                tree_view.append_column(column)
+            cell = gtk.CellRendererText()
+            column = gtk.TreeViewColumn(lists[2], cell, text=i)
+            column.set_resizable(True)
+            tree_view.append_column(column)
+        lists=self.valuelist[0]
+        listcount = len(lists[0])
+        for i in range(0, listcount):
+            iter = model.append()
+            i2 = 0
+            for lists in self.valuelist:
+                if (i2==0):
+                    model.set(iter,i2,lists[0][i])
+                model.set(iter,i2+1,lists[1][i])
+                i2 = i2 + 1
+
+        return scrolled_window
+    
+##    class ThreadExternalProg(Thread):
+##    def __init__(self,process,filename,plotwin,window):
+##        Thread.__init__(self)
+##        self.process = process
+##        self.filename = filename
+##        self.plotwin = plotwin
+##        self.window = window
+##        self.lock=thread.allocate_lock()
+##    def run(self):
+##        self.process.wait()
+##        print "ja ja"
+##        self.
+##        try:
+##            self.plotwin.open_file(self.filename)
+##        except:
+##            print "Error open file"
+##        print "non no"
+##        self.lock.release()
+##        os.remove (self.filename)
+##        print "Exit Thread"
+        
+    def thread_extern_prog(self,filename):
+        print "Process Start"
+        subprocess.Popen([self.externspreadsheet,filename]).wait()
+        #os.system(self.externspreadsheet+" "+filename)
+        print "Process exit"
+        lock.acquire()
+        self.main_class.open_file_name= filename;
+        print "File opened"
+        lock.release()
+        time.sleep(2)
+        
+        
+    
+    def open_with_extern_prog(self,filename):
+        thread.start_new_thread(self.thread_extern_prog,(filename,))
+        
+    def on_extern_edit(self, widget):
+        print "extern edit"
+        tmpfile2 = tempfile.NamedTemporaryFile()
+        tmpfile = tmpfile2.name + '.csv'
+        tmpfile2.close()
+        
+        self.save_file(tmpfile)
+        
+        
+        print tmpfile
+
+        self.open_with_extern_prog(tmpfile)
+        
+#       
+    def on_toggle_legend(self,widget):
+        self.legend=widget.get_active()
+        self.paintPlot()
+    def on_toggle_list(self,widget):
+        if (widget.get_active()==True):
+            self.list.show()
+        else:
+            self.list.hide()
+    def paintPlot(self):
+        if self.paint_allowed==False:
+            return
+        self.fig = Figure(figsize=(5,4), dpi=600,facecolor='white')
+        print "503"
+        for lists in self.valuelist:
+            ax = self.fig.add_subplot(111)
+            d = []
+            for entry in lists[0]:
+                d2 = datetime.datetime.fromtimestamp(entry)
+                d.append(d2)
+            if self.xachseformat==0:
+                pl=ax.plot(lists[0],lists[1], self.linestyle,label=lists[2])
+            else:
+                pl=ax.plot_date(d,lists[1],self.linestyle,label=lists[2])
+                ax.xaxis.set_major_formatter(DateFormatter("%d %b %Y"))
+                self.fig.autofmt_xdate()
+            ax.grid(True)
+            if (self.legend==True):
+                ax.legend(shadow=True)
+       
+        try:
+            self.PlotBox.remove(self.canvas)
+        except:
+            print "First Time Drawing Plot"
+        try:
+            self.PlotBox.remove(self.Navtoolbar)
+        except AttributeError:
+            print "First Time Drawing Plot"
+        self.canvas = FigureCanvas(self.fig)  # a gtk.DrawingArea
+        self.Navtoolbar = NavigationToolbar(self.canvas, self.Parentwindow)
+        self.PlotBox.pack_start(self.canvas,True,True)
+        self.PlotBox.pack_start(self.Navtoolbar, False, False)
+        self.PlotBox.show_all()
+    
+
+class GtkTabButton(gtk.HBox):
+    def __init__(self,Count):
+        gtk.HBox.__init__(self)
+        self.label_str="Figure "+ str(Count)
+        label = gtk.Label(self.label_str)
+        self.closebutton = gtk.Button()
+        self.closebutton.set_relief(gtk.RELIEF_NONE)
+        im = gtk.image_new_from_stock("gtk-close",1)
+        self.closebutton.set_image(im)
+        self.pack_start(label,False,False)
+        self.pack_start(self.closebutton,False,False)
+        self.show_all()
+    def get_label(self):
+        return self.label_str
+        
+class MainWindow:
+    
+    def newWin(self,source,page,x,y,user_data):
+        wind = gtk.Window()
+        noteb = gtk.Notebook()
+        noteb.set_show_tabs(False)
+        wind.add(noteb)
+        wind.set_default_size(600,600)
+        wind.set_title(user_data)
+        wind.connect("delete-event",self.freewindestroy,noteb)
+        wind.show_all()
+        return noteb
+    
+    def freewindestroy(self,widget,data, noteb):
+        wid = noteb.get_nth_page(0)
+        tab = noteb.get_tab_label(wid)
+        noteb.remove_page(0)
+        self.notebookPlot.append_page(wid,tab)
+        self.notebookPlot.set_tab_reorderable(wid,True)
+        self.notebookPlot.set_tab_detachable(wid,True)
+        gtk.notebook_set_window_creation_hook(self.newWin,tab.label_str)
+        return False
+    
+    def update_timer(self):
+        if self.open_file_name!='':
+            args = ""
+            if self.dialogoptionspath.get_text()=="":
+                args=self.dialogoptionscommand.get_text()
+            else:
+                args=self.dialogoptionspath.get_text()+"/"+self.dialogoptionscommand.get_text()
+            self.open_plot_window(args,self.open_file_name,True)
+            os.remove (self.open_file_name)
+            self.open_file_name=""
+        return True # run again in one second
+    
+    
+    def open_plot_window(self,args,filename,open_whole_file=False):
+        vbox = PlotWindow(self,self.window,self.Figure_Count,filename,self.liststore,args,open_whole_file)
+        self.Figure_Count = self.Figure_Count + 1
+        tabbtn = GtkTabButton(self.Figure_Count)
+        tabbtn.closebutton.connect_object("clicked",self.on_tab_destroy, self.notebookPlot,vbox)
+        tabbtn.show_all()
+        self.notebookPlot.append_page(vbox,tabbtn)
+        self.notebookPlot.set_tab_reorderable(vbox,True)
+        self.notebookPlot.set_tab_detachable(vbox,True)
+        gtk.notebook_set_window_creation_hook(self.newWin,tabbtn.label_str)
+        #self.notebookPlot.set_default_size(600,600)
+        self.notebookPlot.show()
+        self.notebookPlot.set_current_page(-1)
+
+    def on_button_matplot(self,widget, data=None):
+        args = ""
+        if self.dialogoptionspath.get_text()=="":
+            args=self.dialogoptionscommand.get_text()
+        else:
+            args=self.dialogoptionspath.get_text()+"/"+self.dialogoptionscommand.get_text()
+        self.open_plot_window(args,self.filename,False)
+        
+        
+    
+    def on_window_destroy(self, widget, data=None):
+        #self.window.show_all()
+        id = self.dialogClose.run()
+        if (id==1):
+            self.window.destroy()
+            gobject.source_remove(self.timer_id)
+            gtk.main_quit()
+        self.dialogClose.hide()
+        return True
+    def on_tab_destroy(self,notebook,vbox):
+        notebook.remove_page(notebook.page_num(vbox))
+        #if (notebook.get_n_pages()==0):
+        #    notebook.hide()
+
+    
+    def on_filechooserbutton_file_set(self,widget, data=None):
+        self.filename=widget.get_filename()
+        self.on_toolbutton_refresh(self, widget)
+        
+    
+    def on_menu_import_Expert_N_file(self,widget, data=None):
+        dialog = gtk.FileChooserDialog("Open..",None,gtk.FILE_CHOOSER_ACTION_OPEN,(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        filter = gtk.FileFilter()
+        filter.set_name("All files")
+        filter.add_pattern("*")
+        dialog.add_filter(filter)
+
+        response = dialog.run()
+        if response != gtk.RESPONSE_OK:
+            dialog.destroy()
+            return
+        self.read_Expert_N_file(dialog.get_filename())
+        dialog.destroy()
+        
+    def on_toolbutton_options(self,widget):
+        response = self.dialogOptions.run()
+        if response==1:
+            configfile=open("cdbplot.ini",'w')
+            try:
+                self.config.add_section("spreadsheet")
+            except:
+                print "Section exists"
+            self.config.set("spreadsheet","path",self.dialogoptionspath.get_text())
+            self.config.set("spreadsheet","command",self.dialogoptionscommand.get_text())
+            self.config.write(configfile)
+            configfile.close()
+        self.dialogOptions.hide()
+        
+    def on_toolbutton_about(self,widget):
+        self.aboutdialog.run()
+        self.aboutdialog.hide()
+         
+        
+    def on_toolbutton_refresh(self, widget, data=None):
+        if ".rf" in self.filename:
+            print "Read Expert N Header"
+            f = open(self.filename)
+            count = 0
+            for line in f:
+                count = count + 1
+                if (count < 7): continue
+                if (line=="\n"): break
+            count = 0
+            for line in f:
+                count = count + 1
+                if (count < 3): continue
+                if (count == 3):
+                    self.liststore.clear()
+                    names=string.split(line.replace(" ",""),"\t")
+                    for S in names:
+                        iter = self.liststore.insert(-1)
+                        self.liststore.set_value(iter,1,S.split("\n")[0])
+        else:
+            print "Read C Debug / CDV File"
+            file = open(self.filename)
+            line = file.readline()
+            file.close()
+            if not line:
+                return
+            self.liststore.clear()        
+            names=string.split(line,",")
+            for S in names:
+                iter = self.liststore.insert(-1)
+                self.liststore.set_value(iter,1,S.split("\n")[0])
+    def on_toolbutton_gnumeric(self, widget, data=None):
+        args = ""
+        if self.dialogoptionspath.get_text()=="":
+            args=self.dialogoptionscommand.get_text()
+        else:
+            args=self.dialogoptionspath.get_text()+"/"+self.dialogoptionscommand.get_text()
+        subprocess.Popen([args,self.filename])
+        #p1=subprocess.Popen('gnumeric ' + '"'+self.filename+'"')
+        
+        
+        
+    def on_cellrenderertoggle_toggled(self,cell,path, data=None):
+        model = self.liststore
+        iter = model.get_iter((int(path),))
+        val = model.get_value(iter,0)
+        val = not val
+        model.set(iter,0,val)
+        
+    def SetFileFilters(self):
+        self.filter = gtk.FileFilter()
+        self.filter.set_name("C Debug File (*.cdb)")
+        self.filter.add_pattern("*.cdb")
+        self.filechooserbutton.add_filter(self.filter)
+        self.filechooserbutton.set_filter(self.filter)
+        
+        filter = gtk.FileFilter()
+        filter.set_name("Expert N Water Files (*.rfw)")
+        filter.add_pattern("*.rfw")
+        self.filechooserbutton.add_filter(filter)
+        
+        filter = gtk.FileFilter()
+        filter.set_name("Expert N Plant Files (*.rfp)")
+        filter.add_pattern("*.rfp")
+        self.filechooserbutton.add_filter(filter)
+        
+        filter = gtk.FileFilter()
+        filter.set_name("Expert N Nitrogen Files (*.rfn)")
+        filter.add_pattern("*.rfn")
+        self.filechooserbutton.add_filter(filter)
+        
+        filter = gtk.FileFilter()
+        filter.set_name("Expert N Carbon Files (*.rfc)")
+        filter.add_pattern("*.rfc")
+        self.filechooserbutton.add_filter(filter)          
+        
+        
+        filter = gtk.FileFilter()
+        filter.set_name("Expert N Gis Files (*.rfg)")
+        filter.add_pattern("*.rfg")
+        self.filechooserbutton.add_filter(filter)
+        
+        filter = gtk.FileFilter()
+        filter.set_name("Expert N Balance Files (*.rfb)")
+        filter.add_pattern("*.rfb")
+        self.filechooserbutton.add_filter(filter)
+        
+        filter = gtk.FileFilter()
+        filter.set_name("All Files (*.*)")
+        filter.add_pattern("*")
+        self.filechooserbutton.add_filter(filter)
+              
+        
+    def __init__(self):
+        
+        
+        builder = gtk.Builder()
+        builder.add_from_file("cdbplot.ui")
+        
+        self.Figure_Count=0
+        self.window = builder.get_object("window")
+        self.liststore = builder.get_object("liststore")
+        self.comboboxLineStyle = builder.get_object("comboboxLineStyle")
+        self.liststoreLineStyle = builder.get_object("liststoreLineStyle")
+        self.notebookPlot = builder.get_object("notebookPlot")
+        self.WidgetTab = builder.get_object("WidgetTab")
+        self.togglebuttonGrid = builder.get_object("togglebuttonGrid")
+        self.togglebuttonLegend = builder.get_object("togglebuttonLegend")
+        self.filechooserbutton = builder.get_object("filechooserbutton")
+        self.dialogClose = builder.get_object("dialogClose")
+        self.dialogOptions = builder.get_object("dialogOptions")
+        self.dialogoptionscommand = builder.get_object("dialogoptionscommand")
+        self.dialogoptionspath =  builder.get_object("dialogoptionspath")
+        self.aboutdialog = builder.get_object("aboutdialog")
+        
+        self.SetFileFilters()
+        
+        builder.connect_signals(self)
+        self.open_file_name=''
+        self.timer_id = gobject.timeout_add(1000, self.update_timer)
+        
+        self.config = ConfigParser.ConfigParser()
+        
+        try:
+            self.config.read("cdbplot.ini")
+            self.dialogoptionspath.set_text(self.config.get("spreadsheet","path"))
+            self.dialogoptionscommand.set_text(self.config.get("spreadsheet","command"))
+        except:
+            self.dialogoptionspath.set_text("")
+            self.dialogoptionscommand.set_text("gnumeric")
+            
+            
+           # self.config.add_section("spreadsheet")
+           # self.config.set("spreadsheet","path",self.dialogoptionspath.get_text())
+           # self.config.set("spreadsheet","command",self.dialogoptionscommand.get_text())
+           # self.config.write(configfile)
+       # self.config.read("cdbplot.ini")
+      
+
+if __name__ == "__main__":
+    Mwindow = MainWindow()
+    Mwindow.window.show()
+    gtk.main()

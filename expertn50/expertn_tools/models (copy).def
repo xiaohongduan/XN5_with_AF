@@ -1,0 +1,35 @@
+
+[modules]
+names=control,atmosphere,management,water,heat,plant,nitrogen,other
+
+[control]
+icon=control32x32.png
+submodul=database,pedotransfer,input,output,balance
+
+[management]
+icon=management32x32.png
+submodul=mixing incorporation,soil loosing compaction,application fertilizers,loss volatilization,irrigation,loss efficiency,animal,harvest,agroforestry
+
+[water]
+icon=water.png
+submodul=interception,potential evapotranspiration,actual evaporation,potential evaporation,flow module,hydraulic functions,snow,kc factor
+
+[heat]
+icon=heat.png
+submodul=heat transfer,albedo,latent heat,sensible heat,ground heat,net radiation,emissivity,surface temperature
+
+[atmosphere]
+icon=atmosphere.png
+submodul=pollen release,stability functions
+
+[plant]
+icon=plant.png
+submodul=potential transpiration,actual transpiration,phenological development,canopy gross photosynthesis,biomass growth,canopy formation,root length growth,nitrogen demand,nitrogen uptake,crop senescence
+
+[nitrogen]
+icon=nitrogen.png
+submodul=deposition,nitrogen transport,urea hydrolysis,nitrification,denitrification,mineralisation,volatilization
+
+[other]
+icon=control32x32.png
+submodul=ogs,wrf,wrf chem,mpmas

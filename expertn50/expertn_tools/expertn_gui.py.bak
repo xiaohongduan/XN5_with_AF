@@ -1,0 +1,2082 @@
+#!/usr/bin/env python
+
+import os
+import gtk, gobject, cairo
+import rsvg
+from gtk import gdk
+
+import subprocess
+import os,shutil
+import ConfigParser
+import thread
+import signal
+from re import findall
+from string import find
+import urllib
+import cdbplot
+import time
+
+templateFileProject = './template/template.xpn'
+templateFileInstance = './template/template.cfg'
+
+if (os.name=='nt'):
+    import win32api, win32con
+    
+    
+def get_fullpath_from_relative(basepath,relativepath):
+    if ((basepath==None) or (basepath=="")):
+        return relativepath
+    if ((relativepath==None) or (relativepath=="")):
+        return relativepath
+    for i in range(len(basepath)):
+       if basepath[i]=='\\':
+          basepath[i]='/'
+    for i in range(len(relativepath)):
+       if relativepath[i]=='\\':
+           relativepath[i]='/'
+    if relativepath[1]==':' or relativepath[0]=='/'  :    
+           return relativepath          
+    return  basepath+'/'+relativepath
+
+def get_output_main_groups(outputlist):
+   groups = []
+   for outputitem in outputlist:
+      S = outputitem.split('.')
+      if len(S)<2: continue
+      if S[0]=='output':
+        is_in = False
+        for item in groups:
+          if S[1]==item:
+            is_in = True
+        if is_in==False:
+          groups.append(S[1])
+   return groups
+   
+def get_output_subgroups(outputlist,group):
+  subgroups = []
+  for outputitem in outputlist:
+    S = outputitem.split('.')
+    if len(S)<3: continue
+    if ((S[0]=='output') and (S[1] == group)):
+        is_in = False
+        for item in subgroups:
+          if S[2]==item:
+            is_in = True
+        if is_in==False:
+          subgroups.append(S[2])
+  return subgroups
+
+def get_output_subgroup_vars(outputlist,group,subgroup):
+  varlist = []
+  for outputitem in outputlist:
+    S = outputitem.split('.')
+    if len(S)<4: continue
+    if ((S[0]=='output') and (S[1] == group) and (S[2] == subgroup)):
+        is_in = False
+        for item in varlist:
+          if S[3]==item:
+            is_in = True
+        if is_in==False:
+          varlist.append(S[3])
+  varliststr = ''
+  first = 0
+  for varlistitem in varlist:
+    if first!=0:
+      varliststr=varliststr+','
+    first= first+1
+    varliststr=varliststr+'output.'+group+'.'+subgroup+'.'+varlistitem
+  return varliststr
+
+
+class cModules:
+    def __init__(self):
+        self.name=""
+        self.libname=""
+        self.active=False
+
+def get_modules_list(Modules,Model,Submodel):
+    active=-1
+    modules_list = []
+    new_model = cModules()
+    new_model.name = "empty"
+    modules_list.append(new_model)
+    for i in range(len(Modules)):
+        if (Modules[i].modul==Model) and (Modules[i].submodul==Submodel):
+            new_model = Modules[i]       
+            modules_list.append(new_model)
+            if new_model.active==True:
+              active=1
+    if active==-1:
+      modules_list[0].active=True
+    return modules_list      
+        
+class cModulesList:
+    def __init__(self):
+        self.name=""
+        self.icon=""
+        self.submodules=[]
+    
+
+class cResultList:
+    def __init__(self):
+        self.name=""
+        self.subcategory=[]
+        
+def item_in_list(item,list):
+    for item2 in list:
+        if item2==item:
+            return True
+    return False
+
+def get_modul_list(modules):
+    modul_list = []
+    for item in modules:
+        if (item_in_list(item.modul,modul_list)==False):
+            modul_list.append(item.modul)
+    return modul_list
+
+def get_submodul_list(modul,modules):
+    submodul_list = []
+    subm_list2 = []
+    for item in modules:
+        item2 = item.submodul
+        if ((modul==item.modul) and (item_in_list(item2,subm_list2)==False)):
+            submodul_list.append(item)
+            subm_list2.append(item2)
+    return submodul_list
+
+def get_name_list(modul,submodul,modules):
+    name_list=[]
+    for item in modules:
+        if (item.submodul==submodul) and (item.modul==modul):
+            name_list.append(item)        
+    return name_list
+    
+def get_filtered_libName(name):
+    S = name.split(".")
+    S2 = S[len(S)-2]
+    S = S2.split("/")
+    S2 = S[len(S)-1]
+    S = S2.split("\\")
+    S2 = S[len(S)-1]
+    return S2[3:]
+    
+
+def convert_uri_to_file(uri):
+    uri = uri.replace('%20',' ')
+    file = uri[7:]
+    if find(file,":")==-1:
+        return file
+    else:
+        return file[1:]
+    
+    
+
+def convert_file_to_uri(file):
+    file = file.replace('%20',' ')
+    if file[0]=='/':
+        return('file://'+file)
+    else:
+        return('file:///'+file)
+        
+    
+
+class MainWindow:
+    def __init__(self):
+        builder = gtk.Builder()
+        builder.add_from_file("expertn_gui_main.ui")
+        self.window = builder.get_object("window") 
+        self.textoutput = builder.get_object("textoutput")
+        self.texterror = builder.get_object("texterror")
+        self.textviewoutput = builder.get_object("textviewoutput")
+        self.textviewerror = builder.get_object("textviewerror")
+        self.labelTime = builder.get_object("labelTime")
+        self.frameError = builder.get_object("frameError")
+        self.aboutdialog = builder.get_object("aboutdialog")
+        self.frameOptions = builder.get_object("frameOptions")
+        self.textbufferOptions = builder.get_object("textbufferOptions")
+        self.labelOptions = builder.get_object("labelOptions")
+        self.dialogCDBPlot = builder.get_object("dialogCDBPlot")
+        self.liststoreCDB = builder.get_object("liststoreCDB")
+        self.treeviewCDB = builder.get_object("treeviewCDB")
+        self.dialogClose = builder.get_object("dialogClose")
+        self.dialog_cfg_general = builder.get_object("dialog_cfg_general");
+        self.drawingareaXPNStartScreen = builder.get_object("drawingareaXPNStartScreen")
+        #self.project_filename="/home/chrikle/projects/newmatrix/software/WXPN/cfg/expertn_driver_bin.xpn"
+        
+        self.drawingareaXPNStartScreensvg = rsvg.Handle('GUI_start_final.svg')
+        
+
+        
+        builder.connect_signals(self)
+        self.builder =  builder
+        
+        self.config = ConfigParser.ConfigParser()
+        # Ini Datei laden:
+        try:
+            self.config.read("expertn_gui.ini")
+            self.expertn_bin = self.config.get("PATHS","expertn_bin")
+            self.base_path = self.config.get("PATHS","base_path")
+            #self.modul_cfg = self.config.get("PATHS","modul_cfg")
+            #self.general_cfg = self.config.get("PATHS","general_cfg")
+            #self.var_list = self.config.get("PATHS","var_list")
+            
+            
+        except:
+            print "Error: Loading INI FILE"
+            
+        self.expertntxtoutlist = [];
+        
+        recentfilter = gtk.RecentFilter()
+        recentfilter.add_pattern("*.xpn")
+        recentfilter.set_name("Expert-N Project Files")
+        self["recentchooser1"].add_filter(recentfilter)
+        
+        self.read_result_structure()
+    
+    def drawingareaXPNStartScreen_expose(self,win,event):
+        x, y, w, h = win.allocation
+        BORDER_WIDTH=10
+        cr = win.window.cairo_create()
+        cr.set_source_color(win.style.fg[win.state])
+        svg = self.drawingareaXPNStartScreensvg
+
+        if svg != None:
+            matrix = cairo.Matrix(event.area.width/(453.0+30.0),0,0,event.area.height/(335.0+30.0),20, 20)        
+            cr.transform (matrix) 
+            svg.render_cairo(cr)
+ 
+        
+        return True
+        
+    
+    def read_result_structure(self):
+        config = ConfigParser.ConfigParser()
+        config.read("result.def")
+            
+        result_list=[]
+        for name in config.get("results","category").split("\n")[0].split(","):
+                results = cResultList()
+                results.name = name
+                results.subcategory = config.items(name)
+                #print name,config.items(name)
+                result_list.append(results)
+               
+        hboxRestultCategory  = self["hboxRestultCategory"]  
+        hboxResultSubcategory  = self["hboxResultSubcategory"]  
+        for item in result_list:
+                #print item.name
+                button = gtk.Button(label=item.name)
+                hboxRestultCategory.pack_start(button,True,True,3)
+                button.show_all()
+        for item in result_list[0].subcategory:
+            button = gtk.Button(label=item[0])
+            hboxResultSubcategory.pack_start(button,True,True,3)
+            button.show_all()
+       
+        
+    def retrieve_info(self, widget):
+        selected = self["recentchooser1"].get_current_item()
+        print "uri ",selected.get_uri()
+        print "Display name:", selected.get_display_name()
+        #print "File URI:", urllib.url2pathname(selected.get_uri())[2:]
+        print "File URI:", selected.get_uri()[7:]
+        print "Last application:", selected.last_application()
+        #self.project_filename="/home/chrikle/projects/newmatrix/software/WXPN/cfg/expertn_driver_bin.cfg"
+        #selected.get_uri()[7:]
+        self.project_filename=convert_uri_to_file(selected.get_uri())
+        print "filename:", self.project_filename         
+        self["notebook1"].set_current_page(1)
+        manager = gtk.recent_manager_get_default()
+        manager.add_item(convert_file_to_uri(self.project_filename))
+        self.window.set_title("Expert N Control Center    -  "+cdbplot.get_filename_without_path(self.project_filename).split(".")[0] +"  -   ")
+
+
+
+        
+    def __getitem__(self,key):
+        return self.builder.get_object(key)        
+        
+        
+    def on_window_destroy(self,widget, data=None):
+        id = self.dialogClose.run()
+        if (id==1):
+            self.window.destroy()
+            gtk.main_quit()
+        self.dialogClose.hide()
+        return True
+    
+    def on_config_modules(self,widget, data=None):
+        #self.show_options_text(self.modul_cfg)
+        print ""
+        #subprocess.Popen(['gedit','/home/chrikle/projects/newmatrix/software/WXPN/cfg/xpn_standart.cfg'])
+    
+    def on_config_general(self,widget, data=None):
+        self.show_options_text(self.project_filename)
+        #subprocess.Popen(['gedit','/home/chrikle/projects/newmatrix/software/WXPN/cfg/expertn_driver_bin.cfg'])
+        
+    def on_config_var_list(self,widget, data=None):
+        #self.show_options_text(self.var_list)
+        print ""
+        #subprocess.Popen(['gedit','/home/chrikle/projects/newmatrix/software/WXPN/cfg/var_list.var'])
+        
+        
+    def act_output_stdout(self,obj):
+        #print self.process.stderr.readline()
+        #print self.process.stdout.readline()
+        #self.textoutput.insert(self.textoutput.get_end_iter(),self.process.stderr.readline())
+        #self.textoutput.insert(self.textoutput.get_end_iter(),self.process.stdout.readline())
+        #sleep(0.05)
+        return True
+        if self.process.poll():
+            return False
+        else:
+            return True
+    def act_output_stderr(self,obj):
+        #print self.process.stderr.readline()
+        #print self.process.stdout.readline()
+        #self.textoutput.insert(self.textoutput.get_end_iter(),self.process.stderr.readline())
+        #self.textoutput.insert(self.textoutput.get_end_iter(),self.process.stdout.readline())
+        if self.process.poll():
+            return False
+        else:
+            return True
+        
+    def treeview_output_doubleclick(self,treeview,path,col,userdate=None):
+      model = treeview.get_model()
+      piter = model.get_iter(path)
+      if piter!=None:
+        Filename = model.get_value(piter,0)
+        Filename_withpath = model.get_value(piter,1)
+        Name = model.get_value(piter,2)
+        Vars = model.get_value(piter,3)
+        filename = model.get_value(piter,1)
+        if (Vars!=''):
+          self.open_cdb_var_list(cdbplot.get_varname_withoutpath(Name),Vars,filename)
+        else:
+          if (Filename==cdbplot.get_filename_without_path(Filename_withpath)):
+             self.open_cdb_var_list(cdbplot.get_filename_without_path(filename),'',filename)
+    
+    def act_output_thread2(self,error):
+        self.texterror.set_text("")
+        while (1):
+            line = error.readline()
+            if not line: break
+            gtk.gdk.threads_enter()
+            self.texterror.insert(self.texterror.get_end_iter(),line)
+            self.textviewerror.scroll_to_iter(self.texterror.get_end_iter(),0.0)
+            self.frameError.show()
+            gtk.gdk.threads_leave()
+     
+    def add_file_to_outputlist(self,filename):                             
+      #Falls schon in der Liste, dann wird zuerst dieser Dateiname geloescht:
+       Filename_withoutpath = cdbplot.get_filename_without_path(filename)
+       treestore = self["treestore_output"]
+       treeviewModules = self["treeview_output"]              
+       selection = treeviewModules.get_selection()
+       selection.unselect_all()
+       model = treeviewModules.get_model()           
+       first = None
+       i = 0
+       while (1):
+          if i == 0:
+             first = model.get_iter_first()
+          else:
+             first = model.iter_next(first)
+          if first==None:
+            break
+          i = i+1
+          ListFilename = model.get_value(first,1)
+          ListFilename_withpath = model.get_value(first,0)         
+          if ((ListFilename == filename) and (ListFilename_withpath==Filename_withoutpath)): 
+              model.remove(first)
+              first = model.get_iter_first()
+              i =1         
+       piter = self['treestore_output'].append(None,[cdbplot.get_filename_without_path(filename),filename,'output',''])
+       headers = cdbplot.read_cdb_header(filename)
+       groups = get_output_main_groups(headers)
+       for group in groups:
+           piter2 = self['treestore_output'].append(piter, [group,filename,'output.'+group,''])
+           subgroup = get_output_subgroups(headers,group)
+           for subgroupitem in subgroup:
+                  varliststr = get_output_subgroup_vars(headers,group,subgroupitem)
+                  #print varliststr
+                  self['treestore_output'].append(piter2, [subgroupitem,filename,'output.'+group+'.'+subgroupitem,varliststr])   
+        
+    def act_output_thread(self,filename,param1,param2,param3,param4,param5):
+        self.expertntxtoutlist =  []
+        p = subprocess.Popen([filename,param1,param2,param3,param4,param5], shell=False,  stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.textoutput.set_text("")
+        (output,input,error) = (p.stdin, p.stdout, p.stderr)
+        thread.start_new_thread(self.act_output_thread2, (error,))
+        self.xpn_pid = p.pid
+        #self.mysubprocess = p
+        #print "PID:", self.xpn_pid
+        while (1):
+            line = input.readline()
+            if not line: 
+                break
+            #lock.acquire()
+            #time.sleep(0.05)
+            #lines = line2.split('<')
+            #if
+            #print findall('<.*>',line) 
+            gtk.gdk.threads_enter()
+            if (find(line,'Simulation Day')!=-1):
+                self.labelTime.set_text(line)
+                #print line
+            elif (find(line,'<TXTOUTPUT:')!=-1):
+                S = line.split("'")
+                #print line
+                time.sleep(0.1)
+                self.add_file_to_outputlist(S[1])
+                
+                #self['scrolledwindowOutput'].show()
+                self['frameOutput'].show()
+            else:
+                self.textoutput.insert(self.textoutput.get_end_iter(),line)
+                self.textviewoutput.scroll_to_iter(self.textoutput.get_end_iter(),0.0)
+                
+                
+            gtk.gdk.threads_leave()
+            #lock.release()
+            #time.sleep(0.05)
+            
+            #print line
+            #self.process.stdout.flush()
+            #lock.acquire()
+            #self.textoutput.insert(self.textoutput.get_end_iter(),self.process.stdout.readline())
+            #print self.output.readline()
+            #time.sleep(5)
+            
+            #print self.process.stdout.readline()
+            #lock.release()
+            #sleep(1)
+        #while (1):
+            #self.textoutput.insert(self.textoutput.get_end_iter(),self.process.stderr.readline())
+            #sleep(1)
+   
+
+         
+   
+    def on_run_expertn(self,widget, data=None):
+        thread.start_new_thread(self.act_output_thread, (self.expertn_bin,"-d",self.base_path,"-c",self.project_filename,''),)
+    
+        
+    def on_run_valgrind_expertn(self,widget, data=None):
+        thread.start_new_thread(self.act_output_thread, ("valgrind --leak-check=yes /home/chrikle/projects/newmatrix/expertn_modul/expertn_bin/Debug/expertn_bin",))
+        
+    def on_stop_expertn(self,widget, data=None):
+        #print self.xpn_pid
+        #os.kill(self.xpn_pid, signal.SIGKILL)
+        print "kill process"
+       
+        #subprocess.Popen(["killall","valgrind"])
+        #self.mysubprocess.terminate()
+        #kill(self.mysubprocess.pid, 9)
+        #self.mysubprocess.terminate()
+        #TerminateProcess(self.mysubprocess._handle, 1)
+        #self.mysubprocess.send_signal(SIGTERM)
+        #if (os.name=='posix'):
+        #    subprocess.Popen(["killall","expertn_bin"])        
+        #if (os.name=='nt'):
+        #    subprocess.Popen(["taskkill","/F","/IM","expertn_bin.exe"])
+        
+        #  Fuer Linux:
+        if (os.name=='posix'):
+            os.kill(self.xpn_pid, signal.SIGKILL)            
+            
+        #  Fuer Windows:
+        if (os.name=='nt'):
+            handle = win32api.OpenProcess( win32con.PROCESS_TERMINATE, 0, self.xpn_pid )
+            win32api.TerminateProcess( handle, 0 )
+            win32api.CloseHandle( handle )
+        
+        #os.kill(self.xpnp.pid, signal.SIGKILL)
+
+        
+        
+    def on_show_error_messages(self,widget, data=None):
+        self.frameError.show()
+        
+    def on_show_results(self,widget,data=None):
+        self['frameOutput'].show()
+        
+    def on_hide_results(self,widget,data=None):
+        self['frameOutput'].hide()
+        
+    def on_hide_error_messages(self,widget, data=None):
+        self.frameError.hide()
+        
+    def on_about_dialog(self,widget, data=None):
+        self.aboutdialog.run()
+        self.aboutdialog.hide()
+    def show_options_text(self,file):
+        self.openfile = file
+        S = '<b>Options: <i>' + file + '</i></b>'
+        self.labelOptions.set_markup(S)
+        self.frameOptions.show()
+        self.textbufferOptions.set_text("")
+        f = open(file,'r')
+        for line in f:
+            self.textbufferOptions.insert_at_cursor(line)
+        
+    def on_options_save(self, data=None):
+        print "Save", self.openfile
+        f = open(self.openfile,'w')
+        f.write(self.textbufferOptions.get_text(self.textbufferOptions.get_start_iter(),self.textbufferOptions.get_end_iter()))
+        self.openfile=''
+        self.frameOptions.hide()
+        
+    def newWin(self,source,page,x,y,user_data):
+        wind = gtk.Window()
+        noteb = gtk.Notebook()
+        noteb.set_show_tabs(False)
+        wind.add(noteb)
+        wind.set_default_size(600,600)
+        #wind.set_title(user_data)
+        wind.set_title(source.get_tab_label(page).get_label())
+        wind.connect("delete-event",self.delete_output_tab,noteb)
+        wind.show_all()
+        return noteb
+    
+    def delete_output_tab(self,widget,data, noteb):
+        wid = noteb.get_nth_page(0)
+        tab = noteb.get_tab_label(wid)
+        noteb.remove_page(0)
+        self['notebookPlot'].append_page(wid,tab)
+        self['notebookPlot'].set_tab_reorderable(wid,True)
+        self['notebookPlot'].set_tab_detachable(wid,True)
+        gtk.notebook_set_window_creation_hook(self.newWin,tab.label_str)
+        return False
+    
+    def on_options_cancel(self, data=None):
+        self.openfile=''
+        self.frameOptions.hide()
+        
+         
+    def on_cdb_plot(self,widget, data=None):
+        #subprocess.Popen(['cdbplot'])
+        #return
+        
+        self.liststoreCDB.clear()  
+        for S in self.expertntxtoutlist:
+            iter = self.liststoreCDB.insert(-1)
+            self.liststoreCDB.set_value(iter,0,S)        
+        iter = self.liststoreCDB.insert(-1)
+        self.liststoreCDB.set_value(iter,0,"Open no file")
+        
+        model = self.liststoreCDB
+        first = model.get_iter_first()
+        selection = self.treeviewCDB.get_selection()
+        selection.select_iter(first)
+        
+        
+        id = self.dialogCDBPlot.run()
+        if (id==1):
+            model = self.liststoreCDB
+            selection = self.treeviewCDB.get_selection()
+            tup = selection.get_selected()
+            iter = tup[1] #model.get_iter((int(path),))
+            if (iter!=None):
+                val = model.get_value(iter,0)
+            else:
+                val='Open no file'
+            if (val!='Open no file'):
+                cdb_plot_args=['expertn_gui','--is_lib','--file='+val]
+                Mwindow = cdbplot.MainWindow(cdb_plot_args)
+                Mwindow.window.show()
+                #subprocess.Popen(args=['python','cdbplot.py','--file='+val])
+            else:
+                #subprocess.Popen(['cdbplot'])
+                cdb_plot_args=['expertn_gui','--is_lib']
+                Mwindow = cdbplot.MainWindow(cdb_plot_args)
+                Mwindow.window.show()
+        self.dialogCDBPlot.hide()
+        
+    def on_temporal_changes(self,widget, data=None):
+        self.open_cdb_var_list('Temporal Changes','OUTPUT.Heat.Air Mean Temperature,OUTPUT.Heat.Soil Temperature[0],OUTPUT.Heat.Soil Temperature[1],OUTPUT.Heat.Soil Temperature[2],OUTPUT.Heat.Soil Temperature[3]')
+        
+    def on_temporal_changes_water(self,widget, data=None):
+        self.open_cdb_var_list('Temporal Changes','OUTPUT.Water.Water Content[0],OUTPUT.Water.Water Content[1],OUTPUT.Water.Water Content[2],OUTPUT.Water.Water Content[3]')
+    
+    def on_climate(self,widget, data=None):
+        self.open_cdb_var_list('Climate','OUTPUT.Heat.Air Mean Temperature,OUTPUT.Water.Precipitation [mm]')
+    
+    def on_matric_potential(self,widget, data=None):
+        self.open_cdb_var_list('Matric Potential','OUTPUT.Water.Matrice Potential [kPa][0],OUTPUT.Water.Matrice Potential [kPa][1],OUTPUT.Water.Matrice Potential [kPa][2],OUTPUT.Water.Matrice Potential [kPa][3]')
+        
+    def on_matric_hydraulic_conductivity(self,widget, data=None):
+        self.open_cdb_var_list('Hydraulic Conductivity','OUTPUT.Water.Hydraulic Conductivity [mm/day][0],OUTPUT.Water.Hydraulic Conductivity [mm/day][1],OUTPUT.Water.Hydraulic Conductivity [mm/day][2],OUTPUT.Water.Hydraulic Conductivity [mm/day][3]')
+    
+    
+        
+    def on_Cum_N_Transformations(self,widget, data=None):
+        self.open_cdb_var_list('Cum N Transformations','OUTPUT.Nitrate N Leaching,OUTPUT.Mineralization,OUTPUT.Denitrifcation,OUTPUT.Nitrification,OUTPUT.Immobilization')
+        
+    def on_Mineral_N_Measurements(self,widget, data=None):
+        self.open_cdb_var_list('Mineral N Measurements','OUTPUT.NO3 Profile,OUTPUT.NO3 lower 2/3 Profile,OUTPUT.NO3 lower 1/3 Profile,OUTPUT.NO4 Profile,OUTPUT.Urea  Profile,OUTPUT.Urea Hydrolysis')
+    
+    def on_N_Temporal_Changes(self,widget, data=None):
+        self.open_cdb_var_list('N Temporal Changes','OUTPUT.NO3 Profile,OUTPUT.NO3 lower 2/3 Profile,OUTPUT.NO3 lower 1/3 Profile,OUTPUT.NO4 Profile,OUTPUT.Urea  Profile,OUTPUT.Urea Hydrolysis')
+    
+    def on_N_Transformations(self,widget, data=None):
+        self.open_cdb_var_list('N Transformations','OUTPUT.Urea Hydrolysis,OUTPUT.N-Release Fresh Org Matter,OUTPUT.N-Release Soil Org. Matter,OUTPUT.Nitrified N,OUTPUT.Denitrified N,OUTPUT.Immobilized N')
+    
+    def on_Mineralisation_Immbob(self,widget, data=None):
+        self.open_cdb_var_list('Mineralisation / Immobilisation','OUTPUT.N Immobilization in Humus,OUTPUT.N Immobilzation in Young Soil Org. Matter,OUTPUT.N Immobilization in Litter,OUTPUT.N Release in Humus,OUTPUT.N Release from Young Soil Org. Matter,OUTPUT.N Release from Litter')
+    
+    def on_C_and_N_Pools(self,widget, data=None):
+        self.open_cdb_var_list('C-  and N- Pools','OUTPUT.C Litter 0 -30 cm depth,OUTPUT.C Manure 0-30 cm depth,OUTPUT.C Humus 0-30 cm depth,OUTPUT.N Litter 0-30 cm depth,OUTPUT.N Manure 0-30 cm depth,OUTPUT.N Humus 0-30 cm depth')
+    
+    def on_C_N_Ratios(self,widget, data=None):
+        self.open_cdb_var_list('C/N Ratios','OUTPUT.C/N Ratio Litter 0-30 cm depth,OUTPUT.C/N Ratio Manure 0-30 cm depth,OUTPUT.C/N Ratio Humus 0-30 cm depth')        
+        
+    def on_tab_destroy(self,notebook,vbox):
+        notebook.remove_page(notebook.page_num(vbox))
+    
+    def open_cdb_var_list(self,title,var_list,filename=''):
+        val=''
+        if filename!='':
+          val= filename
+        else:        
+          if len(self.expertntxtoutlist)==1:
+              val=self.expertntxtoutlist[0]
+          else:
+              self.liststoreCDB.clear()  
+              for S in self.expertntxtoutlist:
+                  iter = self.liststoreCDB.insert(-1)
+                  self.liststoreCDB.set_value(iter,0,S)        
+              model = self.liststoreCDB
+              first = model.get_iter_first()
+              selection = self.treeviewCDB.get_selection()
+              selection.select_iter(first)
+            
+              id = self.dialogCDBPlot.run()
+              self.dialogCDBPlot.hide()
+            
+              if (id==1):
+                  model = self.liststoreCDB
+                  selection = self.treeviewCDB.get_selection()
+                  tup = selection.get_selected()
+                  iter = tup[1] #model.get_iter((int(path),))
+                  if (iter!=None):
+                      val = model.get_value(iter,0)
+                  else:
+                      val='Open no file'
+        if (val!='Open no file'):
+            #subprocess.Popen(args=['python','cdbplot.py','--file='+val,"--plot="+var_list,'--title='+title,'--hide_vars'])
+            if var_list=='':
+              cdb_plot_args=['expertn_gui','--is_lib','--file='+val,'--title='+title]
+            else:
+              cdb_plot_args=['expertn_gui','--is_lib','--file='+val,"--plot="+var_list,'--title='+title,'--hide_vars']
+            Mwindow = cdbplot.MainWindow(cdb_plot_args)
+            hbox = Mwindow["vbox1"]                        
+            notebookPlot = self["notebookPlot"]
+    
+            tabbtn = cdbplot.GtkTabButton(0)
+            tabbtn.set_label(title)
+            tabbtn.set_comment("Filename: "+val + "\n\n" +"Path: "+var_list)
+        
+        
+            tabbtn.label.connect_object("button-release-event",Mwindow.on_ChangeFigureName,notebookPlot,None,tabbtn)
+            tabbtn.show_all()
+            vbox = gtk.VBox(False, 5)            
+            vbox.show()
+            tabbtn.closebutton.connect_object("clicked",self.on_tab_destroy, notebookPlot,vbox)
+            notebookPlot.append_page(vbox,tabbtn)
+            notebookPlot.set_tab_reorderable(vbox,True)
+            notebookPlot.set_tab_detachable(vbox,True)
+            gtk.notebook_set_window_creation_hook(self.newWin,tabbtn.label_str)
+        #self.notebookPlot.set_default_size(600,600)
+            notebookPlot.show()
+            notebookPlot.set_current_page(-1)
+            hbox.reparent(vbox)
+            hbox.show()
+            self["notebook_view"] .set_current_page(2)
+            #Mwindow.window.show()
+            
+            #builder = gtk.Builder()
+            #builder.add_from_file("expertn_gui_mdi.ui")
+            #mdiwindow = builder.get_object("mdiwindow")
+            #backframe = builder.get_object("backframe")
+            #backframe2 = builder.get_object("backframe2")
+            #frame = builder.get_object("frame")
+            
+            #vbox = gtk.VBox(False, 5)
+            #vbox.set_size_request(500,500)
+            
+            #mdiwindow.reparent(vbox)
+            #hbox.reparent(frame)
+            
+            #self["hboxGraphs"].add(vbox)
+            
+             # Frame Auswaehlen:
+             #backframe.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse('#0000ff'))
+            #backframe2.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse('#add8e6'))
+            #builder.get_object("frame1").modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse('#add8e6'))
+             #self["hboxGraphs"].add(hbox)
+            #vbox.show()
+            #hbox.show()
+            #mdiwindow.show()
+            #Mwindow.window.show()
+        else:
+            #subprocess.Popen(['cdbplot'])
+            cdb_plot_args=['expertn_gui','--is_lib']
+            Mwindow = cdbplot.MainWindow(cdb_plot_args)
+            Mwindow.window.show()
+    
+    def AssistantNewApply(self,assistant, button,entryFile):        
+        self.project_filename = entryFile.get_text()          
+        config = ConfigParser.ConfigParser()
+        config.read(templateFileProject)
+        configfile = open(self.project_filename, 'wb')
+        #Grid:
+        try:
+                config.add_section("model")
+        except:
+                dummy=0
+        S2 = cdbplot.get_filename_without_path(self.project_filename)
+        S3 = S2[:-4]
+        instancefilename=S3+'_0_0_0_0.cfg'
+        S='1,0,0,0,cfg/'+instancefilename+',0;'
+        config.set('model','grid',S)
+        
+        #Output:
+        try:
+                config.add_section("system")
+        except:
+                dummy=0
+        S = 'output/'+S3+'%s'+'.cdb'
+        config.set('system','output_txtfile',S)
+        config.write(configfile)
+        
+        # Instanz anlegen:
+        path = get_fullpath_from_relative(self.base_path,'cfg')
+        config_inst = ConfigParser.ConfigParser()
+        config_inst.read(templateFileInstance)
+        configinstfile = open(path+'/'+instancefilename, 'wb')
+        config_inst.write(configinstfile)
+          
+        self["notebook1"].set_current_page(1)        
+        manager = gtk.recent_manager_get_default()
+        manager.add_item(convert_file_to_uri(self.project_filename))
+        self.window.set_title("Expert N Control Center    -  "+cdbplot.get_filename_without_path(self.project_filename).split(".")[0] +"  -   ")
+        assistant.hide_on_delete()
+    
+    def AssistantNewCancel(self,assistant, button):
+        assistant.hide_on_delete()
+    
+    def  AssistantChooseFile(self,widget,entryFile,assistant,vbox):    
+        dialog = gtk.FileChooserDialog("New Expert-N Project",None,gtk.FILE_CHOOSER_ACTION_SAVE,(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_current_folder(get_fullpath_from_relative(self.base_path,'cfg'))
+        filter = gtk.FileFilter()
+        filter.set_name("Expert-N Project Files (*.xpn)")
+        filter.add_pattern("*.xpn")
+        dialog.add_filter(filter)
+        dialog.set_filter(filter)
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+            #self.project_filename=dialog.get_filename()
+            S = dialog.get_filename()
+            S2 = S.split('.')
+            if S2[len(S2)-1] !='xpn':
+              S=S+'.xpn'
+            entryFile.set_text(S)
+            assistant.set_page_complete(vbox, True)                                    
+        dialog.destroy()
+    
+    def on_new_project(self,widget, data=None):
+        #self['assistantNew'].set_current_page(0)
+        #self['assistantNew'].show_all()
+        assistant = gtk.Assistant()
+        assistant.set_transient_for(self['window'])
+        assistant.set_size_request(600,400)              
+        
+        vbox = gtk.VBox()
+        vbox.set_border_width(5)
+        page = assistant.append_page(vbox)
+        assistant.set_page_title(vbox, "Create a new Expert-N Project")
+        assistant.set_page_type(vbox, gtk.ASSISTANT_PAGE_INTRO)
+        label = gtk.Label("This Assistant will help you to create a new Expert-N Project.\nThe Assistant is used to guide a user through configuration of an project.")
+        label.set_line_wrap(True)
+        vbox.pack_start(label, True, True, 0)
+        assistant.set_page_complete(vbox, True)
+        
+        vbox = gtk.VBox()
+        vbox.set_border_width(5)
+        assistant.append_page(vbox)
+        assistant.set_page_title(vbox, "Choose a Project File")
+        assistant.set_page_type(vbox, gtk.ASSISTANT_PAGE_CONTENT)
+        label = gtk.Label("Please choose the path and the file of your new Expert-N project!")
+        label.set_line_wrap(True)
+        hbox = gtk.HBox()
+        hbox.set_border_width(5)
+        entryFile = gtk.Entry()        
+        button = gtk.Button()
+        button.set_relief(gtk.RELIEF_NONE)
+        button.connect('clicked',self.AssistantChooseFile,entryFile,assistant,vbox)
+        im = gtk.image_new_from_stock("gtk-save-as",1)
+        button.set_image(im) 
+        hbox.pack_start(entryFile, True, True, 0)        
+        hbox.pack_start(button, False,False, 0)               
+        vbox.pack_start(hbox, False, False, 0)
+        vbox.pack_start(hbox, False, False, 0)
+        vbox.pack_start(label, True, True, 0)        
+        assistant.set_page_complete(vbox, False)
+        
+        vbox = gtk.VBox()
+        vbox.set_border_width(5)
+        assistant.append_page(vbox)
+        assistant.set_page_title(vbox, "Configuration Complete")
+        assistant.set_page_type(vbox, gtk.ASSISTANT_PAGE_CONFIRM)
+        label = gtk.Label("The configuration of your new Expert-N project is done.\nClick to Apply!")
+        label.set_line_wrap(True)
+        vbox.pack_start(label, True, True, 0)
+        assistant.set_page_complete(vbox, True)
+        
+        assistant.connect("apply", self.AssistantNewApply, "Apply",entryFile)
+        assistant.connect("cancel", self.AssistantNewCancel, "Cancel")
+        
+        assistant.show_all()
+        
+    def on_open_project(self,widget, data=None):
+        dialog = gtk.FileChooserDialog("Open Expert-N Project",None,gtk.FILE_CHOOSER_ACTION_OPEN,(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        filter = gtk.FileFilter()
+        filter.set_name("Expert-N Project Files (*.xpn)")
+        filter.add_pattern("*.xpn")
+        dialog.add_filter(filter)
+        dialog.set_filter(filter)
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+            self.project_filename=dialog.get_filename()
+            self["notebook1"].set_current_page(1)
+            manager = gtk.recent_manager_get_default()
+            manager.add_item(convert_file_to_uri(self.project_filename))
+            self.window.set_title("Expert N Control Center    -  "+cdbplot.get_filename_without_path(self.project_filename).split(".")[0] +"  -   ")
+       
+                
+            #manager.add_item("file://"+self.project_filename)
+        #    print dialog.get_filename(), 'selected'
+        #elif response == gtk.RESPONSE_CANCEL:
+        #    print 'Closed, no files selected'
+        dialog.destroy()
+        
+        
+    def on_start_screen(self,widget, data=None):
+        if self["notebook1"].get_current_page()==0:
+            self["notebook1"].set_current_page(1)
+        else:
+            self["notebook1"].set_current_page(0)
+        
+    def on_buttonInstancesGroupDelete(self,widget,data=None,data2=None):
+        treestore = self['treestoreXPNInstances']
+        treeview = self['treeviewXPNInstances']
+        model = treestore
+        selection = treeview.get_selection()
+        tup = selection.get_selected()
+        iter = tup[1] #model.get_iter((int(path),))
+        if (iter!=None):
+            code = model.get_value(iter,2)
+            name = model.get_value(iter,1)         
+            codearray = self.get_code_array(code)
+            id = self['dialog_Question'].run()
+            self['dialog_Question'].hide()
+            if id == 1:
+                self['vboxInstanceundergroup'].hide()
+                self['vboxmaingroup'].hide()
+                if (len(name.split(','))>1):
+                    i=4            
+                    i2=0
+                    lencodearray = len(codearray)
+                    while (True):
+                        if i+1>lencodearray:
+                            break                        
+                        act = 'rm'
+                        src = get_fullpath_from_relative(self.base_path,codearray[i])
+                        dst = ""
+                        self.FileAction.append([act,src,dst])
+                        i=i+2
+                        i2=i2+1
+                    treestore.remove(iter)
+                else:
+                    number = int(name)
+                    i3=0
+                    i=4            
+                    i2=0
+                    lencodearray = len(codearray)
+                    codearray2=[codearray[0],codearray[1],codearray[2],codearray[3]]
+                    while (True):
+                        if i+1>lencodearray:
+                            break                        
+                        if (number==i2):
+                            act='rm'
+                            src=get_fullpath_from_relative(self.base_path,codearray[i])
+                            dst=""
+                            self.FileAction.append([act,src,dst])        
+                            i3=i3-1
+                        else:
+                            if i2 > number:
+                                S = str(i3)
+                                S2 = cdbplot.get_filename_without_path(self.project_filename)
+                                S3 = S2[:-4]
+                                src=get_fullpath_from_relative(self.base_path,codearray[i])                    
+                                codearray[i]='cfg/'+S3+'_'+codearray[1]+'_'+codearray[2]+'_'+codearray[3]+'_'+S+'.cfg'
+                                dst =get_fullpath_from_relative(self.base_path,codearray[i])
+                                act='rename'
+                                self.FileAction.append([act,src,dst])
+                                
+                            codearray2.append(codearray[i])
+                            codearray2.append(codearray[i+1])                    
+                        i=i+2
+                        i2=i2+1
+                        i3=i3+1
+                    codearray=codearray2
+                    rootiter = model.iter_parent(iter)                    
+                    treestore.remove(iter)                 
+                    if (model.iter_nth_child(rootiter,0)==None):
+                        treestore.remove(rootiter)  
+                        return                  
+                    
+                    codestr = self.set_code_str(codearray)                
+                    
+                    i = 0                    
+                    while (True):
+                        iter = model.iter_nth_child(rootiter,i)
+                        if iter==None:
+                            break
+                        model.set_value(iter,2,codestr)
+                        model.set_value(iter,1,str(i))
+                        i=i+1
+                        
+                    model.set_value(rootiter,2,codestr)            
+
+    
+    def on_buttonInstancesGroupNew(self,widget,data=None,data2=None):
+        treestore = self['treestoreXPNInstances']
+        treeview = self['treeviewXPNInstances']
+        model = treestore
+        selection = treeview.get_selection()
+        tup = selection.get_selected()
+        iter = tup[1] #model.get_iter((int(path),))
+        if (iter!=None):
+            code = model.get_value(iter,2)
+            name = model.get_value(iter,1)         
+            codearray = self.get_code_array(code)
+            #piter = treestoreXPNInstances.append(None,[act,S,group])
+            if (len(name.split(','))>1): 
+                self['dialogInstancesEditgroup'].set_title('Create New Grid')
+                id = self['dialogInstancesEditgroup'].run()
+                self['dialogInstancesEditgroup'].hide()
+                if id==1:                                
+                    codearray = []
+                    codearray.append(str(int(self['checkbuttondialogInstancesEditgroupact'].get_active())))
+                    codearray.append(self['entrydialogInstancesEditgroupID'].get_text())
+                    codearray.append(self['entrydialogInstancesEditgroupi'].get_text())
+                    codearray.append(self['entrydialogInstancesEditgroupj'].get_text())
+                    S2 = cdbplot.get_filename_without_path(self.project_filename)
+                    S3 = S2[:-4]
+                    instancefilename='cfg/'+S3+'_'+codearray[1]+'_'+codearray[2]+'_'+codearray[3]+'_'+'0'+'.cfg'
+                    act = 'copy'
+                    src = templateFileInstance
+                    dst = get_fullpath_from_relative(self.base_path, instancefilename)
+                    self.FileAction.append([act,src,dst])                    
+                    codearray.append(instancefilename)
+                    codearray.append('100.0')
+                    codestr = self.set_code_str(codearray)
+                    name='('+ str(codearray[1])+','+str(codearray[2])+',' + str(codearray[3]) + ')'
+                    rootiter = treestore.append(None,[False,name,codestr])
+                    name='0'
+                    treestore.append(rootiter,[False,name,codestr])
+
+            else:
+                self['dialogInstancesEditSubgroup'].set_title('Create New Instance')
+                id = self['dialogInstancesEditSubgroup'].run()
+                self['dialogInstancesEditSubgroup'].hide()
+                if id==1:          
+                    name = str((len(codearray)-5)/2+1)
+                    S2 = cdbplot.get_filename_without_path(self.project_filename)
+                    S3 = S2[:-4]
+                    instancefilename='cfg/'+S3+'_'+codearray[1]+'_'+codearray[2]+'_'+codearray[3]+'_'+name+'.cfg'
+                    src = templateFileInstance
+                    dst = get_fullpath_from_relative(self.base_path, instancefilename)
+                    act = 'copy'                    
+                    self.FileAction([act,src,dst])
+                    codearray.append(instancefilename)
+                    codearray.append(self['entrydialogInstancesEditSubgroupCover'].get_text())
+                    codestr = self.set_code_str(codearray)
+                    self['entryInstancesCover'].set_text(self['entrydialogInstancesEditSubgroupCover'].get_text());
+                    rootiter = model.iter_parent(iter)                
+                    iter = treestore.append(rootiter,[False,name,''])
+                    i = 0                    
+                    while (True):
+                        iter = model.iter_nth_child(rootiter,i)
+                        if iter==None:
+                            break
+                        model.set_value(iter,2,codestr)
+                        i=i+1
+                        
+                    model.set_value(rootiter,2,codestr)   
+                
+        
+    def on_buttonInstancesUnderGroup(self,widget,data=None,data2=None):
+        treestore = self['treestoreXPNInstances']
+        treeview = self['treeviewXPNInstances']
+        model = treestore
+        selection = treeview.get_selection()
+        tup = selection.get_selected()
+        iter = tup[1] #model.get_iter((int(path),))
+        if (iter!=None):
+            code = model.get_value(iter,2)
+            name = model.get_value(iter,1)         
+            codearray = self.get_code_array(code)
+            if (len(name.split(','))>1): 
+                self['entrydialogInstancesEditgroupID'].set_text(codearray[1])
+                self['entrydialogInstancesEditgroupi'].set_text(codearray[2])
+                self['entrydialogInstancesEditgroupj'].set_text(codearray[3])
+                self['checkbuttondialogInstancesEditgroupact'].set_active(int(codearray[0]))
+                self['dialogInstancesEditgroup'].set_title('Edit Grid')
+                id = self['dialogInstancesEditgroup'].run()
+                if id==1:            
+                    codearray[1] = self['entrydialogInstancesEditgroupID'].get_text()
+                    codearray[2] = self['entrydialogInstancesEditgroupi'].get_text()
+                    codearray[3] =  self['entrydialogInstancesEditgroupj'].get_text()
+                    codearray[0] = str(int(self['checkbuttondialogInstancesEditgroupact'].get_active()))
+                    lencodearray = len(codearray)
+                    S2 = cdbplot.get_filename_without_path(self.project_filename)
+                    S3 = S2[:-4]
+                    i=4            
+                    i2=0
+                    while (True):
+                        if i+1>lencodearray:
+                            break
+                        S = str(i2)
+                        src=get_fullpath_from_relative(self.base_path,codearray[i])                    
+                        codearray[i]='cfg/'+S3+'_'+codearray[1]+'_'+codearray[2]+'_'+codearray[3]+'_'+S+'.cfg'
+                        dst =get_fullpath_from_relative(self.base_path,codearray[i])
+                        act='rename'
+                        self.FileAction.append([act,src,dst])
+                        i=i+2
+                        i2=i2+1
+                    codestr = self.set_code_str(codearray)                    
+                    self['entryInstanceID'].set_text(codearray[1]);
+                    self['entryInstancesi'].set_text(codearray[2]);
+                    self['entryInstancesj'].set_text(codearray[3]);
+                    self['checkbuttonInstancesAct'].set_active(int(codearray[0]))
+                   
+        
+                    rootiter = iter
+                    i = 0                    
+                    while (True):
+                        iter = model.iter_nth_child(rootiter,i)
+                        if iter==None:
+                            break
+                        model.set_value(iter,2,codestr)
+                        i=i+1
+                        
+                    model.set_value(rootiter,2,codestr) 
+                    name='('+codearray[1]+','+codearray[2]+','+codearray[3]+')'
+                    model.set_value(rootiter,1,name) 
+                self['dialogInstancesEditgroup'].hide()
+                
+            else:            
+                self['entrydialogInstancesEditSubgroupCover'].set_text(codearray[5+int(name)*2])
+                self['dialogInstancesEditSubgroup'].set_title('Edit Instance')
+                id = self['dialogInstancesEditSubgroup'].run()
+                if id==1:                                
+                    codearray[5+int(name)*2]=self['entrydialogInstancesEditSubgroupCover'].get_text()
+                    codestr = self.set_code_str(codearray)
+                    name = model.get_value(iter,1)         
+                    self['entryInstancesCover'].set_text(codearray[5+int(name)*2]);
+                    self['entryInstancesConfigFilename'].set_text(codearray[4+int(name)*2])
+                    rootiter = model.iter_parent(iter)                
+                    i = 0                    
+                    while (True):
+                        iter = model.iter_nth_child(rootiter,i)
+                        if iter==None:
+                            break
+                        model.set_value(iter,2,codestr)
+                        i=i+1
+                        
+                    model.set_value(rootiter,2,codestr)                    
+                self['dialogInstancesEditSubgroup'].hide()
+
+    def model_options_opt_edit_cell_Value(self,cellrenderertext, path,new_text):
+        liststore_model_options = self["liststore_model_options_global_opt"]
+        iter = liststore_model_options.get_iter(path)
+        liststore_model_options.set(iter, 1, new_text);
+        
+    def model_options_opt_global_edit_cell_Option(self,cellrenderertext, path,new_text):
+        liststore_model_options = self["liststore_model_options_global_opt"]
+        iter = liststore_model_options.get_iter(path)
+        liststore_model_options.set(iter, 0, new_text);
+        
+    def Add_Global_opt_Option(self,widget, data=None):
+       id = self["dialog_Add_Options"].run()        
+       if (id==1):
+         liststore_model_options_global = self["liststore_model_options_global_opt"]
+         iter = liststore_model_options_global.insert(-1)
+         liststore_model_options_global.set_value(iter,0,self["entry_Add_Option_Option"].get_text())
+         liststore_model_options_global.set_value(iter,1,self["entry_Add_Option_Value"].get_text())                 
+       self["dialog_Add_Options"].hide()
+       
+    def Delete_Global_opt_Option(self,widget, data=None):
+       treeview_model_options_global = self["treeview_model_options_global_opt"]
+       selection = treeview_model_options_global.get_selection()
+       model, treeiter = selection.get_selected()
+       # If there's no selection, treeiter will be None
+       if treeiter is None: return
+       id = self["dialog_Question"].run()       
+       if (id==1):
+          model.remove(treeiter)
+       self["dialog_Question"].hide()
+        
+    def on_cfg_general_dialog(self,widget, data=None):
+        config = ConfigParser.ConfigParser()
+        config.read(self.project_filename)
+        cpus = config.get("system","num_proc")
+        debug_level = config.get("system","debug_level")
+        output_use_txt = config.get("system","output_use_txt")
+        output_database_provider = config.get("system","output_database_provider")
+        output_database_string = config.get("system","output_database_string")
+        output_use_database = config.get("system","output_use_database")
+        output_txtfile = config.get("system","output_txtfile")
+    
+        modules=config.get("modul","libs")
+        module_path=config.get("modul","path")
+        
+        model_lat = 0#config.get("model","lat")
+        model_lon = 0#config.get("model","lon")
+        model_cfg = 0#config.get("model","cfg")
+        model_var_list = config.get("model","var_list")
+        model_act = 0#config.get("model","active")
+        
+        model_grid = config.get("model","grid")
+        
+        self["spinbutton_cpus"].set_value(int(cpus))
+        self["spinbutton_debug_level"].set_value(int(debug_level))
+        
+        self["entryTextFilename"].set_text(output_txtfile)
+        self["checkbuttonTextFile"].set_active(int(output_use_txt))
+        
+        self["checkbuttonDatabase"].set_active(int(output_use_database))
+        self["entryProvider"].set_text(output_database_provider)
+        self["entryDatabaseString"].set_text(output_database_string)
+        
+        self["entry_ModulPath"].set_text(module_path)
+        
+        liststoreModules = self["liststoreModules"]
+        liststoreInstances = self["liststoreInstances"]
+        treeviewInstances = self["treeviewInstances"]
+         
+        
+        liststoreModules.clear()
+        for modul in modules.split(";"):
+            if modul!='':
+                iter = liststoreModules.insert(-1)
+                liststoreModules.set_value(iter,0,modul)
+                
+        model_var_list_split = model_var_list.split(";")
+     
+        treeviewXPNInstances = self['treeviewXPNInstances']
+        treestoreXPNInstances = self['treestoreXPNInstances']        
+        treestoreXPNInstances.clear()
+        instance_group = model_grid.split(';')       
+        for group in instance_group:
+            subgroup = group.split(',')
+            if len(subgroup) < 6:
+              break;
+            lensubgroup = len(subgroup)
+            act = subgroup[0]
+            S ='('+ str(subgroup[1])+','+str(subgroup[2])+',' + str(subgroup[3]) + ')'
+            piter = treestoreXPNInstances.append(None,[act,S,group])
+            i=4
+            i2=0
+            while(1):              
+              if i+1>lensubgroup:
+                break
+              #S = str(subgroup[i+1])
+              S = str(i2)       
+              piter2 = treestoreXPNInstances.append(piter,[act,S,group])
+              i=i+2      
+              i2=i2+1
+        
+        self.FileAction = []
+     
+        treeviewXPNInstances.connect('cursor-changed', self.on_treeviewXPNInstances_Select,treestoreXPNInstances,treeviewXPNInstances)
+        self['vboxInstanceundergroup'].hide()
+        self['vboxmaingroup'].hide()
+        
+        #GlobalOptions:
+        To_Delete_1 = []
+        To_Delete_2 = []
+        To_Delete_3 = []
+        
+        treeview_model_options_global_opt = self['treeview_model_options_global_opt']
+        liststore_model_options_global_opt = self['liststore_model_options_global_opt']
+        liststore_model_options_global_opt.clear()
+        try:
+            for items in config.items('global_options'):
+                iter = liststore_model_options_global_opt.insert(-1)
+                liststore_model_options_global_opt.set_value(iter,0,items[0])
+                liststore_model_options_global_opt.set_value(iter,1,items[1])
+                To_Delete_1.append('global_options')
+                To_Delete_2.append(items[0])             
+                To_Delete_3.append(items[1])    
+        except:
+            nothing=0
+        
+        id = self.dialog_cfg_general.run()
+        
+        self.dialog_cfg_general.hide()
+        
+        if (id==1):
+            try: 
+               config.add_section("system")
+            except:
+               dummy=0
+            config.set("system","num_proc",int(self["spinbutton_cpus"].get_value()))
+            config.set("system","debug_level",int(self["spinbutton_debug_level"].get_value()))
+            config.set("system","output_use_txt",int(self["checkbuttonTextFile"].get_active()))
+            config.set("system","output_use_database",int(self["checkbuttonDatabase"].get_active()))
+            config.set("system","output_txtfile",self["entryTextFilename"].get_text())
+            config.set("system","output_database_provider",self["entryProvider"].get_text())
+            config.set("system","output_database_string",self["entryDatabaseString"].get_text())
+            
+            try: 
+               config.add_section("modul")
+            except:
+               dummy=0
+            
+            config.set("modul","path",self["entry_ModulPath"].get_text())
+            #with open(self.project_filename, 'wb') as configfile:
+            #    config.write(configfile)
+            
+            # Librarys:
+            liblist = []
+            liststoreModules = self["liststoreModules"]
+            treeviewModules = self["treeviewModules"]                                                             
+            selection = treeviewModules.get_selection()
+            selection.unselect_all()
+            model = treeviewModules.get_model()           
+            first = None
+            i = 0
+            while (1):
+                  if i == 0:
+                     first = model.get_iter_first()
+                  else:
+                     first = model.iter_next(first)
+                  if first==None:
+                     break
+                  i = i+1
+                  Listlibname = model.get_value(first,0)
+                  liblist.append(Listlibname)          
+            libnamesstr = ""
+            for  libname in liblist:
+              libnamesstr = libnamesstr + libname + ';'
+            config.set("modul","libs",libnamesstr)
+            
+            #Instances:
+            # treeviewXPNInstances = self['treeviewXPNInstances']
+            #treestoreXPNInstances
+            model = treeviewXPNInstances.get_model()   
+            first = None
+            codelist= []
+            i = 0
+            while (1):
+                  if i == 0:
+                     first = model.get_iter_first()
+                  else:
+                     first = model.iter_next(first)
+                  if first==None:
+                     break
+                  i = i+1
+                  code = model.get_value(first,2)
+                  if model.iter_parent(first)==None:
+                       codelist.append(code)
+            #list to string
+            codestr=''
+            for codeitem in codelist:
+                codestr=codestr+codeitem+';'
+                
+            try: 
+               config.add_section("model")
+            except:
+               dummy=0
+            config.set("model","grid",codestr)
+            
+            
+            #Globel Options:
+            for i in range(len(To_Delete_1)):
+                config.remove_option(To_Delete_1[i],To_Delete_2[i])
+            
+            list_value_Option = []
+            list_value_Value = []
+            
+            #treeview_model_options_global_opt = self['treeview_model_options_global_opt']
+            #liststore_model_options_global_opt = self['liststore_model_options_global_opt']
+            treemodel_model_options_global_opt = treeview_model_options_global_opt.get_model()
+            first = liststore_model_options_global_opt.get_iter_first()
+            
+            if first!=None:
+                val = treemodel_model_options_global_opt.get_value(first,0)
+                val2 = treemodel_model_options_global_opt.get_value(first,1)            
+                list_value_Option.append(val)
+                list_value_Value.append(val2)
+                iter = first
+                while (1):
+                    iter = treemodel_model_options_global_opt.iter_next(iter)
+                    if iter==None:
+                        break
+                    val = treemodel_model_options_global_opt.get_value(iter,0)
+                    val2 =  treemodel_model_options_global_opt.get_value(iter,1)               
+                    list_value_Option.append(val)
+                    list_value_Value.append(val2)
+            try:
+                config.add_section('global_options')
+            except:
+                  nothing=0
+            for i in range(len(list_value_Option)):                                            
+                  config.set('global_options', list_value_Option[i],list_value_Value[i])
+                
+            configfile = open(self.project_filename, 'wb')
+            config.write(configfile)
+            
+            # Kopier, Loesch und umbenenn Aktionen
+            
+            for item in self.FileAction:
+                [act,src,dst] = item
+                if act=='copy':
+                    shutil.copy(src,dst)
+                if act=='rm':
+                    os.remove(src)
+                if act=='rename':
+                    shutil.move(src,dst)
+                
+
+    def on_add_module(self,widget, data=None):
+        dialog = gtk.FileChooserDialog("Add Moduls",None,gtk.FILE_CHOOSER_ACTION_OPEN,(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        filter = gtk.FileFilter()
+        filter.set_name("Modul Files (*.so, *.dll)")
+        filter.add_pattern("*.dll")
+        filter.add_pattern("*.so")
+        dialog.add_filter(filter)
+        dialog.set_filter(filter)
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        dialog.set_current_folder(get_fullpath_from_relative(self.base_path,self["entry_ModulPath"].get_text()))
+        dialog.set_select_multiple(True)
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+           filenames = dialog.get_filenames()
+           liststoreModules = self["liststoreModules"]
+           treeviewModules = self["treeviewModules"]                               
+           for filename in filenames:
+              #print get_filtered_libName(filename)
+                filtered_libname = get_filtered_libName(filename)                
+                selection = treeviewModules.get_selection()
+                selection.unselect_all()
+                model = treeviewModules.get_model()           
+                first = None
+                i = 0
+                while (1):
+                  if i == 0:
+                     first = model.get_iter_first()
+                  else:
+                     first = model.iter_next(first)
+                  if first==None:
+                     break
+                  i = i+1
+                  Listlibname = model.get_value(first,0)          
+                  if (Listlibname==filtered_libname): 
+                     model.remove(first)
+                     first = liststoreModules.get_iter_first()
+                     i =1  
+                           
+                iter = liststoreModules.insert(-1)
+                liststoreModules.set_value(iter,0,get_filtered_libName(filename))              
+        dialog.hide()
+        
+    
+    def on_result_file_add(self,widget, data=None):
+        dialog = gtk.FileChooserDialog("Add Result File",None,gtk.FILE_CHOOSER_ACTION_OPEN,(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        filter = gtk.FileFilter()
+        filter.set_name("Expert-N Output Files (*.cdb)")
+        filter.add_pattern("*.cdb")
+        dialog.add_filter(filter)
+        dialog.set_filter(filter)
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        #dialog.set_current_folder(get_fullpath_from_relative(self.base_path,self["entry_ModulPath"].get_text()))
+        dialog.set_select_multiple(True)
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+           filenames = dialog.get_filenames()
+           for filename in filenames:
+              self.add_file_to_outputlist(filename)
+        dialog.hide()
+        
+    def on_result_file_remove(self,widget, data=None):
+          treeviewModules = self["treeview_output"]
+          selection = treeviewModules.get_selection()
+          model, treeiter = selection.get_selected()
+          # If there's no selection, treeiter will be None
+          if treeiter is None: return
+          id = self["dialog_Question"].run()       
+          if (id==1):
+             model.remove(treeiter)
+          self["dialog_Question"].hide()     
+        
+    def on_delete_module(self,widget, data=None):
+          treeviewModules = self["treeviewModules"]
+          selection = treeviewModules.get_selection()
+          model, treeiter = selection.get_selected()
+         # If there's no selection, treeiter will be None
+          if treeiter is None: return
+          id = self["dialog_Question"].run()       
+          if (id==1):
+             model.remove(treeiter)
+          self["dialog_Question"].hide()  
+
+    def on_xpninstances_toggled(self,cell,path,liststore):
+        model = liststore
+        path2 = path.split(':')[0]
+        iter = model.get_iter((int(path2),))
+        val = model.get_value(iter,0)
+        val = not val
+        model.set(iter,0,val)
+        
+    def on_instances_toggled(self,cell,path,liststore):
+        model = liststore
+        iter = model.get_iter((int(path),))
+        val = model.get_value(iter,2)
+        val = not val
+        model.set(iter,2,val)
+        
+    def set_code_str(self,codearray):
+        codestr = ""
+        first=0
+        for code in codearray:
+            first = first+1
+            if first==1:
+                codestr=code
+            else:
+                codestr=codestr+','+code
+        return codestr
+
+    def get_code_array(self,code):
+       return code.split(',')
+    
+    def on_treeviewXPNInstances_Select(self,widget,treestore,treeview):
+       model = treestore
+       selection = treeview.get_selection()
+       tup = selection.get_selected()
+       iter = tup[1] #model.get_iter((int(path),))    
+       if (iter!=None):
+            code = model.get_value(iter,2)
+            name = model.get_value(iter,1)         
+            codearray = self.get_code_array(code)
+            if (len(name.split(','))>1): 
+                self['entryInstanceID'].set_text(codearray[1]);
+                self['entryInstancesi'].set_text(codearray[2]);
+                self['entryInstancesj'].set_text(codearray[3]);
+                self['checkbuttonInstancesAct'].set_active(int(codearray[0]))
+                self['vboxInstanceundergroup'].hide()
+                self['vboxmaingroup'].show()
+            else:            
+                self['entryInstancesConfigFilename'].set_text(codearray[4+int(name)*2])
+                self['entryInstancesCover'].set_text(codearray[5+int(name)*2]);
+                self['vboxInstanceundergroup'].show()
+                self['vboxmaingroup'].hide()
+           
+            
+            
+        
+    def on_Treeview_Instances_Select(self,widget,liststoreInstances,treeviewInstances,model_lat_split,model_lon_split,model_cfg_split,model_var_list_split):
+        model = liststoreInstances
+        selection = treeviewInstances.get_selection()
+        tup = selection.get_selected()
+        iter = tup[1] #model.get_iter((int(path),))
+        if (iter!=None):
+            i = model.get_value(iter,1)
+            self["spinbuttonLat"].set_value(float(model_lat_split[i]))
+            self["spinbuttonLon"].set_value(float(model_lon_split[i]))
+            self["entryInstanceConfigFile"].set_text(model_cfg_split[i])
+            self["entryInstancesVarList"].set_text(model_var_list_split[i])
+            
+            
+        
+
+    def on_cfg_modul_dialog(self,widget, data=None):
+        self.on_change_instances_combo_Last_SubModelChange=False
+        liststoreModel = self["liststoreModel"]
+        treeviewModel = self["treeviewModel"]
+        config = ConfigParser.ConfigParser()
+        config.read(self.project_filename)
+        #model_cfg = config.get("model","cfg")
+        #model_cfg_split = model_cfg.split(";")
+        #for i in range(len(model_cfg_split)):
+         #  model_cfg_split[i]=get_fullpath_from_relative(self.base_path,model_cfg_split[i])
+        #ModelsConfgFilename=model_cfg_split[0]
+        model_grid = config.get("model","grid")
+        instance_group = model_grid.split(';')       
+        model_cfg_split=[]
+        for group in instance_group:
+            subgroup = group.split(',')
+            if len(subgroup) < 6:
+              break;
+            lensubgroup = len(subgroup)
+            act = subgroup[0]
+            S = str(subgroup[1])+','+str(subgroup[2])+',' + str(subgroup[3])
+            #print subgroup
+            #piter = treestoreXPNInstances.append(None,[act,S,group])
+            i=4
+            while(1):              
+              if i+1>lensubgroup:
+                break
+              model_cfg_split.append(get_fullpath_from_relative(self.base_path,subgroup[i]))
+              S = str(subgroup[i+1])
+              #piter2 = treestoreXPNInstances.append(piter,[act,S,group])
+              i=i+2      
+        
+        liststoreInstance=self["liststoreInstance"]
+        liststoreInstance.clear()  
+        for S in model_cfg_split:
+            if S!="":
+              iter = liststoreInstance.insert(-1)
+              liststoreInstance.set_value(iter,0,S)                                     
+            
+        xpn_modules=[]
+       
+            
+        
+        
+                                    
+            #def File lesen:
+        config = ConfigParser.ConfigParser()
+        config.read("models.def")
+            
+        modules_list=[]
+        for name in config.get("modules","names").split("\n")[0].split(","):
+                model = cModulesList()
+                model.name = name
+                model.icon = config.get(name,"icon")
+                model.submodules = config.get(name,"submodul").split("\n")[0].split(",")
+                modules_list.append(model)
+                
+        liststoreModel.clear()
+        for i in range(len(modules_list)):
+                iter = liststoreModel.insert(-1)
+                liststoreModel.set_value(iter,0,modules_list[i].name)
+                #img = cairo.ImageSurface.create_from_png("cdbplot64x64.png")
+                pbuf = gdk.pixbuf_new_from_file(modules_list[i].icon)
+                liststoreModel.set_value(iter,1,pbuf)
+                liststoreModel.set_value(iter,2,i)                 
+            
+        treeviewModel.connect('cursor-changed',self.on_Model_Selected,modules_list,xpn_modules)
+            
+        model = liststoreModel
+        first = model.get_iter_first()
+        selection = treeviewModel.get_selection()
+        selection.set_mode(gtk.SELECTION_SINGLE)
+        selection.select_iter(first)
+            
+            
+            
+            #event = gtk.gdk.Event(gtk.gdk.CURSOR_CHANGED)
+            #event.send_event = True                
+            #self.quit.emit("cursor-changed", event)
+            
+        self["combobox_Instance"].connect('changed', self.on_change_instances_combo, xpn_modules,modules_list)
+            
+        self["combobox_Instance"].set_active(0) 
+    
+            
+        result = self["dialogModel"].run()           
+        if (result==1):               
+               ModelsConfgFilename = self["combobox_Instance"].get_model().get_value(self["combobox_Instance"].get_active_iter(),0)  
+               self.Save_Modul_CFG_File(ModelsConfgFilename,modules_list,xpn_modules)
+        self["dialogModel"].hide()
+        
+    def Save_Modul_CFG_File(self,ModelsConfgFilename,modules_list,xpn_modules):    
+         modul_cfg = ConfigParser.ConfigParser()
+         modul_cfg.read(ModelsConfgFilename)
+         for i in range(len(modules_list)):
+                  for i2 in range(len(modules_list[i].submodules)):                     
+                    try:
+                           modul_cfg.remove_option(modules_list[i].name,modules_list[i].submodules[i2])
+                    except:
+                           nothing=True
+     
+         for i in range(len(xpn_modules)):
+                  if (xpn_modules[i].active==True):
+                       try:
+                          modul_cfg.add_section(xpn_modules[i].modul)               
+                       except:
+                          nothing=0		                   
+                       modul_cfg.set(xpn_modules[i].modul,xpn_modules[i].submodul,xpn_modules[i].name)       
+         configfile = open(ModelsConfgFilename, 'wb')
+         modul_cfg.write(configfile)
+            
+    def on_change_instances_combo(self,combobox,xpn_modules,modules_list):
+        model = combobox.get_model()
+        iter = combobox.get_active_iter()       
+        if iter!=None:
+           ModelsConfgFilename = model.get_value(iter,0) 
+           try:
+                #print self.on_change_instances_combo_Last_ModelsConfgFilename
+                if self.on_change_instances_combo_Last_SubModelChange==True:
+                    id = self["dialog_Save_Changes"].run()
+                    if (id==1):
+                        self.Save_Modul_CFG_File(self.on_change_instances_combo_Last_ModelsConfgFilename,modules_list,xpn_modules)
+                self["dialog_Save_Changes"].hide()                    
+            
+           except:
+                nothing=True
+           del xpn_modules[:]
+           self.on_change_instances_combo_Last_SubModelChange=False
+           self.on_change_instances_combo_Last_ModelsConfgFilename = ModelsConfgFilename
+           liststoreModel = self["liststoreModel"]
+           treeviewModel = self["treeviewModel"]
+           modul_cfg = ConfigParser.ConfigParser()        
+           modul_cfg.read(ModelsConfgFilename)
+           p = subprocess.Popen([self.expertn_bin,"-d",self.base_path,"-c",self.project_filename,"-m"], shell=False,  stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+           (output,input,error) = (p.stdin, p.stdout, p.stderr)
+           while (1):
+                lines = input.readline()
+                if not lines: 
+                    break
+                line = lines.split("\n")[0].split("\r")[0].split(",")     
+                xpn_modul = cModules()
+                #xpn_modul.modul = line[0].replace("_"," ")
+                xpn_modul.modul = line[0]
+                #xpn_modul.submodul = line[1].replace("_"," ")
+                xpn_modul.submodul = line[1]        
+                xpn_modul.libname = line[2]
+                xpn_modul.name = line[3].split("\n")[0]
+                try:                                                            
+                    name = modul_cfg.get(line[0],line[1])     
+                    if name == xpn_modul.name:
+                        xpn_modul.active = True
+                    else:
+                        xpn_modul.active = False
+                except:
+                    xpn_modul.active = False
+                
+                xpn_modules.append(xpn_modul)    
+           self.on_Model_Selected(None, modules_list,xpn_modules)
+
+        
+    def on_Model_Selected(self,data, modules_list,xpn_modules):      
+        ModelsConfgFilename = self["combobox_Instance"].get_model().get_value(self["combobox_Instance"].get_active_iter(),0)         
+        liststoreModel = self["liststoreModel"]
+        treeviewModel = self["treeviewModel"]
+        vboxSubmodels = self["vboxSubmodels"]
+        model = liststoreModel
+        selection = treeviewModel.get_selection()
+        tup = selection.get_selected()
+        iter = tup[1] #model.get_iter((int(path),))
+        if (iter!=None):
+                val = model.get_value(iter,2) #Nummer
+                children = vboxSubmodels.get_children() 
+                children = vboxSubmodels.get_children()
+                if (len(children)!=0):
+                    for child in children:
+                        vboxSubmodels.remove(child)
+                tablex=5
+                table_submodul = gtk.VBox()
+                table_submodul2 = gtk.VBox()
+                
+
+                hbox21 = gtk.HBox()
+                hbox21.pack_start(table_submodul2,True,True,10)
+                hbox21.pack_start(table_submodul,True,True,10)
+                hbox21.set_homogeneous(True)
+                hbox21.show()
+                #self.vboxSubmodels
+                scrolled_window2 = gtk.ScrolledWindow()
+                scrolled_window2.set_border_width(0)
+                scrolled_window2.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)#gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+                scrolled_window2.add_with_viewport(hbox21)
+                scrolled_window2.show()
+                vbox20 = gtk.HBox() #gtk.Table(len(submodellist),2,True)
+                #self.table_submodul.pack_end(scrolled_window2)
+                #vbox20.pack_start(scrolled_window2)
+                vboxSubmodels.add(scrolled_window2)
+                table_submodul.show()
+                table_submodul2.show()
+                i=0
+                i2=0
+                for submodules in modules_list[val].submodules:
+                    #scrolled_window = gtk.ScrolledWindow()
+                    #scrolled_window.set_border_width(0)
+                    #scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
+                    frame = gtk.Frame()
+                    #scrolled_window.add_with_viewport(frame)
+                    #table_submodul.attach(scrolled_window,i,i+1,i2,i2+1, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=5, ypadding=5)
+                    if i2 % 2: 
+                        table_submodul.pack_start(frame,False,True,10)
+                    else:
+                        table_submodul2.pack_start(frame,False,False,10)
+                    #scrolled_window.show()
+                    i2=i2+1
+                    #if i > 2:
+                     #   i=0
+                     #   i2=i2+1
+                    
+                    frame.set_label(submodules)
+                    name_list = []
+                    
+                    comboactive=0
+                    xpn_module_list = get_modules_list(xpn_modules,modules_list[val].name,submodules)
+                    for i in range(len(xpn_module_list)):
+                        name_list.append(xpn_module_list[i].name)
+                        if xpn_module_list[i].active==True: comboactive=i
+                                        
+                    
+                    combobox1 = gtk.combo_box_new_text()
+                    i5=0
+                    
+                    for item in name_list:   
+                        combobox1.append_text(item)
+                        #if item=='empty' and comboactive==-1:
+                        #    comboactive=i5 
+                        #if item.activated:
+                        #    comboactive=i5
+                        #i5=i5+1
+                    combobox1.set_active(comboactive)
+                    OptionButton = gtk.Button()
+                    OptionButton.set_relief(gtk.RELIEF_NONE)
+                    im = gtk.image_new_from_stock(gtk.STOCK_EDIT,1)
+                    OptionButton.add(im)
+                    model = combobox1.get_model()
+                    index = combobox1.get_active()
+                    iter = combobox1.get_active_iter()
+                    val2 = model.get_value(iter,0)
+                    if val2=="empty":
+                       OptionButton.set_sensitive(False)   
+                    else:
+                       OptionButton.set_sensitive(True)                    
+                    OptionButton.connect("clicked", self.model_options_edit, None,xpn_module_list,combobox1,ModelsConfgFilename)
+                    #OptionButton.set_image(im)
+                    OptionButton.show_all()
+                    #OptionButton.
+                    #stock=gtk.STOCK_PREFERENCES)
+                    vbox1 = gtk.VBox()
+                    hbox5=gtk.HBox()                    
+                    hbox5.pack_start(combobox1,True,True,10)
+                    hbox5.pack_end(OptionButton,False,False,10)
+                    vbox1.pack_start(hbox5,False,False)                    
+                    text1=gtk.Label()
+                    text1.set_markup("<i>No Description</i>")
+                    #text1.set_justify(gtk.JUSTIFY_LEFT)
+                    hbox1000=gtk.HBox()
+                    hbox1000.pack_start(text1,False,False,10)
+                    vbox1.pack_end(hbox1000,False,False,10)
+                    vbox2 = gtk.VBox()
+                    vbox1.pack_end(vbox2,True,True,0)
+                    combobox1.connect('changed', self.on_submodel_change,OptionButton,xpn_module_list)
+                    frame.add(vbox1)
+                    frame.show_all()
+                    
+     
+    def model_options_edit(self, widget,data=None,xpn_module=None,combobox=None,ModelsConfgFilename=None):
+        model = combobox.get_model()
+        comboactive = combobox.get_active()
+        To_Delete_1 = []
+        To_Delete_2 = []
+        To_Delete_3 = []
+        if comboactive==0: return
+        liststore_model_options = self["liststore_model_options"]
+        liststore_model_options.clear()
+        modul_cfg = ConfigParser.ConfigParser()
+        modul_cfg.read(ModelsConfgFilename)
+        try:
+          for items in modul_cfg.items(xpn_module[comboactive].name):
+             #print items
+             iter = liststore_model_options.insert(-1)
+             liststore_model_options.set_value(iter,0,items[0])
+             liststore_model_options.set_value(iter,1,items[1])
+             To_Delete_1.append(xpn_module[comboactive].name)
+             To_Delete_2.append(items[0])             
+             To_Delete_3.append(items[1])    
+
+        except:
+             nothing=0
+             
+        liststore_model_options_global = self["liststore_model_options_global"]
+        liststore_model_options_global.clear()
+        libname = get_filtered_libName(xpn_module[comboactive].libname)
+        try:
+          for items in modul_cfg.items(libname):
+             #print items
+             iter = liststore_model_options_global.insert(-1)
+             liststore_model_options_global.set_value(iter,0,items[0])
+             liststore_model_options_global.set_value(iter,1,items[1])
+             To_Delete_1.append(libname)
+             To_Delete_2.append(items[0])             
+             To_Delete_3.append(items[1])    
+
+        except:
+             nothing = 0
+
+        id = self["dialog_modeloption"].run()
+        if id==1:
+               configfile = open(ModelsConfgFilename, 'wb')
+               
+               for i in range(len(To_Delete_1)):
+                   modul_cfg.remove_option(To_Delete_1[i],To_Delete_2[i])
+                     
+               list_value_Option = []
+               list_value_Value = []
+               liststore_model_options = self["liststore_model_options"]
+               treeview_model_options = self["treeview_model_options"]
+               treemodel_model_options = treeview_model_options.get_model()
+               first = liststore_model_options.get_iter_first()               
+               if first!=None:
+                  val = treemodel_model_options.get_value(first,0)
+                  val2 = treemodel_model_options.get_value(first,1)            
+                  list_value_Option.append(val)
+                  list_value_Value.append(val2)
+                  iter = first
+                  while (1):
+                     iter = treemodel_model_options.iter_next(iter)
+                     if iter==None:
+                        break
+                     val = treemodel_model_options.get_value(iter,0)
+                     val2 =  treemodel_model_options.get_value(iter,1)               
+                     list_value_Option.append(val)
+                     list_value_Value.append(val2)
+               try:
+                  modul_cfg.add_section(xpn_module[comboactive].name)               
+               except:
+                  nothing=0
+               for i in range(len(list_value_Option)):                                            
+                  modul_cfg.set(xpn_module[comboactive].name, list_value_Option[i],list_value_Value[i])    
+                  
+               list_value_Option = []
+               list_value_Value = []
+               liststore_model_options = self["liststore_model_options_global"]
+               treeview_model_options = self["treeview_model_options_global"]
+               treemodel_model_options = treeview_model_options.get_model()
+               first = liststore_model_options.get_iter_first()               
+               if first!=None:
+                  val = treemodel_model_options.get_value(first,0)
+                  val2 = treemodel_model_options.get_value(first,1)            
+                  list_value_Option.append(val)
+                  list_value_Value.append(val2)
+                  iter = first
+                  while (1):
+                     iter = treemodel_model_options.iter_next(iter)
+                     if iter==None:
+                        break
+                     val = treemodel_model_options.get_value(iter,0)
+                     val2 =  treemodel_model_options.get_value(iter,1)               
+                     list_value_Option.append(val)
+                     list_value_Value.append(val2)
+               try:
+                  modul_cfg.add_section(libname)               
+               except:
+                  nothing=0
+               for i in range(len(list_value_Option)):                               
+                  modul_cfg.set(libname, list_value_Option[i],list_value_Value[i])                                
+               
+               modul_cfg.write(configfile)
+        self["dialog_modeloption"].hide()
+    
+    def model_options_edit_cell_Option(self,cellrenderertext, path,new_text):
+        liststore_model_options = self["liststore_model_options"]
+        iter = liststore_model_options.get_iter(path)
+        liststore_model_options.set(iter, 0, new_text);
+    
+    def model_options_edit_cell_Value(self,cellrenderertext, path,new_text):
+        liststore_model_options = self["liststore_model_options"]
+        iter = liststore_model_options.get_iter(path)
+        liststore_model_options.set(iter, 1, new_text);
+        
+    def model_options_global_edit_cell_Option(self,cellrenderertext, path,new_text):
+        liststore_model_options = self["liststore_model_options_global"]
+        iter = liststore_model_options.get_iter(path)
+        liststore_model_options.set(iter, 0, new_text);
+    
+    def model_options_global_edit_cell_Value(self,cellrenderertext, path,new_text):
+        liststore_model_options = self["liststore_model_options_global"]
+        iter = liststore_model_options.get_iter(path)
+        liststore_model_options.set(iter, 1, new_text);
+        
+    def Add_Option(self,widget, data=None):
+       id = self["dialog_Add_Options"].run()        
+       if (id==1):
+         liststore_model_options_global = self["liststore_model_options"]
+         iter = liststore_model_options_global.insert(-1)
+         liststore_model_options_global.set_value(iter,0,self["entry_Add_Option_Option"].get_text())
+         liststore_model_options_global.set_value(iter,1,self["entry_Add_Option_Value"].get_text())                 
+       self["dialog_Add_Options"].hide()
+       
+    def Delete_Option(self,widget, data=None):
+       treeview_model_options_global = self["treeview_model_options"]
+       selection = treeview_model_options_global.get_selection()
+       model, treeiter = selection.get_selected()
+       # If there's no selection, treeiter will be None
+       if treeiter is None: return
+       id = self["dialog_Question"].run()       
+       if (id==1):
+          model.remove(treeiter)
+       self["dialog_Question"].hide()
+       
+    def Add_Global_Option(self,widget, data=None):
+       id = self["dialog_Add_Options"].run()        
+       if (id==1):
+         liststore_model_options_global = self["liststore_model_options_global"]
+         iter = liststore_model_options_global.insert(-1)
+         liststore_model_options_global.set_value(iter,0,self["entry_Add_Option_Option"].get_text())
+         liststore_model_options_global.set_value(iter,1,self["entry_Add_Option_Value"].get_text())                 
+       self["dialog_Add_Options"].hide()
+       
+    def Delete_Global_Option(self,widget, data=None):
+       treeview_model_options_global = self["treeview_model_options_global"]
+       selection = treeview_model_options_global.get_selection()
+       model, treeiter = selection.get_selected()
+       # If there's no selection, treeiter will be None
+       if treeiter is None: return
+       id = self["dialog_Question"].run()       
+       if (id==1):
+          model.remove(treeiter)
+       self["dialog_Question"].hide()
+      
+                    
+    def on_submodel_change(self,combobox,OptionButton,xpn_module_list):
+        self.on_change_instances_combo_Last_SubModelChange=True
+        model = combobox.get_model()
+        index = combobox.get_active()
+        iter = combobox.get_active_iter()
+        val = model.get_value(iter,0)
+        choosen=-1
+        for i in range(len(xpn_module_list)):
+           if (xpn_module_list[i].name==val):
+              choosen=i
+              xpn_module_list[i].active=True
+           else:
+              xpn_module_list[i].active=False        
+        if (choosen==0):
+          OptionButton.set_sensitive(False)
+        else:
+              OptionButton.set_sensitive(True)    
+        return
+        item = cModules()
+        for item2 in name_list:
+            if item2.name==val:
+                item=item2
+        if item.description=='':
+            text1.set_markup("\n<i>No Description</i>")
+        else:
+            textlist = item.description.split("\\n")
+            text = ""
+            for txt in textlist:
+                text = text + '\n' + txt
+            text1.set_markup('<i>'+text+'</i>')
+        text1.set_line_wrap(True)
+        text1.set_single_line_mode(False)
+        text1.show()
+        children = vbox2.get_children()
+        if (len(children)!=0):
+                    for child in children:
+                        vbox2.remove(child)
+        i=0
+        
+        hbox_1=gtk.HBox()
+        vbox_1=gtk.VBox()
+        vbox_2=gtk.VBox()
+        vbox_3=gtk.VBox()
+        hbox_1.pack_start(vbox_1)
+        hbox_1.pack_start(vbox_2)
+        hbox_1.pack_start(vbox_3)
+        
+        for param in item.params:    
+            text2=gtk.Label()
+            S = '<b>'+param+':</b>'
+            text2.set_markup(S)
+            textentry1 = gtk.Entry()
+            textentry1.set_text(item.params_act_val[i])
+            text3=gtk.Label()
+            text3.set_label(item.params_descr[i])
+            hbox1=gtk.HBox()
+            hbox1.pack_start(text3,False,True,10)
+            hbox2=gtk.HBox()
+            hbox2.pack_start(text2,False,True,10)
+            
+            vbox_1.pack_start(hbox2)
+            vbox_2.pack_start(textentry1);
+            vbox_3.pack_start(hbox1,False,False,5)
+            i=i+1
+        if len(item.params)!=0:
+            text5=gtk.Label()
+            text5.set_markup('<span foreground="blue"><b>Options:</b> </span>')
+            text4=gtk.Label()
+            text4.set_markup("")
+            text3=gtk.Label()
+            text3.set_markup("")
+            vbox2.pack_start(text4,True,True,5)
+            vbox2.pack_start(text5,True,True,5)
+            vbox2.pack_end(text3,True,True,5)
+        vbox2.pack_end(hbox_1)
+        vbox2.show_all()
+        
+    def on_cfg_dialog_SystemSettings(self,widget, data=None):
+       entry_Working_Directory = self['entry_Working_Directory']
+       entry_Expert_N_Exec = self['entry_Expert_N_Exec']       
+       try:
+          entry_Working_Directory.set_text(self.base_path)
+       except:
+          a=0
+       try:
+         entry_Expert_N_Exec.set_text(self.expertn_bin)      
+       except:
+          a=0
+       
+       cdbplotconfig = ConfigParser.ConfigParser()
+       try:
+            cdbplotconfig.read("cdbplot.ini")
+            self['dialogoptionspath'].set_text(cdbplotconfig.get("spreadsheet","path"))
+            self['dialogoptionscommand'].set_text(cdbplotconfig.get("spreadsheet","command"))   
+       except:
+            self['dialogoptionspath'].set_text("")
+            self['dialogoptionscommand'].set_text("gnumeric")   
+       id = self["dialog_SystemSettings"].run()
+       if (id==1):
+           configfile = open("expertn_gui.ini", 'wb')
+           self.base_path = entry_Working_Directory.get_text()
+           self.expertn_bin = entry_Expert_N_Exec.get_text()
+           modul_cfg = ConfigParser.ConfigParser()
+           try:
+              modul_cfg.add_section("PATHS")
+           except:
+              dummy=0
+           modul_cfg.set("PATHS","expertn_bin",self.expertn_bin)
+           modul_cfg.set("PATHS","base_path",self.base_path)
+           modul_cfg.write(configfile)
+           cdbconfigfile=open("cdbplot.ini",'w')
+           try:
+                cdbplotconfig.add_section("spreadsheet")
+           except:
+                dummy=0
+           cdbplotconfig.set("spreadsheet","path",self['dialogoptionspath'].get_text())
+           cdbplotconfig.set("spreadsheet","command",self['dialogoptionscommand'].get_text())
+           cdbplotconfig.write(cdbconfigfile)
+           cdbconfigfile.close()
+       self["dialog_SystemSettings"].hide()                    
+            
+        
+gobject.threads_init()
+if (os.name=='posix'):
+    gtk.gdk.threads_init()
+lock = thread.allocate_lock()
+        
+        
+if __name__ == "__main__":
+    #thread.start_new_thread(testthread, ())
+    Mwindow = MainWindow()
+    Mwindow.window.show()
+    gtk.gdk.threads_enter
+    gtk.main()
+    gtk.gdk.threads_leave()

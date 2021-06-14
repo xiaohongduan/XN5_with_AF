@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="expertn_class" InternalType="Library">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0005Release000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_class\src\expertnclass.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_class\src\general_config.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_class\src\xpn_output_netcdf.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_class\include\expertnclass.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_class\include\general_config.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_class\include\xpn_output_netcdf.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\expertn_modul_base.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\expertn_noah_driver.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\expertn_noah_driver_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\expertn_wrfchem_driver.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xchemist.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xchemist_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xclimate.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xclimate_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xdefines.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xgraphic.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xheat.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xheat_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xinclexp.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xlocatn.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xmanag.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xmanag_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xn_mpmas_interface.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xplant.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xplant_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xpn_defines.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xpn_exports.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xpn_register_modul.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xpn_register_var.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xsoil.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xsoil_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xsystem.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xtime.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xtime_reg.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xtypes.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xwater.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\libexpertn_modul_base\include\xwater_reg.h"/>
+  </VirtualDirectory>
+  <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Release" CompilerType="gnu gcc" ReleasegerType="GNU gdb Releaseger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value=""/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="D:\XN5_AF\expertn50\dev\build\xpn\libexpertn_class\src\libexpertn_class.dll" IntermediateDirectory="" Command="" CommandArguments="" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Releaseger IsRemote="no" RemoteHostName="" RemoteHostPort="" ReleasegerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Releaseger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        $b = project.build_properties[0]}
+        <RebuildCommand>D:\XN5_AF\expertn50\dev/waf clean build  --targets=expertn_class</RebuildCommand>
+        <CleanCommand>D:\XN5_AF\expertn50\dev/waf clean  --targets=expertn_class</CleanCommand>
+        <BuildCommand>D:\XN5_AF\expertn50\dev/waf build  --targets=expertn_class</BuildCommand>
+        <Target Name="Install">D:\XN5_AF\expertn50\dev/waf install  --targets=expertn_class</Target>
+        <Target Name="Build and Install">D:\XN5_AF\expertn50\dev/waf build install  --targets=expertn_class</Target>
+        <Target Name="Build All">D:\XN5_AF\expertn50\dev/waf build</Target>
+        <Target Name="Rebuild All">D:\XN5_AF\expertn50\dev/waf clean build</Target>
+        <Target Name="Clean All">D:\XN5_AF\expertn50\dev/waf clean</Target>
+        <Target Name="Build and Install All">D:\XN5_AF\expertn50\dev/waf build install</Target>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu gcc" ReleasegerType="GNU gdb Releaseger" Type="" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateReleaseArgs="no" ReleaseArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[
+      ]]>
+      </Environment>
+      <Releaseger IsRemote="no" RemoteHostName="" RemoteHostPort="" ReleasegerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Releaseger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

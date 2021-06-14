@@ -1,0 +1,31 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='open_geo_sys_driver'
+
+
+SOURCE_FILES=  [
+                 'open_geo_sys_driver.c'                 
+                ]
+
+
+
+     
+def options(opt):
+        pass
+
+def configure(conf):
+        pass
+
+def build(bld):
+    lib = bld(
+                features        = 'cxx cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_CLASS,
+                use             = bld.env.USE_STD,                
+                target          = LIBNAME,
+                includes        = bld.env.INCLUDES_CLASS,
+                install_path    = bld.env.INSTALL_MODELS
+                )

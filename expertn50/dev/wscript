@@ -1,0 +1,375 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+# the following two variables are used by the target "waf dist"
+
+from waflib import Configure, Logs, Tools
+from os.path import expanduser
+import os
+
+import subprocess
+
+
+
+
+project_list_std = [
+               "xpn/libexpertn_modul_base/src",
+               "xpn/libexpertn_class/src",
+               "xpn/expertn_bin/src",
+               "xpn/modul/libexpertn_database/src",
+               "xpn/modul/libagroforestry/src",
+               "xpn/modul/libbalance/src",
+               "xpn/modul/libcentury_n/src",
+               "xpn/modul/libdaisy/src",
+               "xpn/modul/libdepos/src",
+               "xpn/modul/libevapotranspiration_pm/src",
+               "xpn/modul/libhpm/src",
+               "xpn/modul/libhydraulic_functions/src",
+               "xpn/modul/libhydrus/src",
+               "xpn/modul/libinterception/src",
+               "xpn/modul/libleachn/src",
+               "xpn/modul/libpedotransfer/src",
+               "xpn/modul/libread_wrf_weather/src",
+               "xpn/modul/libschaaf/src",
+               "xpn/modul/libspass/src",
+               "xpn/modul/libtreemix/src",
+               "xpn/modul/libwrf_coupling/src",
+               "xpn/modul/libxnoah/src",
+               "xpn/modul/libxpn_output/src",
+               "xpn/modul/libceres/src",
+               "xpn/modul/libwrfchem_coupling/src",
+               "xpn/modul/libpollen/src",
+               "xpn/modul/libdaisy_miner/src",
+               "xpn/modul/libschaaf_manag/src",
+               "xpn/modul/libgecros/src",
+               "xpn/modul/libmpmas_coupling/src",
+               "xpn/modul/libxylemwaterflow/src"
+               ]
+
+# Magic Waf variables here.
+top = '.'
+out = 'build'
+
+home = expanduser("~")
+default_prefix = home+'/expertn50/built'
+
+def conf_get_svn_rev():
+    try:
+
+        #p = subprocess.Popen(['svn', 'info', '--non-interactive'], stdout=subprocess.PIPE, \
+        #        stderr=subprocess.STDOUT, close_fds=False, env={'LANG' : 'C'})
+        p = subprocess.Popen(['svn', 'info', '--non-interactive'], stdout=subprocess.PIPE, \
+                stderr=subprocess.STDOUT, close_fds=False)
+        stdout = p.communicate()[0]
+
+        if p.returncode == 0:
+            lines = stdout.splitlines(True)
+            for line in lines:
+                if line.startswith('Last Changed Rev'):
+                    key, value = line.split(': ', 1)
+                    return '5.0 Rev ' + value.strip()
+        return '5.0 Rev 0'
+    except:
+        return '5.0 Rev 0'
+
+
+def check_libgda(conf):
+    #print conf.Tools.msvc.visual_studio_add_flags()
+    #conf.env.prepend_value('CFLAGS', '/IC:/MinGW/include')
+
+    #print conf.env['CFLAGS']
+    #print conf.env['INCLUDES']
+    fragment = '''#include <libgda/libgda.h>
+                  int main (int argc, char *argv[]) {gda_init ();return 0;}
+               '''
+    print conf.env.LIBPATH_LIBXML2
+    print conf.env.INCLUDES_GLIB
+    msg="Checking for libgda-4.0"
+    includes=['C:/MinGW/include','C:/MinGW/include/libgda-4.0','C:/MinGW/include/libgda-4.0/libgda','C:/MinGW/include/libxml2','C:/MinGW/include/glib-2.0','C:/MinGW/lib/glib-2.0/include']
+    #cflag='-IC:/MinGW/include/libgda-4.0'
+    cflag=''
+    for include in includes:
+        conf.env.append_value('INCLUDES',include)
+    #cflag='-mms-bitfields -IC:/MinGW/include/libgda-4.0 /IC:/MinGW/include/libgda-4.0/libgda -IC:/MinGW/include/libxml2 -IC:/MinGW/include/glib-2.0 -IC:/MinGW/lib/glib-2.0/include'
+    linkflag=''#'-LC:/MinGW/lib -lgda-4.0 -lgobject-2.0 -lxml2 -lgthread-2.0 -lglib-2.0 -lintl'
+    conf.check_cc(msg=msg, fragment=fragment, cflags=cflag,linkflags=linkflag,lib='libgda-4.0',uselib='GLIB GOBJECT GMODULE LIBXML2', uselib_store='LIBGDA')
+
+def check_pnetcdf(conf):
+     pnetcdf_msg="Checking for pnetcdf "
+     pnetcdf_fragment='''#include <mpi.h>
+                         #include <pnetcdf.h>
+                        int main(int argc, char **argv){
+                        int ncfile;
+                        return ncmpi_create(MPI_COMM_WORLD, argv[1],NC_CLOBBER|NC_64BIT_OFFSET, MPI_INFO_NULL, &ncfile);
+                        };'''
+     linkflag=''
+     cflag=''
+     conf.check_cc(msg=pnetcdf_msg,cflags=cflag,linkflags=linkflag,lib="pnetcdf", fragment=pnetcdf_fragment,uselib='OPEN_MPI', uselib_store='LIBNETCDF')
+
+def check_expertn_modul_base(conf):
+     expertn_modul_base_msg="Checking for expertn_modul_base "
+     expertn_modul_base_fragment='''#include "expertn_modul_base.h"
+                                   expertn_modul_base* base;
+                        int main(int argc, char **argv){
+                        base = expertn_modul_base_new();
+                        return 0;
+                        };'''
+     linkflag='-L'+conf.options.prefix+'/bin'
+     cflag=''
+     includes=[os.getcwd()+'/xpn/libexpertn_modul_base/include']
+     conf.check_cc(msg=expertn_modul_base_msg,cflags=cflag,linkflags=linkflag,includes=includes,lib="expertn_modul_base", fragment=expertn_modul_base_fragment,uselib='GLIB GOBJECT GMODULE LIBXML2 LIBGDA M', uselib_store='expertn_modul_base')
+
+def check_expertn_class(conf):
+     expertn_modul_base_msg="Checking for expertn_class "
+     expertn_modul_base_fragment='''#include "expertnclass.h"
+                        int main(int argc, char **argv){
+                        expertnclass_get_type();
+                        return 0;
+                        };'''
+     linkflag='-L'+conf.options.prefix+'/bin'
+     cflag=''
+     includes=[os.getcwd()+'/xpn/libexpertn_class/include']
+     conf.check_cc(msg=expertn_modul_base_msg,cflags=cflag,linkflags=linkflag,includes=includes,lib="expertn_class", fragment=expertn_modul_base_fragment,uselib='GLIB GOBJECT GMODULE LIBXML2 LIBGDA LIBNETCDF expertn_modul_base M', uselib_store='expertn_class')
+
+
+def list(targets):
+    print "list"
+    return
+
+
+def options(opt):
+    opt.load('compiler_cxx')
+    opt.load('compiler_c')
+    opt.load('gnu_dirs')
+
+    opt.load('msvs')
+    opt.load('eclipse')
+    opt.load('codelite')
+    #opt.load('xcode')
+
+    opt.add_option('--prefix', action='store', default=default_prefix,help='installation prefix [default='+default_prefix+']')
+    opt.add_option('--debug', action='store_true', default=False, help='enable debugging')
+    opt.add_option('--without_database', action='store_true', default=False, help='Compiling without libgda! Expert-N has no Database!')
+    opt.add_option('--max_optimize', action='store_true', default=False, help='maximal optimization (speed)')
+    opt.add_option('--USE_OPENMP', action='store_true', default=False,help='Compile Expert-N with OPENMP')
+    opt.add_option('--USE_MPI', action='store_true', default=False,help='Compile Expert-N with Open MPI')
+    opt.add_option('--add_project', action='store', default='',help='Adds optional projects --> readme.txt')
+    opt.add_option('--extern_project', action='store', default='',help='Compiles only optional projects --> readme.txt')
+    if os.name == 'nt':
+        opt.add_option('--GUI', action='store_true', default=False,help='Build Expert-N for use on grahphical user interface (Windows only)')
+
+
+    #opt.recurse(project_list_std)
+
+def configure(conf):
+    # Compiler Flags:
+    conf.load('compiler_cxx')
+    conf.load('compiler_cc')
+
+    # Libraries Check:
+    conf.check_cfg (package='glib-2.0', uselib_store='GLIB', atleast_version='2.22.5',
+                    args='--cflags --libs')
+    conf.check_cfg (package='gobject-2.0', uselib_store='GOBJECT', atleast_version='2.22.5',
+                    args='--cflags --libs')
+    conf.check_cfg (package='gmodule-2.0', uselib_store='GMODULE',
+                    args='--cflags --libs')
+    conf.check_cfg (package='gmodule-2.0', uselib_store='GMODULE',
+                    args='--cflags --libs')
+    conf.check_cfg (package='libxml-2.0', uselib_store='LIBXML2',
+                    args='--cflags --libs')
+    #check_libgda(conf)
+
+    if conf.options.without_database:
+        conf.define('XPN_WITHOUT_DATABASE',1)
+    else:
+        conf.check_cfg (package='libgda-4.0', uselib_store='LIBGDA', atleast_version='4.0.9',
+                    args='--cflags --libs')
+
+
+
+    conf.check_cc(lib='m', cflags='-Wall', uselib_store='M', mandatory=False)
+
+    conf.start_msg('Checking for MS Windows')
+    if os.name == 'nt':
+        conf.define('WIN32',1)
+        conf.end_msg("True")
+    else:
+        conf.end_msg("False")
+
+    # Versions Check:
+    conf.start_msg('Checking Expert-N Version')
+    xpn_version =  conf_get_svn_rev()
+    conf.end_msg(xpn_version)
+    conf.define('XPN_VERSION',xpn_version)
+
+    # Set general Flags:
+    conf.env.append_value('CFLAGS','-Wall')
+    conf.env.append_value('CXXFLAGS','-Wall')
+    conf.env.append_value('CFLAGS','-fPIC')
+    conf.env.append_value('CXXFLAGS','-fPIC')
+
+    # Compile Expert-N in debug or optimize mode
+    if conf.options.debug:
+        conf.define('XPN_DEBUG',1)
+    conf.start_msg('Flag debug:')
+    conf.end_msg(str(conf.options.debug))
+
+    if conf.options.debug:
+        conf.env.append_value('CFLAGS','-g')
+        conf.env.append_value('CFLAGS','-O0')
+        conf.env.append_value('CXXFLAGS','-g')
+        conf.env.append_value('CXXFLAGS','-O0')
+        conf.options.max_optimize=False
+    else:
+        if conf.options.max_optimize:
+            conf.env.append_value('CFLAGS','-O3')
+            conf.env.append_value('CXXFLAGS','-O3')
+        else:
+            conf.env.append_value('CFLAGS','-O2')
+            conf.env.append_value('CXXFLAGS','-O2')
+    if conf.options.max_optimize:
+        conf.define('XPN_MAX_OPTIMIZE', 1)
+    conf.start_msg('Flag max_optimize')
+    conf.end_msg(str(conf.options.max_optimize))
+
+    # Link OpenMP library if necessary:
+    conf.start_msg('Flag USE_OPENMP')
+    conf.end_msg(str(conf.options.USE_OPENMP))
+    if conf.options.USE_OPENMP:
+        conf.define('USE_OPENMP',1)
+        conf.env.append_value('USELIB_STD','OPEN_MP')
+        conf.options.USE_MPI=False
+        openmp_msg="Checking for openmp flag "
+        openmp_fragment='''#include <omp.h>
+                        int main(int argc, char **argv){
+                        int i;
+                        #pragma omp parallel for
+                        for (i=0;i<5;i++)
+                        {}
+                        return omp_get_thread_num();};'''
+        found_openmp=False
+        openmp_flags=['-fopenmp','-openmp','-mp','-xopenmp','-omp','-qsmp=omp']
+        for flag in openmp_flags:
+            try:
+                conf.check_cc(msg=openmp_msg+flag, fragment=openmp_fragment, cflags=flag,linkflags=flag, uselib_store='OPEN_MP')
+                conf.env.append_value('USELIB_STD','OPEN_MP')
+            except conf.errors.ConfigurationError:
+                continue
+            else:
+                found_openmp=True
+                break
+        if not found_openmp:
+            conf.fatal('Could not find OpenMP')
+
+
+
+
+    # Open MPI use?
+    conf.start_msg('Flag USE_MPI')
+    conf.end_msg(str(conf.options.USE_MPI))
+    if conf.options.USE_MPI:
+        #conf.check_cfg(path='mpicc', args=['--showme:compile','--showme:link'],package='', uselib_store='OPEN_MPI', mandatory=False)
+        conf.check_cfg(path='mpicc', args='--showme',package='', uselib_store='OPEN_MPI', mandatory=False)
+        conf.env.append_value('USELIB_STD','OPEN_MPI')
+        conf.define('USE_MPI',1)
+
+    if conf.options.USE_MPI:
+        try:
+            check_pnetcdf(conf)
+        except conf.errors.ConfigurationError:
+            conf.check_cfg (package='pnetcdf', uselib_store='LIBNETCDF', args='--cflags --libs')            
+    else:
+        conf.check_cfg (package='netcdf', uselib_store='LIBNETCDF',
+                    args='--cflags --libs')
+
+    conf.start_msg('Installation Prefix')
+    conf.end_msg(conf.options.prefix)
+
+    conf.env.append_value('USELIB_STD','GLIB')
+    conf.env.append_value('USELIB_STD','GOBJECT')
+    conf.env.append_value('USELIB_STD','GMODULE')
+    conf.env.append_value('USELIB_STD','LIBGDA')
+    conf.env.append_value('USELIB_STD','LIBNETCDF')
+    conf.env.append_value('USELIB_STD','M')
+
+
+
+
+
+    conf.env['USE_STD']='expertn_modul_base'
+    conf.env['USE_CLASS']='expertn_modul_base';conf.env.append_value('USE_CLASS','expertn_class')
+    cflag='-I'+os.getcwd().replace("\\","/")+'/xpn/libexpertn_modul_base/include'
+    conf.env['INCLUDES_STD'] = ['../include ',os.getcwd().replace("\\","/")+'/xpn/libexpertn_modul_base/include','.']
+    conf.env['INCLUDES_CLASS'] = ['../include ',os.getcwd().replace("\\","/")+'/xpn/libexpertn_modul_base/include',os.getcwd().replace("\\","/")+'/xpn/libexpertn_class/include','.']
+
+    conf.env['PREFIX'] = conf.options.prefix
+    conf.env['INSTALL_BIN']=conf.options.prefix+'/bin'
+    conf.env['INSTALL_MODELS']=conf.options.prefix+'/models'
+    conf.env['INSTALL_CFG']=conf.options.prefix+'/cfg'
+    conf.env['INSTALL_CFG_TEMPLATE']=conf.options.prefix+'/cfg_template'
+    conf.env['INSTALL_CFG_SYSTEM']=conf.options.prefix+'/cfg_system'
+    conf.env['INSTALL_DOC']=conf.options.prefix+'/doc'
+
+
+    #if
+    #conf.env.append_value('INCLUDES','C:/MinGW/include')
+
+
+    # correct lib pattern to 'lib%s.dll' or 'lib%s.so'
+    if conf.env.cshlib_PATTERN.startswith('lib')==False:
+        conf.env.cshlib_PATTERN='lib' + conf.env.cshlib_PATTERN
+
+    if conf.env.cxxshlib_PATTERN.startswith('lib')==False:
+        conf.env.cxxshlib_PATTERN='lib' + conf.env.cxxshlib_PATTERN
+
+
+    project_list=[]
+    if conf.options.extern_project != "":
+        extern_project_list=read_optional_list_file(conf.options.extern_project.split(','))
+        project_list = extern_project_list
+        check_expertn_modul_base(conf)
+        check_expertn_class(conf)
+        conf.env.append_value('USELIB_STD','expertn_modul_base')
+        conf.env.append_value('USELIB_STD','expertn_class')
+    else:
+        project_list=project_list_std
+
+
+
+
+    add_project_list=[]
+    if conf.options.add_project!='':
+        add_project_list=read_optional_list_file(conf.options.add_project.split(','))
+
+    #conf.env['add_project_list']=add_project_list
+    for item in add_project_list:
+        project_list.append(item)
+    conf.env['project_list']=project_list
+
+    #for item in conf.env.add_project_list:
+        #project_list.append(item)
+
+    conf.recurse(project_list)
+
+
+
+
+
+def build(bld):
+    bld.codelite_solution_name = 'expertn50.workspace'
+    bld.solution_name = 'expertn50.sln'
+    project_list=bld.env['project_list']
+    #for item in bld.env.add_project_list:
+        #project_list.append(item)
+    bld.recurse(project_list)
+
+
+def read_optional_list_file(filenames):
+    paths_to_wscript = []
+    for filename in filenames:
+        f = open(filename, 'r')
+        for line in f:
+            if line[0]!='#':
+                paths_to_wscript.append(line.split("\n")[0])
+    return paths_to_wscript

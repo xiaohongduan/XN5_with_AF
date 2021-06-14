@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="xylemwaterflow" InternalType="Library">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0005Release000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\sp_coletree.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\sp_ienv.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\sp_preorder.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_colamd.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dcolumn_bmod.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dcolumn_dfs.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dcopy_to_ucol.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dgssv.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dgstrf.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dgstrs.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dmemory.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dmyblas2.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dpanel_bmod.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dpanel_dfs.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dpivotL.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dpruneL.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dsnode_bmod.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dsnode_dfs.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dsp_blas2.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dtrsv.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_dutil.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_get_perm_c.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_heap_relax_snode.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_lsame.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_memory.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_mmd.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_relax_snode.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_timer.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\superLU_util.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_Kirchhoff.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_PDESystem.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_Photosynthesis_Leuning.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_SuperLUfunctions.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_balance.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_connector.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_connector_class_wrapper.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_hydraulicFunctions.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_load.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_plant_water_flux.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_quicksort.cpp"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_register_modul.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_tree.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\colamd.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\f2c.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\slu_Cnames.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\slu_ddefs.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\slu_util.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\supermatrix.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xplant_globals.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_GenerateRoots.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_Kirchhoff.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_PDESystem.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_SuperLUfunctions.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_balance.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_config.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_connector.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_connector_class_wrapper.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_global.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_hydraulicFunctions.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_load.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_quicksort.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_soils.h"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libxylemwaterflow\src\xylemwaterflow_tree.h"/>
+  </VirtualDirectory>
+  <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Release" CompilerType="gnu gcc" ReleasegerType="GNU gdb Releaseger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value=""/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="D:\XN5_AF\expertn50\dev\build\xpn\modul\libxylemwaterflow\src\libxylemwaterflow.dll" IntermediateDirectory="" Command="" CommandArguments="" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Releaseger IsRemote="no" RemoteHostName="" RemoteHostPort="" ReleasegerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Releaseger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        $b = project.build_properties[0]}
+        <RebuildCommand>D:\XN5_AF\expertn50\dev/waf clean build  --targets=xylemwaterflow</RebuildCommand>
+        <CleanCommand>D:\XN5_AF\expertn50\dev/waf clean  --targets=xylemwaterflow</CleanCommand>
+        <BuildCommand>D:\XN5_AF\expertn50\dev/waf build  --targets=xylemwaterflow</BuildCommand>
+        <Target Name="Install">D:\XN5_AF\expertn50\dev/waf install  --targets=xylemwaterflow</Target>
+        <Target Name="Build and Install">D:\XN5_AF\expertn50\dev/waf build install  --targets=xylemwaterflow</Target>
+        <Target Name="Build All">D:\XN5_AF\expertn50\dev/waf build</Target>
+        <Target Name="Rebuild All">D:\XN5_AF\expertn50\dev/waf clean build</Target>
+        <Target Name="Clean All">D:\XN5_AF\expertn50\dev/waf clean</Target>
+        <Target Name="Build and Install All">D:\XN5_AF\expertn50\dev/waf build install</Target>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu gcc" ReleasegerType="GNU gdb Releaseger" Type="" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateReleaseArgs="no" ReleaseArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[
+      ]]>
+      </Environment>
+      <Releaseger IsRemote="no" RemoteHostName="" RemoteHostPort="" ReleasegerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Releaseger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

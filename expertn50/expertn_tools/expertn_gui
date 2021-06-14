@@ -1,0 +1,7 @@
+#!/bin/sh
+#. /home/chrikle/projects/newmatrix/software/bin/setup_environment.sh
+#cd /home/chrikle/projects/newmatrix/expertn_modul/expertn_gui/src
+MYDIR=`dirname $0`
+echo $MYDIR
+cd $MYDIR
+./expertn_gui.py

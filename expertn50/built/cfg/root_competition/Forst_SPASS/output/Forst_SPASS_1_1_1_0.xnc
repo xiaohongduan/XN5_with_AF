@@ -1,0 +1,12 @@
+[axes properties]
+x_axis_automatic = True
+y_axis_automatic = True
+xfrom = 0.0
+xto = 10.0
+yfrom = 0.0
+yto = 100.0
+grid_on = True
+angle = 30.0
+linestyle = -
+measurement = 
+

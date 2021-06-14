@@ -1,0 +1,26 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='expertn_modul_base'
+SOURCE_FILES='expertn_modul_base.c xpn_register_modul.c xpn_register_var.c'
+
+def options(opt):
+    pass
+
+def configure(conf):
+    pass    
+
+def build(bld):
+    lib = bld(
+                features        = 'c cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_STD,
+                lib             = bld.env.LIBS,
+                target          = LIBNAME,
+                includes        = '../include',
+                install_path    = bld.env.INSTALL_BIN
+                )           
+      
+

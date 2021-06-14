@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="schaaf" InternalType="Library">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0005Release000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libschaaf\src\schaaf.c"/>
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libschaaf\src\schaaf_register_modul.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+  <File Name="D:\XN5_AF\expertn50\dev\xpn\modul\libschaaf\src\schaaf.h"/>
+  </VirtualDirectory>
+  <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Release" CompilerType="gnu gcc" ReleasegerType="GNU gdb Releaseger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value=""/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="D:\XN5_AF\expertn50\dev\build\xpn\modul\libschaaf\src\libschaaf.dll" IntermediateDirectory="" Command="" CommandArguments="" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Releaseger IsRemote="no" RemoteHostName="" RemoteHostPort="" ReleasegerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Releaseger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        $b = project.build_properties[0]}
+        <RebuildCommand>D:\XN5_AF\expertn50\dev/waf clean build  --targets=schaaf</RebuildCommand>
+        <CleanCommand>D:\XN5_AF\expertn50\dev/waf clean  --targets=schaaf</CleanCommand>
+        <BuildCommand>D:\XN5_AF\expertn50\dev/waf build  --targets=schaaf</BuildCommand>
+        <Target Name="Install">D:\XN5_AF\expertn50\dev/waf install  --targets=schaaf</Target>
+        <Target Name="Build and Install">D:\XN5_AF\expertn50\dev/waf build install  --targets=schaaf</Target>
+        <Target Name="Build All">D:\XN5_AF\expertn50\dev/waf build</Target>
+        <Target Name="Rebuild All">D:\XN5_AF\expertn50\dev/waf clean build</Target>
+        <Target Name="Clean All">D:\XN5_AF\expertn50\dev/waf clean</Target>
+        <Target Name="Build and Install All">D:\XN5_AF\expertn50\dev/waf build install</Target>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu gcc" ReleasegerType="GNU gdb Releaseger" Type="" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateReleaseArgs="no" ReleaseArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[
+      ]]>
+      </Environment>
+      <Releaseger IsRemote="no" RemoteHostName="" RemoteHostPort="" ReleasegerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Releaseger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

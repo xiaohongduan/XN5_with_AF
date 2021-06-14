@@ -1,0 +1,4 @@
+# additional models (ck)
+xpn/modul/libstickstoff/src
+xpn/modul/libdaisyhong/src
+xpn/modul/libschaaf_manag/src

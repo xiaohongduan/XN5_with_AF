@@ -1,0 +1,33 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='century_n'
+
+
+SOURCE_FILES=  [
+                 'century_n.c',
+                 'century_n_denit.c',
+                 'century_n_miner.c',
+                 'century_n_nitrify.c',
+                 'century_n_util.c',
+                 'century_n_register_modul.c'
+                ]
+        
+def options(opt):
+        pass
+
+def configure(conf):
+        pass
+
+def build(bld):
+    lib = bld(
+                features        = 'c cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_STD,
+                use             = bld.env.USE_STD,                
+                target          = LIBNAME,
+                includes        = bld.env.INCLUDES_STD,
+                install_path    = bld.env.INSTALL_MODELS
+                )

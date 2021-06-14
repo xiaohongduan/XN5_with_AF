@@ -1,0 +1,143 @@
+[control]
+balance = BALANCE
+database = Expert N Standard Read INI
+pedotransfer = Campbell
+output = XPN_OUTPUT
+
+[plant]
+potential transpiration = TREEMIX (incl. Rutter Model)
+actual transpiration = TREEMIX
+phenological development = TREEMIX
+canopy gross photosynthesis = TREEMIX
+biomass growth = TREEMIX
+canopy formation = TREEMIX
+root length growth = TREEMIX
+nitrogen demand = TREEMIX
+nitrogen uptake = TREEMIX
+crop senescence = TREEMIX
+
+[HYDRUS Flow]
+
+[TREEMIX (incl. Rutter Model)]
+
+[Expert N Standard Database]
+coupling = -1
+database = $<$BASE_PATH/cfg/$PROJECT_NAME_$REG_STR_database.db$>
+project name = Tharandt_Fichte
+provider name = SQLite
+cnc string = DB_DIR=$BASE_PATH/cfg;DB_NAME=$PROJECT_NAME_$REG_STR_database
+
+[CENTURY_N Mineralisation]
+
+[treemix]
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_treemix.ini$>
+
+[water]
+potential evapotranspiration = Penman Monteith
+potential evaporation = Penman Monteith
+actual evaporation = Penman Monteith
+kc factor = const
+hydraulic functions = van Genuchten and Mualem
+flow module = HYDRUS Flow
+
+[CENTURY_N Denitrification]
+
+[heat]
+heat transfer = DAISY Modul Heat Transfer
+albedo = Albedo const
+ground heat = Penman Monteith
+net radiation = Penman Monteith
+emissivity = Penman Monteith
+
+[hydrus]
+bottombc = 1
+mobil = 0
+infiltration_limit = 0
+infiltration_layer_limit = 0
+
+[nitrogen]
+deposition = Constant Deposition
+nitrification = LEACHN
+denitrification = LEACHN
+mineralisation = LEACHN
+
+[daisy]
+
+[century_n]
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_century_n.ini$>
+iforest = 1
+fdrain = 1.0
+
+[DAISY Modul Heat Transfer]
+frost_rad_flag = 1
+lower_boundary_condition = 2
+
+[TREEMIX]
+
+[expertn_database]
+
+[Expert N Standard Read INI]
+filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_cfg.ini$>
+use high resolution climate data = 0
+climate file = $<$PROJECT_PATH/Wetterdaten_Cottbus_1997-2015_Forst_2016-2018_AF.csv$>
+time zone = 0
+
+
+
+[WRF Coupling]
+
+[wrf_coupling]
+
+[NOAH]
+
+[xnoah]
+veg_filename = $<$PROJECT_PATH/$PROJECT_NAME_VEGPARM.TBL$>
+soil_filename = $<$PROJECT_PATH/$PROJECT_NAME_SOILPARM.TBL$>
+gen_filename = $<$PROJECT_PATH/$PROJECT_NAME_GENPARM.TBL$>
+
+[Albedo const]
+albedo = 0.12
+
+[NOAH LSM]
+
+[Constant Deposition]
+no3 = 3.5
+nh4 = 3.5
+
+[depos]
+
+[Rutter Model (Trees)]
+
+[interception]
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_interception.ini$>
+
+[Hutson and Wagnet]
+bottombc = 1
+mobil = 0
+
+[leachn]
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_leachn.ini$>
+bottombc = 1
+mobil = 0
+
+[Penman Monteith]
+kc = 0.9
+soil cover = 0.0
+
+[evapotranspiration_pm]
+
+[XPN_OUTPUT]
+
+[xpn_output]
+
+[CENTURY_N Nitrification]
+
+[const]
+kc factor = 0.9
+
+[LEACHN]
+
+[doc]
+description = TREEMIX without AF
+
+[management]

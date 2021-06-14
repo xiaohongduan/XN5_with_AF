@@ -1,0 +1,60 @@
+#This file defines the order and availability of the different modules and sub modules
+# !!! DON'T CHANGE THIS FILE  !!!, if you don't know what you are doing!
+# module.submodule
+water.hydraulic functions
+control.pedotransfer
+control.input
+other.wrf
+other.wrf chem
+other.ogs
+control.database
+management.agroforestry
+management.loss volatilization
+management.irrigation
+control.balance
+control.output
+water.snow
+water.interception
+heat.albedo
+heat.emissivity
+heat.net radiation
+heat.ground heat
+atmosphere.stability functions
+water.potential evapotranspiration
+water.potential evaporation
+water.actual evaporation
+management.harvest
+management.animal
+plant.potential transpiration
+plant.actual transpiration
+plant.phenological development
+plant.canopy gross photosynthesis
+plant.biomass growth
+plant.canopy formation
+plant.root length growth
+atmosphere.pollen release
+water.lower boundary condition
+water.flow module
+heat.heat transfer
+heat.latent heat
+heat.surface temperature
+heat.sensible heat
+nitrogen.deposition
+nitrogen.nitrogen transport
+nitrogen.urea hydrolysis
+nitrogen.mineralisation
+nitrogen.nitrification
+plant.nitrogen demand
+plant.nitrogen uptake
+plant.crop senescence
+water.kc factor
+nitrogen.denitrification
+nitrogen.volatilization
+nitrogen.ch4 imission emission
+management.mixing incorporation
+management.soil loosing compaction
+management.application fertilizers
+management.loss efficiency
+other.mpmas
+
+

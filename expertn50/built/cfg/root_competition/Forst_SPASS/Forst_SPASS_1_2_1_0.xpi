@@ -1,0 +1,142 @@
+[control]
+balance = BALANCE
+database = Expert N Standard Read INI
+pedotransfer = Campbell
+output = XPN_OUTPUT
+
+[water]
+potential evapotranspiration = Penman Monteith
+potential evaporation = Penman Monteith
+actual evaporation = Penman Monteith
+kc factor = const
+hydraulic functions = van Genuchten and Mualem
+flow module = HYDRUS Flow
+
+[Expert N Standard Read INI]
+use high resolution climate data = 0
+interpolate climate data = 1
+filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_cfg.ini$>
+time zone = 0
+climate file = $<$PROJECT_PATH/Wetterdaten_Cottbus_1997-2015_Forst_2016-2018_AF.csv$>
+
+[Strip next to trees]
+
+[agroforestry]
+filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_agroforestry.ini$>
+
+[management]
+application fertilizers = Schaaf
+soil loosing compaction = Williams et al. (EPIC)
+mixing incorporation = Williams et al. (EPIC)
+
+[HYDRUS Flow]
+
+[hydrus]
+bottombc = 1
+mobil = 0
+infiltration_limit = 1
+infiltration_layer_limit = 1
+
+[Penman Monteith]
+soil cover = 0.0
+
+[evapotranspiration_pm]
+
+[DAISY Modul Heat Transfer]
+frost_rad_flag = 1
+lower_boundary_condition = 2
+
+[daisy]
+
+[Albedo const]
+albedo = 0.25
+
+[Hurley Pasture Model (Feddes)]
+
+[hpm]
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_hpm.ini$>
+parameter_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_hpm_param.ini$>
+create_auto_init_files = 0
+use_static_root_length = 1
+static_root_length = 12
+
+[Hurley Pasture Model]
+
+[Constant Deposition]
+no3 = 10.0
+nh4 = 20.0
+
+[depos]
+
+[LEACHN]
+
+[leachn]
+bottombc = 1
+mobil = 0
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_leachn.ini$>
+
+[heat]
+heat transfer = DAISY Modul Heat Transfer
+albedo = Albedo const
+surface temperature = First Soil Layer
+latent heat = Penman Monteith
+sensible heat = Penman Monteith
+ground heat = Penman Monteith
+net radiation = Penman Monteith
+emissivity = Penman Monteith
+
+[nitrogen]
+deposition = Constant Deposition
+nitrogen transport = LEACHN
+nitrification = LEACHN
+denitrification = LEACHN
+mineralisation = LEACHN
+urea hydrolysis = LEACHN
+
+[plant]
+phenological development = Wang (SPASS)
+root length growth = Wang (SPASS)
+canopy gross photosynthesis = Wang (SPASS)
+potential transpiration = Wang (SPASS)
+actual transpiration = Wang (SPASS)
+biomass growth = Wang (SPASS)
+canopy formation = Wang (SPASS)
+crop senescence = Wang (SPASS)
+nitrogen demand = Wang (SPASS)
+nitrogen uptake = Wang (SPASS)
+
+[doc]
+description = Camb_1m without AF SPASS
+
+[const]
+kc factor = 1.0
+
+[Penman Monteith ASCE 81]
+
+[Schaaf]
+
+[schaaf]
+filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_fertilization.ini$>
+
+[CENTURY_N Mineralisation]
+
+[century_n]
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_century_n.ini$>
+
+
+
+[First Soil Layer]
+
+[Wang (SPASS)]
+harvest_at_maturity = 0
+set_LAI_to_0_after_maturity = 0
+
+[spass]
+filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_crop_rotation.ini$>
+
+[Williams et al. (EPIC)]
+
+[schaaf_manag]
+ini_filename = $<$PROJECT_PATH/$PROJECT_NAME_$REG_STR_schaaf_manag.ini$>
+
+[expertn_database]

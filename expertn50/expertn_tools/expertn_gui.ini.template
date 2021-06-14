@@ -1,0 +1,9 @@
+[PATHS]
+expertn_bin = expertn_bin
+base_path = ../built
+
+[WINDOWS]
+delay_workaround = 0.1
+
+[TOOLS]
+tool_list = Editor,/usr/bin/gedit,*.ini,*.txt,*.cfg,*.var,*.TBL,*.input,*.wps;Expert-N Helper,./xpnhelper.py,;PDF Viewer,/usr/bin/evince,*.pdf;Database,/usr/bin/sqliteman,*.db;LibreOffice Calc,libreoffice --calc,*.csv,*.xno,*.odt;

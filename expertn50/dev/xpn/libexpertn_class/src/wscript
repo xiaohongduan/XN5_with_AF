@@ -1,0 +1,24 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+LIBNAME='expertn_class'
+SOURCE_FILES='expertnclass.c general_config.c xpn_output_netcdf.c'
+
+def options(opt):
+        return
+
+def configure(conf):
+        return
+
+def build(bld):
+    lib = bld(
+        features        = 'c cshlib',
+        source          = SOURCE_FILES,
+        uselib          = bld.env.USELIB_STD,
+        use             = bld.env.USE_STD,
+        target          = LIBNAME,
+        includes        = '../include ../../libexpertn_modul_base/include',
+        install_path    = bld.env.INSTALL_BIN        
+        )
+

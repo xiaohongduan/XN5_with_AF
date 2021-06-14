@@ -1,0 +1,1 @@
+Put here the trunc path of open geo sys and compile it before compiling the Expert-N open_geo_sys_driver!

@@ -1,0 +1,71 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='xylemwaterflow'
+
+
+SOURCE_FILES=  [
+                 'xylemwaterflow_connector.c',
+                 'xylemwaterflow_register_modul.c',
+                 'xylemwaterflow_connector_class_wrapper.cpp',
+                 'xylemwaterflow.cpp',
+                 'xylemwaterflow_load.cpp',
+                 'xylemwaterflow_plant_water_flux.cpp',
+                 'xylemwaterflow_hydraulicFunctions.cpp',
+                 'xylemwaterflow_Kirchhoff.cpp',
+                 'xylemwaterflow_SuperLUfunctions.cpp',
+                 'xylemwaterflow_PDESystem.cpp',
+                 'xylemwaterflow_Photosynthesis_Leuning.cpp',
+                 'xylemwaterflow_tree.cpp',
+                 'xylemwaterflow_quicksort.cpp',
+                 'xylemwaterflow_balance.cpp',
+                 'sp_ienv.c',
+                 'sp_preorder.c',
+                 'sp_coletree.c',
+                 'superLU_dutil.c',
+                 'superLU_memory.c',
+                 'superLU_dgssv.c',
+                 'superLU_timer.c',
+                 'superLU_get_perm_c.c',
+                 'superLU_colamd.c',
+                 'superLU_mmd.c',
+                 'superLU_dgstrf.c',
+                 'superLU_dgstrs.c',
+                 'superLU_util.c',
+                 'superLU_dmemory.c',
+                 'superLU_heap_relax_snode.c',
+                 'superLU_relax_snode.c',
+                 'superLU_dsnode_bmod.c',
+                 'superLU_dsnode_dfs.c',
+                 'superLU_dpanel_bmod.c',
+                 'superLU_dpanel_dfs.c',
+                 'superLU_dpivotL.c',
+                 'superLU_dcolumn_bmod.c',
+                 'superLU_dcolumn_dfs.c',
+                 'superLU_dcopy_to_ucol.c',
+                 'superLU_dpruneL.c',
+                 'superLU_dmyblas2.c',
+                 'superLU_dsp_blas2.c',
+                 'superLU_lsame.c',
+                 'superLU_dtrsv.c'
+                ]
+
+
+def options(opt):
+        pass
+
+def configure(conf):
+        pass
+
+def build(bld):
+    lib = bld(
+                features        = 'cxx cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_CLASS,
+                use             = bld.env.USE_STD,
+                target          = LIBNAME,
+                includes        = bld.env.INCLUDES_CLASS,
+                install_path    = bld.env.INSTALL_MODELS
+                )

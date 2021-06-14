@@ -1,0 +1,31 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Christian Klein, 2012
+
+
+LIBNAME='daisy_miner'
+
+
+SOURCE_FILES=  [ 'daisy_miner.c',
+				 'daisy_miner_load.c',
+                 'daisy_miner_util.c',
+                 'daisy_miner_register_modul.c'          
+                ]
+
+        
+def options(opt):
+        pass
+
+def configure(conf):
+        pass
+
+def build(bld):
+    lib = bld(
+                features        = 'c cshlib',
+                source          = SOURCE_FILES,
+                uselib          = bld.env.USELIB_STD,
+                use             = bld.env.USE_CLASS,                
+                target          = LIBNAME,
+                includes        = bld.env.INCLUDES_CLASS,
+                install_path    = bld.env.INSTALL_MODELS
+                )
